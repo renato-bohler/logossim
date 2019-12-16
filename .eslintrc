@@ -1,0 +1,19 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": ["error"],
+    "react/prop-types": "off",
+    "react/sort-comp": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "import/prefer-default-export": "warn",
+    "import/no-extraneous-dependencies": "off",
+    "class-methods-use-this": "off"
+  },
+  "env": {
+    "browser": true,
+    "jest": true
+  }
+}

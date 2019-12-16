@@ -1,0 +1,8 @@
+{
+  "name": "@logossim/components",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@logossim/core": "0.0.1"
+  }
+}
