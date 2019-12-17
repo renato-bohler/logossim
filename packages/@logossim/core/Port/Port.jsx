@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { PortWidget } from '@projectstorm/react-diagrams';
 
 const Circle = styled.div`
   width: 10px;
@@ -13,15 +14,15 @@ const Circle = styled.div`
   }
 `;
 
-const Port = props => {
-  const { name, node, className = '' } = props;
-  return (
-    <Circle
-      className={`port ${className}`}
-      data-name={name}
-      data-nodeid={node.getID()}
-    />
-  );
-};
-
-export default Port;
+export default class Port extends PortWidget {
+  render() {
+    const { name, node, className = '' } = this.props;
+    return (
+      <Circle
+        className={`port ${className}`}
+        data-name={name}
+        data-nodeid={node.getID()}
+      />
+    );
+  }
+}

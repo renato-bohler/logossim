@@ -1,4 +1,5 @@
-import { NodeModel, PortModel } from '@projectstorm/react-diagrams';
+import { NodeModel } from '@projectstorm/react-diagrams';
+import PortModel from './Port/PortModel';
 
 export default class BaseModel extends NodeModel {
   constructor(type) {
@@ -24,6 +25,8 @@ export default class BaseModel extends NodeModel {
   addPort(port) {
     if (port instanceof PortModel) {
       super.addPort(port);
+    } else {
+      super.addPort(new PortModel({ name: port }));
     }
   }
 
