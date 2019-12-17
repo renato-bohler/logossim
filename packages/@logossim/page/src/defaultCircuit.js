@@ -1819,46 +1819,6 @@ export default {
           curvyness: 50,
           selectedColor: 'rgb(0,192,255)',
         },
-        'ee32e0f1-0614-4c74-985a-4a159a203ff5': {
-          id: 'ee32e0f1-0614-4c74-985a-4a159a203ff5',
-          type: 'rightAngle',
-          selected: false,
-          source: '48f785fb-5a1b-4e95-8eb0-d7b87b0512c3',
-          sourcePort: 'ecda0683-572c-4a5d-a45e-6064bee83a6c',
-          target: '48f785fb-5a1b-4e95-8eb0-d7b87b0512c3',
-          targetPort: 'ecda0683-572c-4a5d-a45e-6064bee83a6c',
-          points: [
-            {
-              id: 'e0afc671-e735-4e1b-9463-d6c6f11e7972',
-              type: 'point',
-              x: 675,
-              y: 630,
-            },
-            {
-              id: '0df821e7-7f75-4cd1-8b21-f4c270e8d2f6',
-              type: 'point',
-              x: 675,
-              y: 630,
-            },
-            {
-              id: '3b51bfa0-98ab-4734-8bca-85ba813417bd',
-              type: 'point',
-              x: 675,
-              y: 628,
-            },
-            {
-              id: '0bfdfd28-124c-4bf1-92a5-d18ef0b3552a',
-              type: 'point',
-              x: 675,
-              y: 628,
-            },
-          ],
-          labels: [],
-          width: 3,
-          color: 'gray',
-          curvyness: 50,
-          selectedColor: 'rgb(0,192,255)',
-        },
       },
     },
     {
@@ -1870,6 +1830,7 @@ export default {
         '604d8939-ff6d-4c8c-a2b8-2b070ab2fc54': {
           id: '604d8939-ff6d-4c8c-a2b8-2b070ab2fc54',
           type: 'And',
+          extras: {},
           x: 45,
           y: 45,
           ports: [
@@ -1908,6 +1869,7 @@ export default {
         '80370633-57bb-48b1-958b-24cc7676794c': {
           id: '80370633-57bb-48b1-958b-24cc7676794c',
           type: 'And',
+          extras: {},
           x: 45,
           y: 180,
           ports: [
@@ -1946,6 +1908,7 @@ export default {
         '79f1e13a-b0f3-4dbd-926a-bf42564ba420': {
           id: '79f1e13a-b0f3-4dbd-926a-bf42564ba420',
           type: 'And',
+          extras: {},
           x: 45,
           y: 315,
           ports: [
@@ -1984,6 +1947,7 @@ export default {
         '1920e461-bed9-4473-ade9-db939eb1752f': {
           id: '1920e461-bed9-4473-ade9-db939eb1752f',
           type: 'And',
+          extras: {},
           x: 45,
           y: 450,
           ports: [
@@ -2022,6 +1986,7 @@ export default {
         '797da998-b87e-48d6-9079-cc03b7b9f00a': {
           id: '797da998-b87e-48d6-9079-cc03b7b9f00a',
           type: 'And',
+          extras: {},
           x: 45,
           y: 585,
           ports: [
@@ -2060,6 +2025,7 @@ export default {
         'eb7db6ca-e864-46ae-b84d-32deefa28818': {
           id: 'eb7db6ca-e864-46ae-b84d-32deefa28818',
           type: 'And',
+          extras: {},
           x: 180,
           y: 45,
           ports: [
@@ -2098,6 +2064,7 @@ export default {
         'f9e3232d-0393-4ec7-aebc-4fcf469c31b2': {
           id: 'f9e3232d-0393-4ec7-aebc-4fcf469c31b2',
           type: 'And',
+          extras: {},
           x: 180,
           y: 180,
           ports: [
@@ -2136,6 +2103,7 @@ export default {
         '5a2ffeda-33e3-4cb2-958c-9ee16599287f': {
           id: '5a2ffeda-33e3-4cb2-958c-9ee16599287f',
           type: 'And',
+          extras: {},
           x: 180,
           y: 315,
           ports: [
@@ -2174,6 +2142,7 @@ export default {
         '58569558-17ae-43ff-89bc-deeed281b8ba': {
           id: '58569558-17ae-43ff-89bc-deeed281b8ba',
           type: 'And',
+          extras: {},
           x: 180,
           y: 450,
           ports: [
@@ -2212,6 +2181,7 @@ export default {
         '5e9f552b-176f-4b45-bd2f-d6c4b0a8d008': {
           id: '5e9f552b-176f-4b45-bd2f-d6c4b0a8d008',
           type: 'And',
+          extras: {},
           x: 180,
           y: 585,
           ports: [
@@ -2250,6 +2220,7 @@ export default {
         '09af9ce5-7ce9-4ff1-aa84-2af9d483dfe3': {
           id: '09af9ce5-7ce9-4ff1-aa84-2af9d483dfe3',
           type: 'And',
+          extras: {},
           x: 315,
           y: 45,
           ports: [
@@ -2288,6 +2259,7 @@ export default {
         '3e35ebf9-badc-4c1b-b597-8bd3af5c87b2': {
           id: '3e35ebf9-badc-4c1b-b597-8bd3af5c87b2',
           type: 'And',
+          extras: {},
           x: 315,
           y: 180,
           ports: [
@@ -2326,6 +2298,7 @@ export default {
         '4ee2a16f-977a-4cbb-b543-83d6e6ad698d': {
           id: '4ee2a16f-977a-4cbb-b543-83d6e6ad698d',
           type: 'And',
+          extras: {},
           x: 315,
           y: 315,
           ports: [
@@ -2364,6 +2337,7 @@ export default {
         'b5ee459b-fadd-4dac-a2d6-991b9526ac3d': {
           id: 'b5ee459b-fadd-4dac-a2d6-991b9526ac3d',
           type: 'And',
+          extras: {},
           x: 315,
           y: 450,
           ports: [
@@ -2402,6 +2376,7 @@ export default {
         '386c4152-f573-4fa5-a8a4-1f2cc19385bb': {
           id: '386c4152-f573-4fa5-a8a4-1f2cc19385bb',
           type: 'And',
+          extras: {},
           x: 315,
           y: 585,
           ports: [
@@ -2440,6 +2415,7 @@ export default {
         'c3f9b49d-6901-4275-af8b-797534399b74': {
           id: 'c3f9b49d-6901-4275-af8b-797534399b74',
           type: 'And',
+          extras: {},
           x: 450,
           y: 45,
           ports: [
@@ -2479,6 +2455,7 @@ export default {
           id: '0049f053-8971-428b-b0fe-3f9092fc0347',
           type: 'And',
           selected: false,
+          extras: {},
           x: 450,
           y: 180,
           ports: [
@@ -2517,6 +2494,7 @@ export default {
         '85e58e4c-52b3-4c9d-91f8-231d9f95acf5': {
           id: '85e58e4c-52b3-4c9d-91f8-231d9f95acf5',
           type: 'And',
+          extras: {},
           x: 450,
           y: 315,
           ports: [
@@ -2555,6 +2533,7 @@ export default {
         '83a77d61-e60c-4e56-b794-dd9137ff59d1': {
           id: '83a77d61-e60c-4e56-b794-dd9137ff59d1',
           type: 'And',
+          extras: {},
           x: 450,
           y: 450,
           ports: [
@@ -2593,6 +2572,7 @@ export default {
         'c01b570d-df70-4c60-83cd-1e00c7c85b7a': {
           id: 'c01b570d-df70-4c60-83cd-1e00c7c85b7a',
           type: 'And',
+          extras: {},
           x: 450,
           y: 585,
           ports: [
@@ -2631,6 +2611,7 @@ export default {
         '65cac0ef-25df-42a5-b19b-94d1b2b335b1': {
           id: '65cac0ef-25df-42a5-b19b-94d1b2b335b1',
           type: 'And',
+          extras: {},
           x: 585,
           y: 45,
           ports: [
@@ -2666,6 +2647,7 @@ export default {
         '44e5dab1-da1e-46c3-9d41-b88f9128d13a': {
           id: '44e5dab1-da1e-46c3-9d41-b88f9128d13a',
           type: 'And',
+          extras: {},
           x: 585,
           y: 180,
           ports: [
@@ -2701,6 +2683,7 @@ export default {
         '3e6cd5de-b26a-4971-95b2-2ddeed3583db': {
           id: '3e6cd5de-b26a-4971-95b2-2ddeed3583db',
           type: 'And',
+          extras: {},
           x: 585,
           y: 315,
           ports: [
@@ -2736,6 +2719,7 @@ export default {
         'c952ce56-72c8-4008-8535-085717809a7b': {
           id: 'c952ce56-72c8-4008-8535-085717809a7b',
           type: 'And',
+          extras: {},
           x: 585,
           y: 450,
           ports: [
@@ -2771,6 +2755,8 @@ export default {
         '48f785fb-5a1b-4e95-8eb0-d7b87b0512c3': {
           id: '48f785fb-5a1b-4e95-8eb0-d7b87b0512c3',
           type: 'And',
+          selected: false,
+          extras: {},
           x: 585,
           y: 585,
           ports: [
@@ -2799,7 +2785,7 @@ export default {
               y: 625,
               name: 'out',
               parentNode: '48f785fb-5a1b-4e95-8eb0-d7b87b0512c3',
-              links: ['ee32e0f1-0614-4c74-985a-4a159a203ff5'],
+              links: [],
             },
           ],
         },
