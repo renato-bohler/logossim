@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import createEngine, {
-  DiagramModel,
-  RightAngleLinkFactory,
-} from '@projectstorm/react-diagrams';
-import { CanvasWidget } from '@projectstorm/react-canvas-core';
-import { PortFactory } from '@logossim/core';
+import { DiagramEngine, Diagram } from '@logossim/core';
 import components from '@logossim/components';
 
 import defaultCircuit from './defaultCircuit';
@@ -47,75 +42,16 @@ const Button = styled.button.attrs((...props) => ({
 class App extends Component {
   constructor(props) {
     super(props);
+
+    this.diagram = new DiagramEngine(components);
+    this.diagram.load(defaultCircuit);
     this.state = {
       circuit: undefined,
-      locked: false,
     };
   }
 
-  componentDidMount() {
-    this.initializeEngine();
-    this.initializeModel();
-
-    this.forceUpdate();
-  }
-
-  initializeEngine() {
-    this.engine = createEngine({
-      registerDefaultZoomCanvasAction: false,
-    });
-
-    // TODO: this may not be the best way to disallow loose links
-    const state = this.engine.getStateMachine().getCurrentState();
-    if (state) {
-      state.dragNewLink.config.allowLooseLinks = false;
-    }
-
-    this.engine.getPortFactories().registerFactory(new PortFactory());
-
-    this.engine
-      .getLinkFactories()
-      .registerFactory(new RightAngleLinkFactory());
-
-    this.registerComponents();
-  }
-
-  initializeModel() {
-    this.model = new DiagramModel();
-
-    this.model.setGridSize(15);
-    this.model.registerListener({
-      eventDidFire: this.realignGrid,
-    });
-
-    this.engine.setModel(this.model);
-
-    this.loadDiagram(defaultCircuit);
-  }
-
-  loadDiagram(circuit) {
-    this.model.deserializeModel(circuit, this.engine);
-    this.realignGrid({
-      offsetX: this.model.getOffsetX(),
-      offsetY: this.model.getOffsetY(),
-    });
-    setTimeout(() => this.engine.repaintCanvas());
-  }
-
-  realignGrid = ({ offsetX, offsetY }) => {
-    document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
-  };
-
-  registerComponents = () => {
-    components.forEach(component => {
-      this.engine.getNodeFactories().registerFactory(component);
-    });
-  };
-
   handleClickSave = () => {
-    const { model } = this;
-
-    const serialized = model.serialize();
+    const serialized = this.diagram.serialize();
     this.setState({ circuit: serialized });
     console.log(serialized);
   };
@@ -128,27 +64,13 @@ class App extends Component {
       return;
     }
 
-    this.loadDiagram(circuit);
+    this.diagram.load(circuit);
   };
 
-  handleClickLock = () => {
-    this.setState(
-      state => ({
-        locked: !state.locked,
-      }),
-      () => {
-        const { locked } = this.state;
-        this.model.setLocked(locked);
-      },
-    );
-  };
+  handleClickLock = () =>
+    this.diagram.setLocked(!this.diagram.isLocked());
 
   render() {
-    const { engine, model } = this;
-    const { locked } = this.state;
-
-    if (!engine || !model) return <div>Loading...</div>;
-
     return (
       <>
         <ButtonsContainer>
@@ -159,10 +81,10 @@ class App extends Component {
             Load
           </Button>
           <Button onClick={this.handleClickLock}>
-            {locked ? 'Unlock' : 'Lock'}
+            {this.diagram.isLocked() ? 'Unlock' : 'Lock'}
           </Button>
         </ButtonsContainer>
-        <CanvasWidget className="diagram" engine={engine} />
+        <Diagram engine={this.diagram.getEngine()} />
       </>
     );
   }
