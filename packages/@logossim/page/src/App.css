@@ -33,8 +33,3 @@ body {
 * {
   box-sizing: border-box;
 }
-
-.diagram {
-  height: 100vh;
-  width: 100vw;
-}
