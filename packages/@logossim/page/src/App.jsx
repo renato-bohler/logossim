@@ -1,43 +1,12 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { DiagramEngine, Diagram } from '@logossim/core';
 import components from '@logossim/components';
 
+import Buttons from './ui-components/Buttons/Buttons';
+import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
+
 import defaultCircuit from './defaultCircuit';
 import './App.css';
-
-const ButtonsContainer = styled.div`
-  position: absolute;
-  right: 0;
-
-  z-index: 100;
-`;
-
-const Button = styled.button.attrs((...props) => ({
-  ...props,
-  type: 'button',
-}))`
-  border: none;
-  border-radius: 5px;
-  background: ${props => {
-    switch (props.color) {
-      case 'green':
-        return '#07d26b';
-      case 'orange':
-        return 'orange';
-      default:
-        return 'gray';
-    }
-  }};
-
-  color: white;
-  font-weight: bold;
-  font-size: 1.2em;
-
-  min-width: 110px;
-  padding: 5px 20px;
-  margin: 5px;
-`;
 
 class App extends Component {
   constructor(props) {
@@ -47,6 +16,7 @@ class App extends Component {
     this.diagram.load(defaultCircuit);
     this.state = {
       circuit: undefined,
+      isComponentSelectOpen: false,
     };
   }
 
@@ -70,20 +40,28 @@ class App extends Component {
   handleClickLock = () =>
     this.diagram.setLocked(!this.diagram.isLocked());
 
+  handleClickMenu = () =>
+    this.setState(state => ({
+      isComponentSelectOpen: !state.isComponentSelectOpen,
+    }));
+
   render() {
+    const { isComponentSelectOpen } = this.state;
+
     return (
       <>
-        <ButtonsContainer>
-          <Button color="green" onClick={this.handleClickSave}>
-            Save
-          </Button>
-          <Button color="orange" onClick={this.handleClickLoad}>
-            Load
-          </Button>
-          <Button onClick={this.handleClickLock}>
-            {this.diagram.isLocked() ? 'Unlock' : 'Lock'}
-          </Button>
-        </ButtonsContainer>
+        <Buttons
+          handleClickSave={this.handleClickSave}
+          handleClickLoad={this.handleClickLoad}
+          handleClickLock={this.handleClickLock}
+          isLocked={this.diagram.isLocked()}
+        />
+        <ComponentSelect
+          open={isComponentSelectOpen}
+          handleClickMenu={this.handleClickMenu}
+          engine={this.diagram.getEngine()}
+          components={components}
+        />
         <Diagram engine={this.diagram.getEngine()} />
       </>
     );
