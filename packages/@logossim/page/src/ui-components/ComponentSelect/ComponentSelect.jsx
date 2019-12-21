@@ -6,6 +6,9 @@ import DroppableLayer from './DroppableLayer';
 
 const Container = styled.div`
   position: absolute;
+  top: 0;
+  left: 0;
+
   z-index: 100;
 
   display: flex;
@@ -19,6 +22,7 @@ const ComponentSelect = ({
   handleClickMenu,
   engine,
   components,
+  children,
 }) => (
   <Container open={open}>
     <Sidebar
@@ -26,9 +30,9 @@ const ComponentSelect = ({
       handleClickMenu={handleClickMenu}
       components={components}
     />
-    {open ? (
-      <DroppableLayer engine={engine} components={components} />
-    ) : null}
+    <DroppableLayer engine={engine} components={components}>
+      {children}
+    </DroppableLayer>
   </Container>
 );
 

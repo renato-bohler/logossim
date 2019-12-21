@@ -61,8 +61,9 @@ class App extends Component {
           handleClickMenu={this.handleClickMenu}
           engine={this.diagram.getEngine()}
           components={components}
-        />
-        <Diagram engine={this.diagram.getEngine()} />
+        >
+          <Diagram engine={this.diagram.getEngine()} />
+        </ComponentSelect>
       </>
     );
   }

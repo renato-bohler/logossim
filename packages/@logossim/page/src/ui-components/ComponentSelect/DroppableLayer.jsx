@@ -3,9 +3,8 @@ import styled from 'styled-components';
 /**
  * TODO:
  * - this component shouldn't receive the whole `engine` as props
- * - this layer is denying canvas events
  */
-const DropLayer = styled.div.attrs(({ ...props }) => ({
+const DroppableLayer = styled.div.attrs(({ ...props }) => ({
   ...props,
   onDragOver: event => event.preventDefault(),
   onDrop: event => {
@@ -28,4 +27,4 @@ const DropLayer = styled.div.attrs(({ ...props }) => ({
   flex-grow: 1;
 `;
 
-export default DropLayer;
+export default DroppableLayer;
