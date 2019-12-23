@@ -1,6 +1,6 @@
 import React from 'react';
-import AndShape from './AndShape';
+import { Shape } from './AndWidget';
 
-const AndIcon = () => <AndShape size={30} />;
+const AndIcon = () => <Shape size={30} />;
 
 export default AndIcon;

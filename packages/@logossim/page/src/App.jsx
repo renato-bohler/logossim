@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { DiagramEngine, Diagram } from '@logossim/core';
 import components from '@logossim/components';
 

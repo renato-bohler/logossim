@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React from 'react';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 
 export default class Component extends AbstractReactFactory {
-  constructor({ name, model, widget, icon }) {
-    super(name);
+  constructor({ type, name, description, model, widget, icon }) {
+    super(type);
     this.name = name;
+    this.description = description;
     this.Model = model;
     this.Widget = widget;
     this.Icon = icon;

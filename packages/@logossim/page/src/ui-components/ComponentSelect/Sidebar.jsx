@@ -14,10 +14,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 
-  background: ${props => (props.open ? 'white' : 'none')};
+  background: ${props =>
+    props.open ? 'rgba(255, 255, 255, 0.8)' : 'none'};
   border-right: ${props =>
-    props.open ? '1px solid #494949' : 'none'};
+    props.open ? '1px dotted #494949' : 'none'};
 
+  width: 300px;
   height: ${props => (props.open ? '100vh' : 'max-content')};
 `;
 
@@ -37,20 +39,28 @@ const MenuButton = styled.button.attrs(({ ...props }) => ({
   margin: 5px;
 `;
 
+const DraggableContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 8px;
+
+  padding: 8px;
+`;
+
 const Sidebar = ({ open, handleClickMenu, components }) => (
   <Container open={open}>
     <MenuButton open={open} onClick={handleClickMenu}>
       <MenuIcon />
     </MenuButton>
     {open ? (
-      <div>
+      <DraggableContainer>
         {components.map(component => (
           <DraggableComponent
             key={component.type}
             component={component}
           />
         ))}
-      </div>
+      </DraggableContainer>
     ) : null}
   </Container>
 );

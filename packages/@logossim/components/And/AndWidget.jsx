@@ -2,16 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { Port } from '@logossim/core';
 
-import AndShape from './AndShape';
-
 const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 
-  width: ${props => props.size}px;
-  height: ${props => props.size}px;
+  width: 90px;
+  height: 90px;
 
   transition: 100ms linear;
   svg {
@@ -41,11 +39,31 @@ const PositionedPort = styled(Port)`
   }};
 `;
 
-const And = props => {
-  const { node, engine, size = 90 } = props;
+export const Shape = ({ size = 90 }) => (
+  <svg
+    viewBox="0 0 23.8125 23.8125"
+    height={size}
+    width={size}
+    fill="rgba(115, 190, 255, 0.95)"
+    stroke="#598897"
+  >
+    <g>
+      <path d="M 0.26458333,0.2645835 V 11.911935 23.559286 H 11.911934 A 11.647361,11.647269 0 0 0 23.559285,11.911935 11.647361,11.647269 0 0 0 11.911934,0.2645835 Z" />
+      <ellipse
+        ry="15.437704"
+        rx="0.03665797"
+        cy="15.437704"
+        cx="-0.03665797"
+      />
+    </g>
+  </svg>
+);
+
+const AndWidget = props => {
+  const { node, engine } = props;
 
   return (
-    <Wrapper size={size} selected={node.options.selected}>
+    <Wrapper selected={node.options.selected}>
       <PositionedPort
         name="in0"
         node={node}
@@ -64,9 +82,9 @@ const And = props => {
         port={node.getPort('out')}
         engine={engine}
       />
-      <AndShape />
+      <Shape />
     </Wrapper>
   );
 };
 
-export default And;
+export default AndWidget;
