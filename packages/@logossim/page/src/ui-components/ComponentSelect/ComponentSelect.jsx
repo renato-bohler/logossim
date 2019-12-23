@@ -16,7 +16,7 @@ const Container = styled.div`
 const ComponentSelect = ({
   open,
   handleClickMenu,
-  engine,
+  handleComponentDrop,
   components,
   children,
 }) => (
@@ -26,7 +26,10 @@ const ComponentSelect = ({
       handleClickMenu={handleClickMenu}
       components={components}
     />
-    <DroppableLayer engine={engine} components={components}>
+    <DroppableLayer
+      handleComponentDrop={handleComponentDrop}
+      components={components}
+    >
       {children}
     </DroppableLayer>
   </Container>

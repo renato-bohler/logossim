@@ -73,4 +73,11 @@ export default class DiagramEngine {
   realignGrid = ({ offsetX, offsetY }) => {
     document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
   };
+
+  getRelativeMousePoint = event =>
+    this.engine.getRelativeMousePoint(event);
+
+  addComponent = component => this.model.addNode(component);
+
+  repaint = () => this.engine.repaintCanvas();
 }
