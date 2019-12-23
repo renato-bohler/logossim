@@ -1,6 +1,8 @@
 {
   "private": true,
-  "workspaces": ["packages/@logossim/*"],
+  "workspaces": [
+    "packages/@logossim/*"
+  ],
   "scripts": {
     "start": "cd packages/@logossim/page && react-app-rewired start",
     "build": "cd packages/@logossim/page && react-app-rewired build",
@@ -29,6 +31,7 @@
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
+    "react-tooltip": "^3.11.1",
     "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^4.3.2"
   },
