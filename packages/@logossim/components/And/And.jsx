@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Port } from '@logossim/core';
 
-import { ReactComponent as Shape } from './shape.svg';
+import AndShape from './AndShape';
 
 const Wrapper = styled.div`
   position: relative;
@@ -64,7 +64,7 @@ const And = props => {
         port={node.getPort('out')}
         engine={engine}
       />
-      <Shape />
+      <AndShape />
     </Wrapper>
   );
 };

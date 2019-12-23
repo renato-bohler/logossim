@@ -1,5 +1,11 @@
 import { Component } from '@logossim/core';
-import Widget from './And';
-import Model from './AndModel';
+import widget from './And';
+import model from './AndModel';
+import icon from './AndIcon';
 
-export default new Component('And', Model, Widget);
+export default new Component({
+  name: 'And',
+  model,
+  widget,
+  icon,
+});

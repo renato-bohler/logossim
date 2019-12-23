@@ -1,26 +1,37 @@
+import React from 'react';
 import styled from 'styled-components';
 
-/**
- * TODO:
- * - show the icon and name of the component
- * - use `setDragImage` to show component's shape when dragging
- */
-const DraggableComponent = styled.div.attrs(({ ...props }) => ({
+const Container = styled.div.attrs(({ ...props }) => ({
   ...props,
   draggable: true,
-  onDragStart: event =>
-    event.dataTransfer.setData(
-      'component',
-      JSON.stringify({
-        type: props.component.type,
-      }),
-    ),
 }))`
   margin: 5px;
   width: 50px;
   height: 50px;
-  background: #12ee99;
+
+  background: #00000014;
+  border: 1px solid #4141412e;
   border-radius: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
+
+const DraggableComponent = ({ component: { type, Icon } }) => (
+  <Container
+    draggable
+    onDragStart={event =>
+      event.dataTransfer.setData(
+        'component',
+        JSON.stringify({
+          type,
+        }),
+      )
+    }
+  >
+    <Icon />
+  </Container>
+);
 
 export default DraggableComponent;
