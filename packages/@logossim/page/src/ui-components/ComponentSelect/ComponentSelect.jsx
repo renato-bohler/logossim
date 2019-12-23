@@ -5,13 +5,9 @@ import Sidebar from './Sidebar';
 import DroppableLayer from './DroppableLayer';
 
 const Container = styled.div`
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
-
-  z-index: 100;
-
-  display: flex;
 
   width: 100vw;
   height: 100vh;

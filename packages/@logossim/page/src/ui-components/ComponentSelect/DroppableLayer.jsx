@@ -24,7 +24,8 @@ const DroppableLayer = styled.div.attrs(({ ...props }) => ({
     props.engine.repaintCanvas();
   },
 }))`
-  flex-grow: 1;
+  width: 100vw;
+  height: 100vh;
 `;
 
 export default DroppableLayer;

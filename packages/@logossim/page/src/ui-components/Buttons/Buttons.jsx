@@ -6,7 +6,7 @@ const Container = styled.div`
   top: 0;
   right: 0;
 
-  z-index: 100;
+  z-index: 2;
 `;
 
 const Button = styled.button.attrs(({ ...props }) => ({

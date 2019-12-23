@@ -5,14 +5,20 @@ import MenuIcon from '../Icons/Menu';
 import DraggableComponent from './DraggableComponent';
 
 const Container = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: 2;
+
   display: flex;
   flex-direction: column;
 
   background: ${props => (props.open ? 'white' : 'none')};
   border-right: ${props =>
     props.open ? '1px solid #494949' : 'none'};
-  width: 200px;
-  height: 100vh;
+
+  height: ${props => (props.open ? '100vh' : 'max-content')};
 `;
 
 const MenuButton = styled.button.attrs(({ ...props }) => ({
