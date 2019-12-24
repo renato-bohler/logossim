@@ -18,8 +18,7 @@ class App extends Component {
     this.diagram.load(defaultCircuit);
     this.state = {
       circuit: undefined,
-      // TODO: revert to false
-      isComponentSelectOpen: true,
+      isComponentSelectOpen: false,
     };
 
     this.groups = this.groupComponents();
