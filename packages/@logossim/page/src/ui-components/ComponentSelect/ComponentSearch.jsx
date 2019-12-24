@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { Header, Content } from './ComponentLayout';
+import { Header, Content, IconButton } from './ComponentLayout';
 import ComponentGroup from './ComponentGroup';
-import IconButton from '../Buttons/IconButton';
 import Close from '../Icons/Close';
 
 const SearchBar = styled.input`
@@ -23,7 +22,7 @@ const SearchBar = styled.input`
 
 const ComponentSearch = ({
   groups,
-  setSelectedComponent,
+  handleComponentSelect,
   handleClose,
 }) => {
   const [filteredGroups, setFilteredGroups] = useState(groups);
@@ -75,7 +74,7 @@ const ComponentSearch = ({
           <ComponentGroup
             name={name}
             components={components}
-            setSelectedComponent={setSelectedComponent}
+            handleComponentSelect={handleComponentSelect}
             key={name}
           />
         ))}

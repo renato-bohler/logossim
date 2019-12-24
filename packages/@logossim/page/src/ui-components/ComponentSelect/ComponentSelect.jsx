@@ -49,14 +49,17 @@ const ComponentSelect = ({ isOpen, handleClose, groups }) => {
       <Modal>
         {selectedComponent ? (
           <ComponentConfiguration
-            handleClose={handleClose}
+            handleClose={() => {
+              handleClose();
+              setSelectedComponent(null);
+            }}
             handleBack={() => setSelectedComponent(null)}
             component={selectedComponent}
           />
         ) : (
           <ComponentSearch
             handleClose={handleClose}
-            setSelectedComponent={setSelectedComponent}
+            handleComponentSelect={setSelectedComponent}
             groups={groups}
           />
         )}

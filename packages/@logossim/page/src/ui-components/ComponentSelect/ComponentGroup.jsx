@@ -6,7 +6,7 @@ import Chevron from '../Icons/Chevron';
 const ComponentGroup = ({
   name,
   components,
-  setSelectedComponent,
+  handleComponentSelect,
 }) => {
   const [isOpen, setOpen] = useState(true);
 
@@ -86,7 +86,7 @@ const ComponentGroup = ({
       <ComponentsGrid isOpen={isOpen}>
         {components.map(component => (
           <ComponentButton
-            onClick={() => setSelectedComponent(component)}
+            onClick={() => handleComponentSelect(component)}
             key={component.name}
           >
             <ComponentIcon>

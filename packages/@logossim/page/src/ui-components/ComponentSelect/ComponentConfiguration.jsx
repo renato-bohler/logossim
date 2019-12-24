@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Header, Content } from './ComponentLayout';
-import IconButton from '../Buttons/IconButton';
+import { Header, Content, IconButton } from './ComponentLayout';
 import Back from '../Icons/Back';
 import Close from '../Icons/Close';
 
