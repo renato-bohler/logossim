@@ -1,39 +1,21 @@
 import React from 'react';
-import Tooltip from 'react-tooltip';
-import styled from 'styled-components';
 
-const Container = styled.div`
-  display: flex;
-  flex-grow: 0;
-  flex-direction: column;
-  align-items: center;
+const engineStub = {
+  registerListener: () => {},
+  getCanvas: () => {},
+};
 
-  background: #00000014;
-  border: 1px solid #4141412e;
-  border-radius: 15px;
-
-  padding: 8px;
-`;
-
-const IconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Name = styled.span`
-  text-transform: uppercase;
-  font-size: 10px;
-  font-weight: bold;
-
-  padding: 8px 0 0 0;
-`;
+const nodeStub = {
+  getPort: () => {},
+  getID: () => {},
+  options: { selected: false },
+};
 
 const DraggableComponent = ({
-  component: { type, name, description, Icon },
+  component: { type, Widget },
+  handleClose,
 }) => (
-  <Container
-    data-tip={description}
+  <div
     draggable
     onDragStart={event => {
       event.dataTransfer.setDragImage(
@@ -48,14 +30,12 @@ const DraggableComponent = ({
           type,
         }),
       );
+
+      setTimeout(handleClose);
     }}
   >
-    <IconContainer>
-      <Icon />
-    </IconContainer>
-    <Name>{name}</Name>
-    <Tooltip />
-  </Container>
+    <Widget engine={engineStub} node={nodeStub} />
+  </div>
 );
 
 export default DraggableComponent;

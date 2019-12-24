@@ -96,8 +96,9 @@ class App extends Component {
           isOpen={isComponentSelectOpen}
           handleClose={this.hideAddComponent}
           groups={this.groups}
+          engine={this.diagram.getEngine()}
         />
-        <Diagram engine={this.diagram.getEngine()} />
+        <Diagram engine={this.diagram} />
       </>
     );
   }

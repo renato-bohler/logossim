@@ -10,8 +10,12 @@ const FullscreenCanvas = styled(CanvasWidget)`
 `;
 
 const Diagram = ({ engine }) => (
-  <DroppableLayer handleComponentDrop={engine.handleComponentDrop}>
-    <FullscreenCanvas engine={engine} />
+  <DroppableLayer
+    handleComponentDrop={(...args) =>
+      engine.handleComponentDrop(...args)
+    }
+  >
+    <FullscreenCanvas engine={engine.getEngine()} />
   </DroppableLayer>
 );
 

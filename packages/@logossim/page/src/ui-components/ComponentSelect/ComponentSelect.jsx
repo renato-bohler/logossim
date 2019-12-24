@@ -29,7 +29,6 @@ const Modal = styled.div`
   max-height: 800px;
 
   background: white;
-  box-shadow: inset 0 0 20% gray;
 
   border: 1px solid black;
   border-radius: 25px;
@@ -39,7 +38,7 @@ const Modal = styled.div`
   z-index: 4;
 `;
 
-const ComponentSelect = ({ isOpen, handleClose, groups }) => {
+const ComponentSelect = ({ isOpen, handleClose, groups, engine }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
 
   if (!isOpen) return null;
@@ -55,6 +54,7 @@ const ComponentSelect = ({ isOpen, handleClose, groups }) => {
             }}
             handleBack={() => setSelectedComponent(null)}
             component={selectedComponent}
+            engine={engine}
           />
         ) : (
           <ComponentSearch
