@@ -1,3 +1,6 @@
+/**
+ *
+ */
 import styled from 'styled-components';
 
 const DroppableLayer = styled.div.attrs(({ ...props }) => ({

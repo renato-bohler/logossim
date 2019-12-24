@@ -25,10 +25,10 @@ const Button = styled.button`
   color: white;
 `;
 
-const ComponentAddButton = ({ handleClick }) => (
+const ComponentSelectButton = ({ handleClick }) => (
   <Container>
     <Button onClick={handleClick}>+</Button>
   </Container>
 );
 
-export default ComponentAddButton;
+export default ComponentSelectButton;

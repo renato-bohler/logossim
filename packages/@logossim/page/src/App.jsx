@@ -4,9 +4,8 @@ import { DiagramEngine, Diagram } from '@logossim/core';
 import components from '@logossim/components';
 
 import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
-import ComponentAddButton from './ui-components/Buttons/ComponentAddButton';
-import DroppableLayer from './ui-components/ComponentSelect/DroppableLayer';
-import ComponentAdd from './ui-components/ComponentSelect/ComponentAdd';
+import ComponentSelectButton from './ui-components/Buttons/ComponentSelectButton';
+import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
 
 import defaultCircuit from './defaultCircuit';
 import './App.css';
@@ -20,7 +19,7 @@ class App extends Component {
     this.state = {
       circuit: undefined,
       // TODO: revert to false
-      isComponentAddOpen: true,
+      isComponentSelectOpen: true,
     };
 
     this.groups = this.groupComponents();
@@ -61,12 +60,12 @@ class App extends Component {
 
   showAddComponent = () =>
     this.setState({
-      isComponentAddOpen: true,
+      isComponentSelectOpen: true,
     });
 
   hideAddComponent = () =>
     this.setState({
-      isComponentAddOpen: false,
+      isComponentSelectOpen: false,
     });
 
   handleComponentDrop = (event, component) => {
@@ -82,7 +81,7 @@ class App extends Component {
   };
 
   render() {
-    const { isComponentAddOpen } = this.state;
+    const { isComponentSelectOpen } = this.state;
 
     return (
       <>
@@ -92,18 +91,13 @@ class App extends Component {
           handleClickLock={this.handleClickLock}
           isLocked={this.diagram.isLocked()}
         />
-        <ComponentAddButton handleClick={this.showAddComponent} />
-        <ComponentAdd
-          isOpen={isComponentAddOpen}
+        <ComponentSelectButton handleClick={this.showAddComponent} />
+        <ComponentSelect
+          isOpen={isComponentSelectOpen}
           handleClose={this.hideAddComponent}
           groups={this.groups}
         />
-        <DroppableLayer
-          handleClickMenu={this.handleClickMenu}
-          handleComponentDrop={this.handleComponentDrop}
-        >
-          <Diagram engine={this.diagram.getEngine()} />
-        </DroppableLayer>
+        <Diagram engine={this.diagram.getEngine()} />
       </>
     );
   }

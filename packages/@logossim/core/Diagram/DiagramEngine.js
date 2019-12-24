@@ -6,13 +6,14 @@ import PortFactory from '../Port/PortFactory';
 
 export default class DiagramEngine {
   constructor(components) {
+    this.components = components;
     this.locked = false;
 
-    this.initializeEngine(components);
+    this.initializeEngine();
     this.initializeModel();
   }
 
-  initializeEngine = components => {
+  initializeEngine = () => {
     this.engine = createEngine({
       registerDefaultZoomCanvasAction: false,
     });
@@ -29,7 +30,7 @@ export default class DiagramEngine {
       .getLinkFactories()
       .registerFactory(new RightAngleLinkFactory());
 
-    this.registerComponents(components);
+    this.registerComponents();
   };
 
   initializeModel = () => {
@@ -46,8 +47,8 @@ export default class DiagramEngine {
 
   getEngine = () => this.engine;
 
-  registerComponents = components => {
-    components.forEach(component => {
+  registerComponents = () => {
+    this.components.forEach(component => {
       this.engine.getNodeFactories().registerFactory(component);
     });
   };
@@ -74,10 +75,17 @@ export default class DiagramEngine {
     document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
   };
 
-  getRelativeMousePoint = event =>
-    this.engine.getRelativeMousePoint(event);
+  handleComponentDrop = (event, component) => {
+    const { Model } = this.components.find(
+      c => c.type === component.type,
+    );
 
-  addComponent = component => this.model.addNode(component);
+    const point = this.engine.getRelativeMousePoint(event);
 
-  repaint = () => this.engine.repaintCanvas();
+    const node = new Model(component.type);
+    node.setPosition(point);
+
+    this.model.addNode(node);
+    this.engine.repaintCanvas();
+  };
 }
