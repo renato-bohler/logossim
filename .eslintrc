@@ -8,6 +8,7 @@
     "react/sort-comp": "off",
     "react/jsx-props-no-spreading": "off",
     "react/jsx-curly-newline": "off",
+    "react/jsx-one-expression-per-line": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "import/prefer-default-export": "warn",
     "import/no-extraneous-dependencies": "off",
