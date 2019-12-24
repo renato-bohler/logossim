@@ -75,12 +75,17 @@ export default class DiagramEngine {
     document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
   };
 
+  getSnappedRelativeMousePoint = event => {
+    const { x, y } = this.engine.getRelativeMousePoint(event);
+    return { x: Math.round(x / 15) * 15, y: Math.round(y / 15) * 15 };
+  };
+
   handleComponentDrop = (event, component) => {
     const { Model } = this.components.find(
       c => c.type === component.type,
     );
 
-    const point = this.engine.getRelativeMousePoint(event);
+    const point = this.getSnappedRelativeMousePoint(event);
 
     const node = new Model(component.type);
     node.setPosition(point);
