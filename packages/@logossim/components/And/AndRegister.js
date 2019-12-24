@@ -6,7 +6,8 @@ import icon from './AndIcon';
 export default new Component({
   type: 'And',
   name: 'And',
-  description: 'Logical AND operator',
+  description: 'Logic and gate',
+  group: 'Logic gates',
   model,
   widget,
   icon,

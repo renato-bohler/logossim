@@ -27,7 +27,6 @@ const Button = styled.button.attrs(({ ...props }) => ({
   }};
 
   color: white;
-  font-weight: bold;
   font-size: 1.2em;
 
   min-width: 110px;
@@ -35,7 +34,7 @@ const Button = styled.button.attrs(({ ...props }) => ({
   margin: 5px;
 `;
 
-const Buttons = ({
+const DiagramStateButtons = ({
   handleClickSave,
   handleClickLoad,
   handleClickLock,
@@ -54,4 +53,4 @@ const Buttons = ({
   </Container>
 );
 
-export default Buttons;
+export default DiagramStateButtons;

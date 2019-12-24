@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 import { DiagramEngine, Diagram } from '@logossim/core';
 import components from '@logossim/components';
 
-import Buttons from './ui-components/Buttons/Buttons';
-import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
+import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
+import ComponentAddButton from './ui-components/Buttons/ComponentAddButton';
+import DroppableLayer from './ui-components/ComponentSelect/DroppableLayer';
+import ComponentAdd from './ui-components/ComponentSelect/ComponentAdd';
 
 import defaultCircuit from './defaultCircuit';
 import './App.css';
@@ -17,9 +19,23 @@ class App extends Component {
     this.diagram.load(defaultCircuit);
     this.state = {
       circuit: undefined,
-      isComponentSelectOpen: false,
+      // TODO: revert to false
+      isComponentAddOpen: true,
     };
+
+    this.groups = this.groupComponents();
   }
+
+  groupComponents = () =>
+    components.reduce((acc, component) => {
+      const group = acc.find(g => g.name === component.group);
+
+      if (group) group.components.push(component);
+      else
+        acc.push({ name: component.group, components: [component] });
+
+      return acc;
+    }, []);
 
   handleClickSave = () => {
     const serialized = this.diagram.serialize();
@@ -38,13 +54,20 @@ class App extends Component {
     this.diagram.load(circuit);
   };
 
-  handleClickLock = () =>
+  handleClickLock = () => {
     this.diagram.setLocked(!this.diagram.isLocked());
+    this.forceUpdate();
+  };
 
-  handleClickMenu = () =>
-    this.setState(state => ({
-      isComponentSelectOpen: !state.isComponentSelectOpen,
-    }));
+  showAddComponent = () =>
+    this.setState({
+      isComponentAddOpen: true,
+    });
+
+  hideAddComponent = () =>
+    this.setState({
+      isComponentAddOpen: false,
+    });
 
   handleComponentDrop = (event, component) => {
     const { Model } = components.find(c => c.type === component.type);
@@ -59,24 +82,28 @@ class App extends Component {
   };
 
   render() {
-    const { isComponentSelectOpen } = this.state;
+    const { isComponentAddOpen } = this.state;
 
     return (
       <>
-        <Buttons
+        <DiagramStateButtons
           handleClickSave={this.handleClickSave}
           handleClickLoad={this.handleClickLoad}
           handleClickLock={this.handleClickLock}
           isLocked={this.diagram.isLocked()}
         />
-        <ComponentSelect
-          open={isComponentSelectOpen}
+        <ComponentAddButton handleClick={this.showAddComponent} />
+        <ComponentAdd
+          isOpen={isComponentAddOpen}
+          handleClose={this.hideAddComponent}
+          groups={this.groups}
+        />
+        <DroppableLayer
           handleClickMenu={this.handleClickMenu}
           handleComponentDrop={this.handleComponentDrop}
-          components={components}
         >
           <Diagram engine={this.diagram.getEngine()} />
-        </ComponentSelect>
+        </DroppableLayer>
       </>
     );
   }
