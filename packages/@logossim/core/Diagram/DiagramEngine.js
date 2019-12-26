@@ -2,6 +2,7 @@ import createEngine, {
   DiagramModel,
   RightAngleLinkFactory,
 } from '@projectstorm/react-diagrams';
+import { Point } from '@projectstorm/geometry';
 import PortFactory from '../Port/PortFactory';
 
 export default class DiagramEngine {
@@ -77,7 +78,10 @@ export default class DiagramEngine {
 
   getSnappedRelativeMousePoint = event => {
     const { x, y } = this.engine.getRelativeMousePoint(event);
-    return { x: Math.round(x / 15) * 15, y: Math.round(y / 15) * 15 };
+    return new Point(
+      Math.round(x / 15) * 15,
+      Math.round(y / 15) * 15,
+    );
   };
 
   handleComponentDrop = (event, component) => {
@@ -88,9 +92,9 @@ export default class DiagramEngine {
     const point = this.getSnappedRelativeMousePoint(event);
 
     const node = new Model(component.type);
+    this.model.addNode(node);
     node.setPosition(point);
 
-    this.model.addNode(node);
     this.engine.repaintCanvas();
   };
 }
