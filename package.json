@@ -7,6 +7,7 @@
     "start": "cd packages/@logossim/page && react-app-rewired start",
     "build": "cd packages/@logossim/page && react-app-rewired build",
     "test": "cd packages/@logossim/page && react-app-rewired test",
+    "serve": "serve -s packages/@logossim/page/build",
     "analyze": "source-map-explorer 'packages/@logossim/page/build/static/js/*.js'",
     "prettier": "prettier --write \"**/*.{js,jsx}\""
   },
@@ -46,6 +47,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
     "prettier": "^1.18.2",
+    "serve": "^11.2.0",
     "source-map-explorer": "^2.1.2"
   },
   "eslintConfig": {
