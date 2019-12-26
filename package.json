@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cd packages/@logossim/page && react-app-rewired start",
     "build": "cd packages/@logossim/page && react-app-rewired build",
-    "test": "cd packages/@logossim/page && react-app-rewired test"
+    "test": "cd packages/@logossim/page && react-app-rewired test",
+    "analyze": "source-map-explorer 'packages/@logossim/page/build/static/js/*.jsa'"
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
@@ -43,7 +44,8 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "source-map-explorer": "^2.1.2"
   },
   "eslintConfig": {
     "extends": "react-app"
