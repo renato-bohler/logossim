@@ -122,21 +122,10 @@ const ComponentConfigurationInput = ({
 
 const getInitialValues = component =>
   Object.fromEntries(
-    component.configurations.map(configuration => {
-      let initialValue;
-
-      switch (configuration.type) {
-        case 'select':
-          initialValue =
-            configuration.options.find(option => option.default)
-              .value || configuration.options[0].value;
-          break;
-        default:
-          initialValue = null;
-      }
-
-      return [configuration.name, initialValue];
-    }),
+    component.configurations.map(configuration => [
+      configuration.name,
+      configuration.default,
+    ]),
   );
 
 const ComponentConfiguration = ({
