@@ -25,42 +25,26 @@ const PositionedPort = styled(Port)`
   position: absolute;
 
   ${props => {
-    switch (props.name) {
-      case 'in0':
-        return 'left: -5px; top: 10px;';
-      case 'in1':
-        return `left: -5px; top: ${([0, 0, 5, 3, 0, 2][
-          props.numberOfPorts
-        ] -
-          1) *
-          15 +
-          10}px;`;
-      case 'in2':
-        return `left: -5px; top: ${([0, 0, 0, 5, 0, 3][
-          props.numberOfPorts
-        ] -
-          1) *
-          15 +
-          10}px;`;
-      case 'in3':
-        return `left: -5px; top: ${([0, 0, 0, 0, 0, 4][
-          props.numberOfPorts
-        ] -
-          1) *
-          15 +
-          10}px;`;
-      case 'in4':
-        return `left: -5px; top: ${([0, 0, 0, 0, 0, 5][
-          props.numberOfPorts
-        ] -
-          1) *
-          15 +
-          10}px;`;
-      case 'out':
-        return 'right: -5px';
-      default:
-        return 'left: -5px';
+    if (props.name === 'out') return '';
+
+    const spaceBetweenPorts =
+      (5 - props.numberOfPorts) / (props.numberOfPorts - 1);
+
+    const portPosition =
+      props.portNumber === 0
+        ? 1
+        : props.portNumber * (spaceBetweenPorts + 1) + 1;
+
+    const topPosition = portPosition * 15 - 5;
+
+    return `top: ${topPosition}px;`;
+  }}
+
+  ${props => {
+    if (props.name === 'out') {
+      return 'right: -5px';
     }
+    return 'left: -5px';
   }};
 `;
 
@@ -108,6 +92,7 @@ const AndWidget = props => {
             port={port}
             engine={engine}
             numberOfPorts={INPUT_PORTS_NUMBER}
+            portNumber={i}
           />
         );
       })}
