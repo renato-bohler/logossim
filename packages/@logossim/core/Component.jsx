@@ -7,6 +7,7 @@ export default class Component extends AbstractReactFactory {
     name,
     description,
     group,
+    configurations = [],
     model,
     widget,
     icon,
@@ -15,6 +16,7 @@ export default class Component extends AbstractReactFactory {
     this.name = name;
     this.description = description;
     this.group = group;
+    this.configurations = configurations;
     this.Model = model;
     this.Widget = widget;
     this.Icon = icon;

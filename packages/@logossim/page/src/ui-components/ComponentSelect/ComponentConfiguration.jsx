@@ -12,6 +12,7 @@ const DragArea = styled.div`
   justify-content: center;
 
   height: 200px;
+  margin-bottom: 32px;
 
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
   background-image: linear-gradient(
@@ -50,6 +51,67 @@ const Title = styled.h1`
   text-align: center;
 `;
 
+const ComponentConfigurationInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+
+  label {
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+
+    background: #eee;
+    border: 1px solid gray;
+    border-radius: 8px;
+
+    position: relative;
+    top: 0.8em;
+
+    width: max-content;
+    margin-left: 15px;
+    padding: 0 8px;
+  }
+
+  select {
+    background: white;
+    border: 1px solid gray;
+    border-radius: 25px;
+
+    font-size: 1.2em;
+
+    padding: 10px 0 5px 16px;
+  }
+`;
+
+const ComponentConfigurationInput = ({
+  name,
+  type,
+  label,
+  options = [],
+  componentType,
+}) => {
+  switch (type) {
+    case 'select':
+      return (
+        <>
+          <label htmlFor={name}>{label}</label>
+          <select id={name}>
+            {options.map(option => (
+              <option value={option.value} key={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </>
+      );
+    default:
+      throw new Error(
+        `[Logossim] Invalid configuration type for ${componentType}: ${type}`,
+      );
+  }
+};
+
 const ComponentConfiguration = ({
   component,
   handleClose,
@@ -74,6 +136,19 @@ const ComponentConfiguration = ({
             handleClose={handleClose}
           />
         </DragArea>
+
+        <form>
+          {component.configurations.map(configuration => (
+            <ComponentConfigurationInputContainer
+              key={configuration.name}
+            >
+              <ComponentConfigurationInput
+                componentType={component.type}
+                {...configuration}
+              />
+            </ComponentConfigurationInputContainer>
+          ))}
+        </form>
       </Content>
     </>
   );
