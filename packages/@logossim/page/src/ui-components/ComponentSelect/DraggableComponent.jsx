@@ -3,16 +3,18 @@ import React from 'react';
 const engineStub = {
   registerListener: () => {},
   getCanvas: () => {},
+  getPortCoords: () => {},
 };
 
 const nodeStub = {
-  getPort: () => {},
+  getPort: () => ({ updateCoords: () => {} }),
   getID: () => {},
   options: { selected: false },
 };
 
 const DraggableComponent = ({
   component: { type, Widget },
+  configurations,
   handleClose,
 }) => (
   <div
@@ -28,13 +30,17 @@ const DraggableComponent = ({
         'component',
         JSON.stringify({
           type,
+          configurations,
         }),
       );
 
       setTimeout(handleClose);
     }}
   >
-    <Widget engine={engineStub} node={nodeStub} />
+    <Widget
+      engine={engineStub}
+      node={{ ...nodeStub, configurations }}
+    />
   </div>
 );
 

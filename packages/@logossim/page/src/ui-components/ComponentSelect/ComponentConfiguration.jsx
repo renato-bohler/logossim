@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Formik } from 'formik';
 
 import { Header, Content, IconButton } from './ComponentLayout';
 import Back from '../Icons/Back';
@@ -85,18 +86,25 @@ const ComponentConfigurationInputContainer = styled.div`
 `;
 
 const ComponentConfigurationInput = ({
+  handleChange,
+  value,
+  componentType,
   name,
   type,
   label,
   options = [],
-  componentType,
 }) => {
   switch (type) {
     case 'select':
       return (
         <>
           <label htmlFor={name}>{label}</label>
-          <select id={name}>
+          <select
+            id={name}
+            name={name}
+            value={value}
+            onChange={handleChange}
+          >
             {options.map(option => (
               <option value={option.value} key={option.value}>
                 {option.label}
@@ -112,46 +120,72 @@ const ComponentConfigurationInput = ({
   }
 };
 
+const getInitialValues = component =>
+  Object.fromEntries(
+    component.configurations.map(configuration => {
+      let initialValue;
+
+      switch (configuration.type) {
+        case 'select':
+          initialValue =
+            configuration.options.find(option => option.default)
+              .value || configuration.options[0].value;
+          break;
+        default:
+          initialValue = null;
+      }
+
+      return [configuration.name, initialValue];
+    }),
+  );
+
 const ComponentConfiguration = ({
   component,
   handleClose,
   handleBack,
-}) => {
-  return (
-    <>
-      <Header>
-        <IconButton first onClick={handleBack}>
-          <Back />
-        </IconButton>
-        <Title>Configure component</Title>
-        <IconButton last onClick={handleClose}>
-          <Close />
-        </IconButton>
-      </Header>
+}) => (
+  <>
+    <Header>
+      <IconButton first onClick={handleBack}>
+        <Back />
+      </IconButton>
+      <Title>Configure component</Title>
+      <IconButton last onClick={handleClose}>
+        <Close />
+      </IconButton>
+    </Header>
 
-      <Content>
-        <DragArea>
-          <DraggableComponent
-            component={component}
-            handleClose={handleClose}
-          />
-        </DragArea>
-
-        <form>
-          {component.configurations.map(configuration => (
-            <ComponentConfigurationInputContainer
-              key={configuration.name}
-            >
-              <ComponentConfigurationInput
-                componentType={component.type}
-                {...configuration}
+    <Content>
+      <Formik initialValues={getInitialValues(component)}>
+        {({ values, handleChange }) => (
+          <>
+            <DragArea>
+              <DraggableComponent
+                component={component}
+                configurations={values}
+                handleClose={handleClose}
               />
-            </ComponentConfigurationInputContainer>
-          ))}
-        </form>
-      </Content>
-    </>
-  );
-};
+            </DragArea>
+
+            <form>
+              {component.configurations.map(configuration => (
+                <ComponentConfigurationInputContainer
+                  key={configuration.name}
+                >
+                  <ComponentConfigurationInput
+                    handleChange={handleChange}
+                    value={values[configuration.name]}
+                    componentType={component.type}
+                    {...configuration}
+                  />
+                </ComponentConfigurationInputContainer>
+              ))}
+            </form>
+          </>
+        )}
+      </Formik>
+    </Content>
+  </>
+);
 
 export default ComponentConfiguration;

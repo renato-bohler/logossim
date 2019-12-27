@@ -7,7 +7,6 @@ import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
 import ComponentSelectButton from './ui-components/Buttons/ComponentSelectButton';
 import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
 
-import defaultCircuit from './defaultCircuit';
 import './App.css';
 
 class App extends Component {
@@ -15,7 +14,6 @@ class App extends Component {
     super(props);
 
     this.diagram = new DiagramEngine(components);
-    this.diagram.load(defaultCircuit);
     this.state = {
       circuit: undefined,
       isComponentSelectOpen: false,
@@ -95,7 +93,6 @@ class App extends Component {
           isOpen={isComponentSelectOpen}
           handleClose={this.hideAddComponent}
           groups={this.groups}
-          engine={this.diagram.getEngine()}
         />
         <Diagram engine={this.diagram} />
       </>

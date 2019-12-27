@@ -38,7 +38,7 @@ const Modal = styled.div`
   z-index: 4;
 `;
 
-const ComponentSelect = ({ isOpen, handleClose, groups, engine }) => {
+const ComponentSelect = ({ isOpen, handleClose, groups }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
 
   if (!isOpen) return null;
@@ -54,7 +54,6 @@ const ComponentSelect = ({ isOpen, handleClose, groups, engine }) => {
             }}
             handleBack={() => setSelectedComponent(null)}
             component={selectedComponent}
-            engine={engine}
           />
         ) : (
           <ComponentSearch

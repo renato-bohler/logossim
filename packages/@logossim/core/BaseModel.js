@@ -2,12 +2,14 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 import PortModel from './Port/PortModel';
 
 export default class BaseModel extends NodeModel {
-  constructor(type) {
+  constructor(type, configurations) {
     super({ type });
 
-    this.initialize();
+    this.initialize(configurations);
 
-    this.extras = {
+    this.configurations = configurations;
+
+    this.functions = {
       onSimulationStart: this.onSimulationStart,
       onSimulationEnd: this.onSimulationEnd,
       step: this.step,
@@ -15,11 +17,22 @@ export default class BaseModel extends NodeModel {
   }
 
   deSerialize(obj, engine) {
-    super.deSerialize({ ...obj, extras: this.extras }, engine);
+    super.deSerialize(
+      {
+        ...obj,
+        functions: this.functions,
+        configurations: this.configurations,
+      },
+      engine,
+    );
   }
 
   serialize() {
-    return { ...super.serialize(), extras: this.extras };
+    return {
+      ...super.serialize(),
+      functions: this.functions,
+      configurations: this.configurations,
+    };
   }
 
   addPort(port) {

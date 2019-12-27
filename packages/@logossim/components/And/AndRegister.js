@@ -21,6 +21,7 @@ export default new Component({
         {
           label: 'Two',
           value: 2,
+          default: true,
         },
         {
           label: 'Three',
