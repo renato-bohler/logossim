@@ -12,24 +12,20 @@ export default new Component({
     {
       name: 'INPUT_PORTS_NUMBER',
       type: 'select',
+      default: '2',
       label: 'Number of input ports',
       options: [
         {
-          label: 'One',
-          value: 1,
-        },
-        {
           label: 'Two',
-          value: 2,
-          default: true,
+          value: '2',
         },
         {
           label: 'Three',
-          value: 3,
+          value: '3',
         },
         {
-          label: 'Four',
-          value: 4,
+          label: 'Five',
+          value: '5',
         },
       ],
     },

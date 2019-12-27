@@ -29,7 +29,33 @@ const PositionedPort = styled(Port)`
       case 'in0':
         return 'left: -5px; top: 10px;';
       case 'in1':
-        return 'left: -5px; bottom: 10px;';
+        return `left: -5px; top: ${([0, 0, 5, 3, 0, 2][
+          props.numberOfPorts
+        ] -
+          1) *
+          15 +
+          10}px;`;
+      case 'in2':
+        return `left: -5px; top: ${([0, 0, 0, 5, 0, 3][
+          props.numberOfPorts
+        ] -
+          1) *
+          15 +
+          10}px;`;
+      case 'in3':
+        return `left: -5px; top: ${([0, 0, 0, 0, 0, 4][
+          props.numberOfPorts
+        ] -
+          1) *
+          15 +
+          10}px;`;
+      case 'in4':
+        return `left: -5px; top: ${([0, 0, 0, 0, 0, 5][
+          props.numberOfPorts
+        ] -
+          1) *
+          15 +
+          10}px;`;
       case 'out':
         return 'right: -5px';
       default:
@@ -58,21 +84,33 @@ export const Shape = ({ size = 90 }) => (
 
 const AndWidget = props => {
   const { node, engine } = props;
+  const {
+    configurations,
+    options: { selected },
+  } = node;
+
+  const INPUT_PORTS_NUMBER = parseInt(
+    configurations.INPUT_PORTS_NUMBER,
+    10,
+  );
 
   return (
-    <Wrapper selected={node.options.selected}>
-      <PositionedPort
-        name="in0"
-        node={node}
-        port={node.getPort('in0')}
-        engine={engine}
-      />
-      <PositionedPort
-        name="in1"
-        node={node}
-        port={node.getPort('in1')}
-        engine={engine}
-      />
+    <Wrapper selected={selected}>
+      {[...new Array(INPUT_PORTS_NUMBER)].map((_, i) => {
+        const name = `in${i}`;
+        const port = node.getPort(name);
+
+        return (
+          <PositionedPort
+            key={name}
+            name={name}
+            node={node}
+            port={port}
+            engine={engine}
+            numberOfPorts={INPUT_PORTS_NUMBER}
+          />
+        );
+      })}
       <PositionedPort
         name="out"
         node={node}
