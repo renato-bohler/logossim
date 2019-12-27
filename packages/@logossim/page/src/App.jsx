@@ -70,7 +70,7 @@ class App extends Component {
 
     const point = this.diagram.getRelativeMousePoint(event);
 
-    const model = new Model(component.type);
+    const model = new Model(component.type, component.configurations);
     model.setPosition(point);
 
     this.diagram.addComponent(model);

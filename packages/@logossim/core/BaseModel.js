@@ -16,17 +16,6 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  deSerialize(obj, engine) {
-    super.deSerialize(
-      {
-        ...obj,
-        functions: this.functions,
-        configurations: this.configurations,
-      },
-      engine,
-    );
-  }
-
   serialize() {
     return {
       ...super.serialize(),
