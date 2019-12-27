@@ -25,6 +25,7 @@
     "@testing-library/user-event": "^7.1.2",
     "closest": "^0.0.1",
     "dagre": "^0.8.5",
+    "formik": "^2.0.8",
     "lodash": "^4.17.15",
     "mathjs": "^6.2.5",
     "pathfinding": "^0.4.18",
