@@ -74,7 +74,8 @@ const ComponentConfigurationInputContainer = styled.div`
     padding: 0 8px;
   }
 
-  select {
+  select,
+  input {
     background: white;
     border: 1px solid gray;
     border-radius: 25px;
@@ -83,6 +84,11 @@ const ComponentConfigurationInputContainer = styled.div`
 
     padding: 10px 0 5px 16px;
   }
+`;
+
+const FormScroll = styled.form`
+  height: 400px;
+  overflow-y: auto;
 `;
 
 const ComponentConfigurationInput = ({
@@ -111,6 +117,32 @@ const ComponentConfigurationInput = ({
               </option>
             ))}
           </select>
+        </>
+      );
+    case 'number':
+      return (
+        <>
+          <label htmlFor={name}>{label}</label>
+          <input
+            id={name}
+            name={name}
+            value={value}
+            onChange={handleChange}
+            type="number"
+          />
+        </>
+      );
+    case 'text':
+      return (
+        <>
+          <label htmlFor={name}>{label}</label>
+          <input
+            id={name}
+            name={name}
+            value={value}
+            onChange={handleChange}
+            type="text"
+          />
         </>
       );
     default:
@@ -156,7 +188,7 @@ const ComponentConfiguration = ({
               />
             </DragArea>
 
-            <form>
+            <FormScroll autoComplete="off">
               {component.configurations.map(configuration => (
                 <ComponentConfigurationInputContainer
                   key={configuration.name}
@@ -169,7 +201,7 @@ const ComponentConfiguration = ({
                   />
                 </ComponentConfigurationInputContainer>
               ))}
-            </form>
+            </FormScroll>
           </>
         )}
       </Formik>
