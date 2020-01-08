@@ -13,6 +13,7 @@ deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
+  local_dir: packages/@logossim/page/build
   verbose: true
   on:
     branch: master

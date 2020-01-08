@@ -1,5 +1,6 @@
 {
   "name": "@logossim/page",
+  "homepage" : "https://renato-bohler.github.io/logossim",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
