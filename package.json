@@ -4,9 +4,9 @@
     "packages/@logossim/*"
   ],
   "scripts": {
-    "start": "cd packages/@logossim/page && react-app-rewired start",
-    "build": "cd packages/@logossim/page && react-app-rewired build",
-    "test": "cd packages/@logossim/page && react-app-rewired test",
+    "start": "cd packages/@logossim/page && yarn start",
+    "build": "cd packages/@logossim/page && yarn build",
+    "test": "cd packages/@logossim/page && yarn test",
     "serve": "serve -s packages/@logossim/page/build",
     "analyze": "source-map-explorer 'packages/@logossim/page/build/static/js/*.js'",
     "prettier": "prettier --write \"**/*.{js,jsx}\""

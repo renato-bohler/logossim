@@ -2,6 +2,11 @@
   "name": "@logossim/page",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test"
+  },
   "dependencies": {
     "@logossim/core": "0.0.1",
     "@logossim/components": "0.0.1"
