@@ -1,25 +1,31 @@
 {
   "private": true,
-  "workspaces": ["packages/@logossim/*"],
+  "workspaces": [
+    "packages/@logossim/*"
+  ],
   "scripts": {
     "start": "cd packages/@logossim/page && react-app-rewired start",
     "build": "cd packages/@logossim/page && react-app-rewired build",
-    "test": "cd packages/@logossim/page && react-app-rewired test"
+    "test": "cd packages/@logossim/page && react-app-rewired test",
+    "serve": "serve -s packages/@logossim/page/build",
+    "analyze": "source-map-explorer 'packages/@logossim/page/build/static/js/*.js'",
+    "prettier": "prettier --write \"**/*.{js,jsx}\""
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
-    "@projectstorm/react-canvas-core": "^6.0.1-beta.6",
-    "@projectstorm/react-diagrams": "^6.0.1-beta.6",
-    "@projectstorm/react-diagrams-core": "^6.0.1-beta.6",
-    "@projectstorm/react-diagrams-defaults": "^6.0.1-beta.6",
-    "@projectstorm/react-diagrams-routing": "^6.0.1-beta.6",
+    "@projectstorm/react-canvas-core": "^6.0.1-beta.7",
+    "@projectstorm/react-diagrams": "^6.0.1-beta.7",
+    "@projectstorm/react-diagrams-core": "^6.0.1-beta.7",
+    "@projectstorm/react-diagrams-defaults": "^6.0.1-beta.7",
+    "@projectstorm/react-diagrams-routing": "^6.0.1-beta.7",
     "@testing-library/dom": "^6.11.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "closest": "^0.0.1",
     "dagre": "^0.8.5",
+    "formik": "^2.0.8",
     "lodash": "^4.17.15",
     "mathjs": "^6.2.5",
     "pathfinding": "^0.4.18",
@@ -41,7 +47,9 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.7.0",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "serve": "^11.2.0",
+    "source-map-explorer": "^2.1.2"
   },
   "eslintConfig": {
     "extends": "react-app"

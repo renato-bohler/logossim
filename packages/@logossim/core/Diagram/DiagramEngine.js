@@ -2,17 +2,19 @@ import createEngine, {
   DiagramModel,
   RightAngleLinkFactory,
 } from '@projectstorm/react-diagrams';
+import { Point } from '@projectstorm/geometry';
 import PortFactory from '../Port/PortFactory';
 
 export default class DiagramEngine {
   constructor(components) {
+    this.components = components;
     this.locked = false;
 
-    this.initializeEngine(components);
+    this.initializeEngine();
     this.initializeModel();
   }
 
-  initializeEngine = components => {
+  initializeEngine = () => {
     this.engine = createEngine({
       registerDefaultZoomCanvasAction: false,
     });
@@ -29,7 +31,7 @@ export default class DiagramEngine {
       .getLinkFactories()
       .registerFactory(new RightAngleLinkFactory());
 
-    this.registerComponents(components);
+    this.registerComponents();
   };
 
   initializeModel = () => {
@@ -46,8 +48,8 @@ export default class DiagramEngine {
 
   getEngine = () => this.engine;
 
-  registerComponents = components => {
-    components.forEach(component => {
+  registerComponents = () => {
+    this.components.forEach(component => {
       this.engine.getNodeFactories().registerFactory(component);
     });
   };
@@ -72,5 +74,29 @@ export default class DiagramEngine {
 
   realignGrid = ({ offsetX, offsetY }) => {
     document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+  };
+
+  getSnappedRelativeMousePoint = event => {
+    const { x, y } = this.engine.getRelativeMousePoint(event);
+    return new Point(
+      Math.round(x / 15) * 15,
+      Math.round(y / 15) * 15,
+    );
+  };
+
+  handleComponentDrop = (event, component) => {
+    const { Model } = this.components.find(
+      c => c.type === component.type,
+    );
+
+    const point = event
+      ? this.getSnappedRelativeMousePoint(event)
+      : new Point(0, 0);
+
+    const node = new Model(component.type, component.configurations);
+    this.model.addNode(node);
+    node.setPosition(point);
+
+    this.engine.repaintCanvas();
   };
 }

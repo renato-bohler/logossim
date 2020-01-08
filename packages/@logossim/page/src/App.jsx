@@ -1,54 +1,37 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+
 import { DiagramEngine, Diagram } from '@logossim/core';
 import components from '@logossim/components';
 
-import defaultCircuit from './defaultCircuit';
+import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
+import ComponentSelectButton from './ui-components/Buttons/ComponentSelectButton';
+import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
+
 import './App.css';
-
-const ButtonsContainer = styled.div`
-  position: absolute;
-  right: 0;
-
-  z-index: 100;
-`;
-
-const Button = styled.button.attrs((...props) => ({
-  ...props,
-  type: 'button',
-}))`
-  border: none;
-  border-radius: 5px;
-  background: ${props => {
-    switch (props.color) {
-      case 'green':
-        return '#07d26b';
-      case 'orange':
-        return 'orange';
-      default:
-        return 'gray';
-    }
-  }};
-
-  color: white;
-  font-weight: bold;
-  font-size: 1.2em;
-
-  min-width: 110px;
-  padding: 5px 20px;
-  margin: 5px;
-`;
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.diagram = new DiagramEngine(components);
-    this.diagram.load(defaultCircuit);
     this.state = {
       circuit: undefined,
+      isComponentSelectOpen: false,
     };
+
+    this.groups = this.groupComponents();
   }
+
+  groupComponents = () =>
+    components.reduce((acc, component) => {
+      const group = acc.find(g => g.name === component.group);
+
+      if (group) group.components.push(component);
+      else
+        acc.push({ name: component.group, components: [component] });
+
+      return acc;
+    }, []);
 
   handleClickSave = () => {
     const serialized = this.diagram.serialize();
@@ -67,24 +50,40 @@ class App extends Component {
     this.diagram.load(circuit);
   };
 
-  handleClickLock = () =>
+  handleClickLock = () => {
     this.diagram.setLocked(!this.diagram.isLocked());
+    this.forceUpdate();
+  };
+
+  showAddComponent = () =>
+    this.setState({
+      isComponentSelectOpen: true,
+    });
+
+  hideAddComponent = () =>
+    this.setState({
+      isComponentSelectOpen: false,
+    });
 
   render() {
+    const { isComponentSelectOpen } = this.state;
+
     return (
       <>
-        <ButtonsContainer>
-          <Button color="green" onClick={this.handleClickSave}>
-            Save
-          </Button>
-          <Button color="orange" onClick={this.handleClickLoad}>
-            Load
-          </Button>
-          <Button onClick={this.handleClickLock}>
-            {this.diagram.isLocked() ? 'Unlock' : 'Lock'}
-          </Button>
-        </ButtonsContainer>
-        <Diagram engine={this.diagram.getEngine()} />
+        <DiagramStateButtons
+          handleClickSave={this.handleClickSave}
+          handleClickLoad={this.handleClickLoad}
+          handleClickLock={this.handleClickLock}
+          isLocked={this.diagram.isLocked()}
+        />
+        <ComponentSelectButton handleClick={this.showAddComponent} />
+        <ComponentSelect
+          isOpen={isComponentSelectOpen}
+          groups={this.groups}
+          handleClose={this.hideAddComponent}
+          handleComponentDrop={this.diagram.handleComponentDrop}
+        />
+        <Diagram engine={this.diagram} />
       </>
     );
   }

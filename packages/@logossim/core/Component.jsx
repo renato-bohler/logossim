@@ -1,12 +1,25 @@
-import * as React from 'react';
+import React from 'react';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 
 export default class Component extends AbstractReactFactory {
-  constructor(name, Model, Widget) {
-    super(name);
+  constructor({
+    type,
+    name,
+    description,
+    group,
+    configurations = [],
+    model,
+    widget,
+    icon,
+  }) {
+    super(type);
     this.name = name;
-    this.Model = Model;
-    this.Widget = Widget;
+    this.description = description;
+    this.group = group;
+    this.configurations = configurations;
+    this.Model = model;
+    this.Widget = widget;
+    this.Icon = icon;
   }
 
   generateReactWidget(event) {
@@ -14,8 +27,9 @@ export default class Component extends AbstractReactFactory {
     return <Widget engine={this.engine} node={event.model} />;
   }
 
-  generateModel() {
+  generateModel(event) {
     const { Model } = this;
-    return new Model(this.type);
+    const { type, configurations } = event.initialConfig;
+    return new Model(type, configurations);
   }
 }
