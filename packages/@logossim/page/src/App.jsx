@@ -65,18 +65,6 @@ class App extends Component {
       isComponentSelectOpen: false,
     });
 
-  handleComponentDrop = (event, component) => {
-    const { Model } = components.find(c => c.type === component.type);
-
-    const point = this.diagram.getRelativeMousePoint(event);
-
-    const model = new Model(component.type, component.configurations);
-    model.setPosition(point);
-
-    this.diagram.addComponent(model);
-    this.diagram.repaint();
-  };
-
   render() {
     const { isComponentSelectOpen } = this.state;
 
@@ -91,8 +79,9 @@ class App extends Component {
         <ComponentSelectButton handleClick={this.showAddComponent} />
         <ComponentSelect
           isOpen={isComponentSelectOpen}
-          handleClose={this.hideAddComponent}
           groups={this.groups}
+          handleClose={this.hideAddComponent}
+          handleComponentDrop={this.diagram.handleComponentDrop}
         />
         <Diagram engine={this.diagram} />
       </>

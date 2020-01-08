@@ -89,7 +89,9 @@ export default class DiagramEngine {
       c => c.type === component.type,
     );
 
-    const point = this.getSnappedRelativeMousePoint(event);
+    const point = event
+      ? this.getSnappedRelativeMousePoint(event)
+      : new Point(0, 0);
 
     const node = new Model(component.type, component.configurations);
     this.model.addNode(node);

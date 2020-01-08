@@ -87,7 +87,7 @@ const ComponentConfigurationInputContainer = styled.div`
 `;
 
 const FormScroll = styled.form`
-  height: 400px;
+  height: 375px;
   overflow-y: auto;
 `;
 
@@ -152,6 +152,34 @@ const ComponentConfigurationInput = ({
   }
 };
 
+const Footer = styled.div`
+  display: flex;
+`;
+
+const Hint = styled.span`
+  font-size: 0.8em;
+  font-style: italic;
+  align-self: center;
+  text-align: right;
+  margin-right: 10px;
+`;
+
+const SubmitButton = styled.button.attrs(({ ...props }) => ({
+  ...props,
+  type: 'button',
+}))`
+  border: none;
+  border-radius: 5px;
+  background: #07d26b;
+
+  color: white;
+  font-size: 1.2em;
+
+  width: 100%;
+  padding: 5px 20px;
+  margin: 5px;
+`;
+
 const getInitialValues = component =>
   Object.fromEntries(
     component.configurations.map(configuration => [
@@ -164,6 +192,7 @@ const ComponentConfiguration = ({
   component,
   handleClose,
   handleBack,
+  handleComponentDrop,
 }) => (
   <>
     <Header>
@@ -202,6 +231,22 @@ const ComponentConfiguration = ({
                 </ComponentConfigurationInputContainer>
               ))}
             </FormScroll>
+
+            <Footer>
+              <Hint>(hint: you can also drag the component)</Hint>
+              <SubmitButton
+                type="button"
+                onClick={() => {
+                  handleComponentDrop(null, {
+                    type: component.type,
+                    configurations: values,
+                  });
+                  handleClose();
+                }}
+              >
+                Add to circuit
+              </SubmitButton>
+            </Footer>
           </>
         )}
       </Formik>

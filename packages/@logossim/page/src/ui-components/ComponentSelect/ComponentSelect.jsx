@@ -38,7 +38,12 @@ const Modal = styled.div`
   z-index: 4;
 `;
 
-const ComponentSelect = ({ isOpen, handleClose, groups }) => {
+const ComponentSelect = ({
+  isOpen,
+  groups,
+  handleClose,
+  handleComponentDrop,
+}) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
 
   if (!isOpen) return null;
@@ -52,6 +57,7 @@ const ComponentSelect = ({ isOpen, handleClose, groups }) => {
               handleClose();
               setSelectedComponent(null);
             }}
+            handleComponentDrop={handleComponentDrop}
             handleBack={() => setSelectedComponent(null)}
             component={selectedComponent}
           />

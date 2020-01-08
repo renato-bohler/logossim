@@ -9,7 +9,10 @@ const Container = styled.div`
   z-index: 2;
 `;
 
-const Button = styled.button`
+const Button = styled.button.attrs(({ ...props }) => ({
+  ...props,
+  type: 'button',
+}))`
   border: none;
   border-radius: 100%;
 
