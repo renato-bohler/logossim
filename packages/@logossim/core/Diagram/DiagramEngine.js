@@ -1,8 +1,9 @@
 import createEngine, {
   DiagramModel,
-  RightAngleLinkFactory,
 } from '@projectstorm/react-diagrams';
 import { Point } from '@projectstorm/geometry';
+
+import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
 
 export default class DiagramEngine {
@@ -27,9 +28,7 @@ export default class DiagramEngine {
 
     this.engine.getPortFactories().registerFactory(new PortFactory());
 
-    this.engine
-      .getLinkFactories()
-      .registerFactory(new RightAngleLinkFactory());
+    this.engine.getLinkFactories().registerFactory(new LinkFactory());
 
     this.registerComponents();
   };

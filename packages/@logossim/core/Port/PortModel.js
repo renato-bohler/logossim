@@ -1,7 +1,6 @@
-import {
-  PortModel as RDPortModel,
-  RightAngleLinkModel,
-} from '@projectstorm/react-diagrams';
+import { PortModel as RDPortModel } from '@projectstorm/react-diagrams';
+
+import LinkModel from '../Link/LinkModel';
 
 export default class PortModel extends RDPortModel {
   constructor(options = {}) {
@@ -21,6 +20,6 @@ export default class PortModel extends RDPortModel {
   }
 
   createLinkModel() {
-    return new RightAngleLinkModel();
+    return new LinkModel();
   }
 }
