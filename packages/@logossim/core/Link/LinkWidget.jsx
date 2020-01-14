@@ -1,10 +1,11 @@
 import React, { Component, MouseEvent } from 'react';
-import {
-  LinkWidget as RDLinkWidget,
-  PointModel,
-} from '@projectstorm/react-diagrams-core';
+import { LinkWidget as RDLinkWidget } from '@projectstorm/react-diagrams-core';
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
 import { Point } from '@projectstorm/geometry';
+
+import LinkPort from '../LinkPort/LinkPort';
+import LinkPortModel from '../LinkPort/LinkPortModel';
+import LinkPointModel from '../LinkPoint/LinkPointModel';
 
 export default class LinkWidget extends Component {
   constructor(props) {
@@ -73,7 +74,7 @@ export default class LinkWidget extends Component {
 
     // If path is first or last add another point to keep node port on its position
     if (index === 0) {
-      const point = new PointModel({
+      const point = new LinkPointModel({
         link,
         position: new Point(
           points[index].getX(),
@@ -86,7 +87,7 @@ export default class LinkWidget extends Component {
     }
 
     if (index === points.length - 2) {
-      const point = new PointModel({
+      const point = new LinkPointModel({
         link,
         position: new Point(
           points[index + 1].getX(),
@@ -164,6 +165,7 @@ export default class LinkWidget extends Component {
     auxPoints[index + 1][
       coordinate
     ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
+
     points[index].setPosition(auxPoints[index]);
     points[index + 1].setPosition(auxPoints[index + 1]);
   }
@@ -206,7 +208,7 @@ export default class LinkWidget extends Component {
   };
 
   render() {
-    const { link } = this.props;
+    const { link, diagramEngine } = this.props;
     const { canDrag } = this.state;
 
     // Ensure id is present for all points on the path
@@ -230,7 +232,7 @@ export default class LinkWidget extends Component {
     if (link.getTargetPort() === null && points.length === 2) {
       [...Array(2)].forEach(() => {
         link.addPoint(
-          new PointModel({
+          new LinkPointModel({
             link,
             position: new Point(pointLeft.getX(), pointRight.getY()),
           }),
@@ -295,7 +297,7 @@ export default class LinkWidget extends Component {
     // NOTE: It doesn't matter if check is for dy or dx
     if (points.length === 2 && dy !== 0 && !canDrag) {
       link.addPoint(
-        new PointModel({
+        new LinkPointModel({
           link,
           position: new Point(pointLeft.getX(), pointRight.getY()),
         }),
@@ -330,10 +332,29 @@ export default class LinkWidget extends Component {
     }
 
     this.refPaths = [];
+
     return (
-      <g data-default-link-test={link.getOptions().testName}>
-        {paths}
-      </g>
+      <>
+        <g data-default-link-test={link.getOptions().testName}>
+          {paths}
+        </g>
+        {Object.entries(
+          link
+            .getSourcePort()
+            .getNode()
+            .getPorts(),
+        )
+          .filter(([name, port]) => port instanceof LinkPortModel)
+          .map(([name, port]) => (
+            <LinkPort
+              key={name}
+              name={name}
+              node={link.getSourcePort().getNode()}
+              port={port}
+              engine={diagramEngine}
+            />
+          ))}
+      </>
     );
   }
 }

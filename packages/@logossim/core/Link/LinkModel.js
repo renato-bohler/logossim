@@ -1,4 +1,9 @@
+import { BaseModel } from '@projectstorm/react-canvas-core';
+import { Point } from '@projectstorm/geometry';
+import { PointModel } from '@projectstorm/react-diagrams-core';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
+
+import LinkPointModel from '../LinkPoint/LinkPointModel';
 
 export default class LinkModel extends DefaultLinkModel {
   constructor(options = {}) {
@@ -30,12 +35,38 @@ export default class LinkModel extends DefaultLinkModel {
   addPoint(pointModel, index = 1) {
     super.addPoint(pointModel, index);
     this.setFirstAndLastPathsDirection();
+
     return pointModel;
+  }
+
+  remove() {
+    this.getPoints()
+      .filter(point => point instanceof LinkPointModel)
+      .forEach(point => point.removePort());
+    super.remove();
   }
 
   deserialize(event) {
     super.deserialize(event);
-    this.setFirstAndLastPathsDirection();
+
+    // TODO: we shouldn't be doing this, I feel
+    setTimeout(() => {
+      this.points = event.data.points.map(point => {
+        const Model =
+          point.type === 'point' ? PointModel : LinkPointModel;
+
+        const p = new Model({
+          link: this,
+          position: new Point(point.x, point.y),
+        });
+        p.deserialize({
+          ...event,
+          data: point,
+        });
+        return p;
+      });
+      this.setFirstAndLastPathsDirection();
+    });
   }
 
   setManuallyFirstAndLastPathsDirection(first, last) {
