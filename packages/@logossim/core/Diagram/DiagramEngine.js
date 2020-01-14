@@ -3,6 +3,10 @@ import createEngine, {
 } from '@projectstorm/react-diagrams';
 import { Point } from '@projectstorm/geometry';
 
+import initial from './initial';
+
+import States from './states/States';
+
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
 import LinkPortFactory from '../LinkPort/LinkPortFactory';
@@ -14,6 +18,8 @@ export default class DiagramEngine {
 
     this.initializeEngine();
     this.initializeModel();
+
+    this.load(initial);
   }
 
   initializeEngine = () => {
@@ -21,11 +27,7 @@ export default class DiagramEngine {
       registerDefaultZoomCanvasAction: false,
     });
 
-    // TODO: this may not be the best way to disallow loose links
-    const state = this.engine.getStateMachine().getCurrentState();
-    if (state) {
-      state.dragNewLink.config.allowLooseLinks = false;
-    }
+    this.engine.getStateMachine().pushState(new States());
 
     this.engine.getPortFactories().registerFactory(new PortFactory());
     this.engine

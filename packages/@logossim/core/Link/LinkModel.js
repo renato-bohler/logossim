@@ -17,6 +17,10 @@ export default class LinkModel extends DefaultLinkModel {
     this.firstPathXdirection = false;
   }
 
+  addBifurcation(link) {
+    console.log('[LinkModel] addBifurcation', link);
+  }
+
   setFirstAndLastPathsDirection() {
     const points = this.getPoints();
 
