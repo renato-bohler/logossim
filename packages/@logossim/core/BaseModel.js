@@ -28,7 +28,6 @@ export default class BaseModel extends NodeModel {
   }
 
   addPort(port) {
-    console.log('[BaseModel] addPort', port);
     if (port instanceof PortModel || port instanceof LinkPortModel) {
       super.addPort(port);
     } else {

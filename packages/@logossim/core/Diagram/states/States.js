@@ -15,14 +15,21 @@ import {
 import BifurcateLinkState from './BifurcateLinkState';
 
 export default class States extends State {
-  constructor() {
+  constructor(options) {
     super({
       name: 'default-diagrams',
     });
+
+    const config = {
+      allowLinksFromLockedPorts: false,
+      allowLooseLinks: false,
+      ...options,
+    };
+
     this.childStates = [new SelectingState()];
     this.dragCanvas = new DragCanvasState();
-    this.dragNewLink = new DragNewLinkState();
-    this.bifurcateLink = new BifurcateLinkState();
+    this.dragNewLink = new DragNewLinkState(config);
+    this.bifurcateLink = new BifurcateLinkState(config);
     this.dragItems = new DragDiagramItemsState();
 
     // determine what was clicked on
@@ -33,6 +40,7 @@ export default class States extends State {
           const element = this.engine
             .getActionEventBus()
             .getModelForEvent(event);
+          console.log('element:', element);
 
           // the canvas was clicked on, transition to the dragging canvas state
           if (!element) {

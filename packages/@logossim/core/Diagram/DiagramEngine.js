@@ -67,7 +67,7 @@ export default class DiagramEngine {
       offsetX: this.model.getOffsetX(),
       offsetY: this.model.getOffsetY(),
     });
-    setTimeout(() => this.engine.repaintCanvas());
+    requestAnimationFrame(() => this.engine.repaintCanvas());
   };
 
   setLocked = locked => {
@@ -77,9 +77,10 @@ export default class DiagramEngine {
 
   isLocked = () => this.locked;
 
-  realignGrid = ({ offsetX, offsetY }) => {
-    document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
-  };
+  realignGrid = ({ offsetX, offsetY }) =>
+    requestAnimationFrame(() => {
+      document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+    });
 
   getSnappedRelativeMousePoint = event => {
     const { x, y } = this.engine.getRelativeMousePoint(event);

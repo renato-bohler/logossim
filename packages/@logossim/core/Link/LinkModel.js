@@ -1,6 +1,3 @@
-import { BaseModel } from '@projectstorm/react-canvas-core';
-import { Point } from '@projectstorm/geometry';
-import { PointModel } from '@projectstorm/react-diagrams-core';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
 
 import LinkPointModel from '../LinkPoint/LinkPointModel';
@@ -12,13 +9,35 @@ export default class LinkModel extends DefaultLinkModel {
       ...options,
     });
 
-    this.lastHoverIndexOfPath = 0;
+    this.isBifurcation = false;
+    this.bifurcations = [];
+    this.totalBifurcations = 0;
+
     this.lastPathXdirection = false;
     this.firstPathXdirection = false;
   }
 
+  performanceTune() {
+    return false;
+  }
+
+  setAsBifurcation() {
+    this.isBifurcation = true;
+  }
+
   addBifurcation(link) {
-    console.log('[LinkModel] addBifurcation', link);
+    this.bifurcations.push(link);
+  }
+
+  removeBifurcation(link) {
+    this.bifurcations = this.bifurcations.filter(
+      b => b.getID() !== link.getID(),
+    );
+    link.remove();
+  }
+
+  getSelectionEntities() {
+    return [...super.getSelectionEntities(), ...this.bifurcations];
   }
 
   setFirstAndLastPathsDirection() {
@@ -44,33 +63,24 @@ export default class LinkModel extends DefaultLinkModel {
   }
 
   remove() {
-    this.getPoints()
-      .filter(point => point instanceof LinkPointModel)
-      .forEach(point => point.removePort());
+    this.bifurcations.forEach(b => b.remove());
+    this.bifurcations = [];
     super.remove();
+  }
+
+  serialize() {
+    return {
+      ...super.serialize(),
+      isBifurcation: this.isBifurcation,
+      bifurcations: this.bifurcations,
+    };
   }
 
   deserialize(event) {
     super.deserialize(event);
 
-    // TODO: we shouldn't be doing this, I feel
-    setTimeout(() => {
-      this.points = event.data.points.map(point => {
-        const Model =
-          point.type === 'point' ? PointModel : LinkPointModel;
-
-        const p = new Model({
-          link: this,
-          position: new Point(point.x, point.y),
-        });
-        p.deserialize({
-          ...event,
-          data: point,
-        });
-        return p;
-      });
-      this.setFirstAndLastPathsDirection();
-    });
+    this.bifurcations = event.data.bifurcations;
+    this.isBifurcation = event.data.isBifurcation;
   }
 
   setManuallyFirstAndLastPathsDirection(first, last) {

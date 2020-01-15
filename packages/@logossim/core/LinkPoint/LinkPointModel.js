@@ -26,7 +26,6 @@ export default class LinkPointModel extends BasePositionModel {
   }
 
   addPort() {
-    console.log('[LinkPointModel] addPort parent:', this.getParent());
     const node = this.getParent()
       .getSourcePort()
       .getNode();
@@ -73,12 +72,10 @@ export default class LinkPointModel extends BasePositionModel {
   }
 
   serialize() {
-    console.log('[LinkPointModel] serialize');
     return { ...super.serialize(), port: this.port };
   }
 
   deserialize(event) {
-    console.log('[LinkPointModel] deserialize:', event);
     super.deserialize(event);
     this.port = event.data.port;
   }

@@ -12,12 +12,6 @@ export default class LinkWidget extends Component {
     super(props);
 
     this.refPaths = [];
-    this.state = {
-      selected: false,
-      canDrag: false,
-    };
-
-    this.draggingIndex = 0;
   }
 
   componentDidUpdate() {
@@ -47,9 +41,9 @@ export default class LinkWidget extends Component {
   }
 
   generateLink(path, extraProps, id) {
-    const { diagramEngine, link } = this.props;
+    const { diagramEngine, link, factory, options = {} } = this.props;
 
-    const { selected } = this.state;
+    const { selected } = options;
 
     const ref = React.createRef();
     this.refPaths.push(ref);
@@ -60,164 +54,39 @@ export default class LinkWidget extends Component {
         path={path}
         selected={selected}
         diagramEngine={diagramEngine}
-        factory={diagramEngine.getFactoryForLink(link)}
+        factory={factory}
         link={link}
         forwardRef={ref}
-        onSelection={s => this.setState({ selected: s })}
         extras={extraProps}
+        onSelection={() => {}}
       />
     );
   }
 
-  calculatePositions(points, event, index, coordinate) {
-    const { link, diagramEngine } = this.props;
-
-    // If path is first or last add another point to keep node port on its position
-    if (index === 0) {
-      const point = new LinkPointModel({
-        link,
-        position: new Point(
-          points[index].getX(),
-          points[index].getY(),
-        ),
-      });
-      link.addPoint(point, index);
-      this.draggingIndex += 1;
-      return;
-    }
-
-    if (index === points.length - 2) {
-      const point = new LinkPointModel({
-        link,
-        position: new Point(
-          points[index + 1].getX(),
-          points[index + 1].getY(),
-        ),
-      });
-      link.addPoint(point, index + 1);
-      return;
-    }
-
-    // Merge two points if it is not close to node port and close to each other
-    if (index - 2 > 0) {
-      const auxPoints = {
-        [index - 2]: points[index - 2].getPosition(),
-        [index + 1]: points[index + 1].getPosition(),
-        [index - 1]: points[index - 1].getPosition(),
-      };
-      if (
-        Math.abs(
-          auxPoints[index - 1][coordinate] -
-            auxPoints[index + 1][coordinate],
-        ) < 5
-      ) {
-        auxPoints[index - 2][
-          coordinate
-        ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
-        auxPoints[index + 1][
-          coordinate
-        ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
-        points[index - 2].setPosition(auxPoints[index - 2]);
-        points[index + 1].setPosition(auxPoints[index + 1]);
-        points[index - 1].remove();
-        points[index - 1].remove();
-        this.draggingIndex -= 2;
-        return;
-      }
-    }
-
-    // Merge two points if it is not close to node port
-    if (index + 2 < points.length - 2) {
-      const auxPoints = {
-        [index + 3]: points[index + 3].getPosition(),
-        [index + 2]: points[index + 2].getPosition(),
-        [index + 1]: points[index + 1].getPosition(),
-        [index]: points[index].getPosition(),
-      };
-      if (
-        Math.abs(
-          auxPoints[index + 1][coordinate] -
-            auxPoints[index + 2][coordinate],
-        ) < 5
-      ) {
-        auxPoints[index][
-          coordinate
-        ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
-        auxPoints[index + 3][
-          coordinate
-        ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
-        points[index].setPosition(auxPoints[index]);
-        points[index + 3].setPosition(auxPoints[index + 3]);
-        points[index + 1].remove();
-        points[index + 1].remove();
-        return;
-      }
-    }
-
-    // If no condition above handled then just update path points position
-    const auxPoints = {
-      [index]: points[index].getPosition(),
-      [index + 1]: points[index + 1].getPosition(),
-    };
-    auxPoints[index][
-      coordinate
-    ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
-    auxPoints[index + 1][
-      coordinate
-    ] = diagramEngine.getRelativeMousePoint(event)[coordinate];
-
-    points[index].setPosition(auxPoints[index]);
-    points[index + 1].setPosition(auxPoints[index + 1]);
-  }
-
-  draggingEvent(event, index) {
+  generateBifurcationSourcePoint() {
     const { link } = this.props;
 
-    const points = link.getPoints();
+    if (!link.isBifurcation) return null;
 
-    /**
-     * Get moving difference.
-     *
-     * `index + 1` will work because links indexes has `length = points.length - 1`
-     */
-    const dx = Math.abs(
-      points[index].getX() - points[index + 1].getX(),
-    );
-    const dy = Math.abs(
-      points[index].getY() - points[index + 1].getY(),
-    );
+    const position = link.getFirstPoint().getPosition();
 
-    // Moving with y direction
-    if (dx === 0) {
-      this.calculatePositions(points, event, index, 'x');
-    } else if (dy === 0) {
-      this.calculatePositions(points, event, index, 'y');
-    }
-    link.setFirstAndLastPathsDirection();
+    return (
+      <circle r={5} fill="gray" cx={position.x} cy={position.y} />
+    );
   }
 
-  handleMove = event => {
-    this.draggingEvent(event, this.draggingIndex);
-  };
-
-  handleUp = () => {
-    // Unregister handlers to avoid multiple event handlers for other links
-    this.setState({ canDrag: false, selected: false });
-    window.removeEventListener('mousemove', this.handleMove);
-    window.removeEventListener('mouseup', this.handleUp);
-  };
-
   render() {
-    const { link, diagramEngine } = this.props;
-    const { canDrag } = this.state;
+    const { link, factory, diagramEngine } = this.props;
 
     // Ensure id is present for all points on the path
     const points = link.getPoints();
+
     const paths = [];
 
     // Get points based on link orientation
     let pointLeft = points[0];
     let pointRight = points[points.length - 1];
+
     let hadToSwitch = false;
     if (pointLeft.getX() > pointRight.getX()) {
       pointLeft = points[points.length - 1];
@@ -264,7 +133,7 @@ export default class LinkWidget extends Component {
     // Render was called but link is not moved but user.
     // Node is moved and in this case fix coordinates to get 90° angle.
     // For loop just for first and last path
-    else if (!canDrag && points.length > 2) {
+    else if (points.length > 2) {
       // Those points and its position only will be moved
       for (let i = 1; i < points.length; i += points.length - 2) {
         if (i - 1 === 0) {
@@ -295,7 +164,7 @@ export default class LinkWidget extends Component {
 
     // If there is existing link which has two points add one
     // NOTE: It doesn't matter if check is for dy or dx
-    if (points.length === 2 && dy !== 0 && !canDrag) {
+    if (points.length === 2 && dy !== 0) {
       link.addPoint(
         new LinkPointModel({
           link,
@@ -311,20 +180,6 @@ export default class LinkWidget extends Component {
           {
             'data-linkid': link.getID(),
             'data-point': j,
-            onMouseDown: (event: MouseEvent) => {
-              if (event.button === 0) {
-                this.setState({ canDrag: true });
-                this.draggingIndex = j;
-                // Register mouse move event to track mouse position
-                // On mouse up these events are unregistered check "this.handleUp"
-                window.addEventListener('mousemove', this.handleMove);
-                window.addEventListener('mouseup', this.handleUp);
-              }
-            },
-            onMouseEnter: () => {
-              this.setState({ selected: true });
-              link.lastHoverIndexOfPath = j;
-            },
           },
           j,
         ),
@@ -338,22 +193,18 @@ export default class LinkWidget extends Component {
         <g data-default-link-test={link.getOptions().testName}>
           {paths}
         </g>
-        {Object.entries(
-          link
-            .getSourcePort()
-            .getNode()
-            .getPorts(),
-        )
-          .filter(([name, port]) => port instanceof LinkPortModel)
-          .map(([name, port]) => (
-            <LinkPort
-              key={name}
-              name={name}
-              node={link.getSourcePort().getNode()}
-              port={port}
-              engine={diagramEngine}
-            />
-          ))}
+        {link.bifurcations.map(
+          bifurcation =>
+            console.log('Rendering bifurcation...', bifurcation) || (
+              <LinkWidget
+                key={bifurcation.getID()}
+                diagramEngine={diagramEngine}
+                link={bifurcation}
+                factory={factory}
+              />
+            ),
+        )}
+        {this.generateBifurcationSourcePoint(link)}
       </>
     );
   }
