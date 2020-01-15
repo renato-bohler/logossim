@@ -1,7 +1,5 @@
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
 
-import LinkPointModel from '../LinkPoint/LinkPointModel';
-
 export default class LinkModel extends DefaultLinkModel {
   constructor(options = {}) {
     super({
@@ -11,14 +9,9 @@ export default class LinkModel extends DefaultLinkModel {
 
     this.isBifurcation = false;
     this.bifurcations = [];
-    this.totalBifurcations = 0;
 
     this.lastPathXdirection = false;
     this.firstPathXdirection = false;
-  }
-
-  performanceTune() {
-    return false;
   }
 
   setAsBifurcation() {
@@ -33,11 +26,15 @@ export default class LinkModel extends DefaultLinkModel {
     this.bifurcations = this.bifurcations.filter(
       b => b.getID() !== link.getID(),
     );
-    link.remove();
   }
 
   getSelectionEntities() {
     return [...super.getSelectionEntities(), ...this.bifurcations];
+  }
+
+  setSelected(selected) {
+    super.setSelected(selected);
+    this.bifurcations.forEach(b => b.setSelected(selected));
   }
 
   setFirstAndLastPathsDirection() {

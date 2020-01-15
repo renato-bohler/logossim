@@ -45,18 +45,12 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           this.bifurcation.getFirstPoint().setPosition(position);
           this.bifurcation.getLastPoint().setPosition(position);
 
-          console.log(
-            this.bifurcation
-              .getPoints()
-              .map(
-                p => `(${p.getPosition().x}, ${p.getPosition().y})`,
-              ),
-          );
           this.bifurcation.setSourcePort(this.source.getSourcePort());
           this.bifurcation.setSelected(true);
 
           this.source.setSelected(false);
           this.source.addBifurcation(this.bifurcation);
+          this.engine.getModel().addLink(this.bifurcation);
         },
       }),
     );
@@ -83,6 +77,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             !this.config.allowLooseLinks
           ) {
             this.source.removeBifurcation(this.bifurcation);
+            this.bifurcation.remove();
             this.engine.repaintCanvas();
           }
         },

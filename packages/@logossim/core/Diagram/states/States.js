@@ -40,7 +40,6 @@ export default class States extends State {
           const element = this.engine
             .getActionEventBus()
             .getModelForEvent(event);
-          console.log('element:', element);
 
           // the canvas was clicked on, transition to the dragging canvas state
           if (!element) {

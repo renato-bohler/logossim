@@ -190,21 +190,10 @@ export default class LinkWidget extends Component {
 
     return (
       <>
+        {this.generateBifurcationSourcePoint(link)}
         <g data-default-link-test={link.getOptions().testName}>
           {paths}
         </g>
-        {link.bifurcations.map(
-          bifurcation =>
-            console.log('Rendering bifurcation...', bifurcation) || (
-              <LinkWidget
-                key={bifurcation.getID()}
-                diagramEngine={diagramEngine}
-                link={bifurcation}
-                factory={factory}
-              />
-            ),
-        )}
-        {this.generateBifurcationSourcePoint(link)}
       </>
     );
   }
