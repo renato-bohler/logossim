@@ -1,5 +1,8 @@
 import React, { Component, MouseEvent } from 'react';
-import { LinkWidget as RDLinkWidget } from '@projectstorm/react-diagrams-core';
+import {
+  LinkWidget as RDLinkWidget,
+  PointModel,
+} from '@projectstorm/react-diagrams-core';
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
 import { Point } from '@projectstorm/geometry';
 
@@ -76,102 +79,10 @@ export default class LinkWidget extends Component {
   }
 
   render() {
-    const { link, factory, diagramEngine } = this.props;
+    const { link } = this.props;
 
-    // Ensure id is present for all points on the path
     const points = link.getPoints();
-
     const paths = [];
-
-    // Get points based on link orientation
-    let pointLeft = points[0];
-    let pointRight = points[points.length - 1];
-
-    let hadToSwitch = false;
-    if (pointLeft.getX() > pointRight.getX()) {
-      pointLeft = points[points.length - 1];
-      pointRight = points[0];
-      hadToSwitch = true;
-    }
-    const dy = Math.abs(
-      points[0].getY() - points[points.length - 1].getY(),
-    );
-
-    // When new link add one middle point to get everywhere 90° angle
-    if (link.getTargetPort() === null && points.length === 2) {
-      [...Array(2)].forEach(() => {
-        link.addPoint(
-          new LinkPointModel({
-            link,
-            position: new Point(pointLeft.getX(), pointRight.getY()),
-          }),
-          1,
-        );
-      });
-      link.setManuallyFirstAndLastPathsDirection(true, true);
-    }
-    // When new link is moving and not connected to target port move with middle point
-    /**
-     * TODO: this will be better to update in `DragNewLinkState` in function `fireMouseMoved`
-     * to avoid calling this unexpectedly e.g. after deserialize
-     */
-    else if (
-      link.getTargetPort() === null &&
-      link.getSourcePort() !== null
-    ) {
-      points[1].setPosition(
-        pointRight.getX() +
-          (pointLeft.getX() - pointRight.getX()) / 2,
-        !hadToSwitch ? pointLeft.getY() : pointRight.getY(),
-      );
-      points[2].setPosition(
-        pointRight.getX() +
-          (pointLeft.getX() - pointRight.getX()) / 2,
-        !hadToSwitch ? pointRight.getY() : pointLeft.getY(),
-      );
-    }
-    // Render was called but link is not moved but user.
-    // Node is moved and in this case fix coordinates to get 90° angle.
-    // For loop just for first and last path
-    else if (points.length > 2) {
-      // Those points and its position only will be moved
-      for (let i = 1; i < points.length; i += points.length - 2) {
-        if (i - 1 === 0) {
-          if (link.getFirstPathXdirection()) {
-            points[i].setPosition(
-              points[i].getX(),
-              points[i - 1].getY(),
-            );
-          } else {
-            points[i].setPosition(
-              points[i - 1].getX(),
-              points[i].getY(),
-            );
-          }
-        } else if (link.getLastPathXdirection()) {
-          points[i - 1].setPosition(
-            points[i - 1].getX(),
-            points[i].getY(),
-          );
-        } else {
-          points[i - 1].setPosition(
-            points[i].getX(),
-            points[i - 1].getY(),
-          );
-        }
-      }
-    }
-
-    // If there is existing link which has two points add one
-    // NOTE: It doesn't matter if check is for dy or dx
-    if (points.length === 2 && dy !== 0) {
-      link.addPoint(
-        new LinkPointModel({
-          link,
-          position: new Point(pointLeft.getX(), pointRight.getY()),
-        }),
-      );
-    }
 
     for (let j = 0; j < points.length - 1; j += 1) {
       paths.push(

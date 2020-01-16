@@ -1,3 +1,4 @@
+import { Point } from '@projectstorm/geometry';
 import {
   AbstractDisplacementState,
   Action,
@@ -21,6 +22,11 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             event.event,
           );
 
+          const snappedPosition = new Point(
+            Math.round(position.x / 15) * 15,
+            Math.round(position.y / 15) * 15,
+          );
+
           this.source = this.engine.getMouseElement(event.event);
 
           if (
@@ -42,8 +48,12 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           }
 
           this.bifurcation.setAsBifurcation();
-          this.bifurcation.getFirstPoint().setPosition(position);
-          this.bifurcation.getLastPoint().setPosition(position);
+          this.bifurcation
+            .getFirstPoint()
+            .setPosition(snappedPosition);
+          this.bifurcation
+            .getLastPoint()
+            .setPosition(snappedPosition);
 
           this.bifurcation.setSourcePort(this.source.getSourcePort());
           this.bifurcation.setSelected(true);
@@ -124,7 +134,10 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       (initialYRelative - portPos.y) +
       event.virtualDisplacementY;
 
-    this.bifurcation.getLastPoint().setPosition(linkNextX, linkNextY);
+    const snappedX = Math.round(linkNextX / 15) * 15;
+    const snappedY = Math.round(linkNextY / 15) * 15;
+
+    this.bifurcation.getLastPoint().setPosition(snappedX, snappedY);
     this.engine.repaintCanvas();
   }
 }

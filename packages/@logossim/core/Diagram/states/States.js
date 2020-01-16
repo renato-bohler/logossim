@@ -8,11 +8,11 @@ import {
 import {
   PortModel,
   LinkModel,
-  DragNewLinkState,
   DragDiagramItemsState,
 } from '@projectstorm/react-diagrams-core';
 
 import BifurcateLinkState from './BifurcateLinkState';
+import DragNewLinkState from './DragNewLinkState';
 
 export default class States extends State {
   constructor(options) {
@@ -21,8 +21,8 @@ export default class States extends State {
     });
 
     const config = {
+      allowLooseLinks: true,
       allowLinksFromLockedPorts: false,
-      allowLooseLinks: false,
       ...options,
     };
 
