@@ -1,10 +1,11 @@
-import { Point } from '@projectstorm/geometry';
 import {
   AbstractDisplacementState,
   Action,
   InputType,
 } from '@projectstorm/react-canvas-core';
 import { PortModel } from '@projectstorm/react-diagrams-core';
+
+import { snap, nearby, handleMouseMoved } from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
   constructor(options) {
@@ -18,13 +19,16 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       new Action({
         type: InputType.MOUSE_DOWN,
         fire: event => {
+          this.moveDirection = undefined;
+          this.hasStartedMoving = false;
+
           const position = this.engine.getRelativeMousePoint(
             event.event,
           );
 
-          const snappedPosition = new Point(
-            Math.round(position.x / 15) * 15,
-            Math.round(position.y / 15) * 15,
+          const snappedPosition = snap(
+            position,
+            this.engine.getModel().gridSize,
           );
 
           this.source = this.engine.getMouseElement(event.event);
@@ -95,49 +99,15 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
     );
   }
 
-  isNearbySourcePosition({ clientX, clientY }) {
-    const sourcePosition = this.bifurcation
-      .getFirstPoint()
-      .getPosition();
-
-    return (
-      clientX >= sourcePosition.x - 3 &&
-      clientX <= sourcePosition.x + 3 &&
-      clientY >= sourcePosition.y - 3 &&
-      clientY <= sourcePosition.y + 3
+  isNearbySourcePosition(mousePosition) {
+    return nearby(
+      mousePosition,
+      this.bifurcation.getFirstPoint().getPosition(),
+      3,
     );
   }
 
   fireMouseMoved(event) {
-    const portPos = this.bifurcation.getFirstPoint().getPosition();
-
-    const zoomLevelPercentage =
-      this.engine.getModel().getZoomLevel() / 100;
-    const engineOffsetX =
-      this.engine.getModel().getOffsetX() / zoomLevelPercentage;
-    const engineOffsetY =
-      this.engine.getModel().getOffsetY() / zoomLevelPercentage;
-
-    const initialXRelative =
-      this.initialXRelative / zoomLevelPercentage;
-    const initialYRelative =
-      this.initialYRelative / zoomLevelPercentage;
-
-    const linkNextX =
-      portPos.x -
-      engineOffsetX +
-      (initialXRelative - portPos.x) +
-      event.virtualDisplacementX;
-    const linkNextY =
-      portPos.y -
-      engineOffsetY +
-      (initialYRelative - portPos.y) +
-      event.virtualDisplacementY;
-
-    const snappedX = Math.round(linkNextX / 15) * 15;
-    const snappedY = Math.round(linkNextY / 15) * 15;
-
-    this.bifurcation.getLastPoint().setPosition(snappedX, snappedY);
-    this.engine.repaintCanvas();
+    handleMouseMoved.call(this, event, this.bifurcation);
   }
 }
