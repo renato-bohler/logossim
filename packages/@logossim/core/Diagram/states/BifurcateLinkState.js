@@ -51,7 +51,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             return;
           }
 
-          this.bifurcation.setAsBifurcation();
+          this.bifurcation.setBifurcationSource(this.source);
           this.bifurcation
             .getFirstPoint()
             .setPosition(snappedPosition);

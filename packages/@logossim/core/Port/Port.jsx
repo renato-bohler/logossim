@@ -22,6 +22,7 @@ export default class Port extends PortWidget {
       port: { links },
       className = '',
     } = this.props;
+
     return (
       <Circle
         className={`port ${className}`}

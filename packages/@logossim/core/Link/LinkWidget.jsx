@@ -101,12 +101,3 @@ export default class LinkWidget extends Component {
     );
   }
 }
-
-LinkWidget.defaultProps = {
-  color: 'red',
-  width: 3,
-  link: null,
-  smooth: false,
-  diagramEngine: null,
-  factory: null,
-};

@@ -1,18 +1,18 @@
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
 
 export default class LinkModel extends DefaultLinkModel {
-  constructor(options = {}) {
+  constructor(options) {
     super({
       type: 'link',
       ...options,
     });
 
-    this.isBifurcation = false;
     this.bifurcations = [];
+    this.bifurcationSource = null;
   }
 
-  setAsBifurcation() {
-    this.isBifurcation = true;
+  setBifurcationSource(link) {
+    this.bifurcationSource = link;
   }
 
   addBifurcation(link) {
@@ -49,16 +49,35 @@ export default class LinkModel extends DefaultLinkModel {
   serialize() {
     return {
       ...super.serialize(),
-      isBifurcation: this.isBifurcation,
-      bifurcations: this.bifurcations,
+      bifurcations: this.bifurcations.map(b => b.getID()),
+      bifurcationSource: this.bifurcationSource
+        ? this.bifurcationSource.getID()
+        : null,
     };
   }
 
   deserialize(event) {
     super.deserialize(event);
 
-    this.bifurcations = event.data.bifurcations;
-    this.isBifurcation = event.data.isBifurcation;
+    const {
+      getModel,
+      registerModel,
+      data: { bifurcationSource, bifurcations },
+    } = event;
+
+    registerModel(this);
+
+    bifurcations.forEach(b =>
+      getModel(b).then(bifurcation =>
+        this.addBifurcation(bifurcation),
+      ),
+    );
+
+    if (bifurcationSource) {
+      getModel(bifurcationSource).then(source =>
+        this.setBifurcationSource(source),
+      );
+    }
   }
 
   setWidth(width) {
