@@ -7,7 +7,7 @@ const engineStub = {
 };
 
 const nodeStub = {
-  getPort: () => ({ updateCoords: () => {} }),
+  getPort: () => ({ links: {}, updateCoords: () => {} }),
   getID: () => {},
   options: { selected: false },
 };
