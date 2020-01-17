@@ -9,7 +9,6 @@ import States from './states/States';
 
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
-import LinkPortFactory from '../LinkPort/LinkPortFactory';
 
 export default class DiagramEngine {
   constructor(components) {
@@ -30,10 +29,6 @@ export default class DiagramEngine {
     this.engine.getStateMachine().pushState(new States());
 
     this.engine.getPortFactories().registerFactory(new PortFactory());
-    this.engine
-      .getPortFactories()
-      .registerFactory(new LinkPortFactory());
-
     this.engine.getLinkFactories().registerFactory(new LinkFactory());
 
     this.registerComponents();

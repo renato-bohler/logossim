@@ -1,14 +1,6 @@
-import React, { Component, MouseEvent } from 'react';
-import {
-  LinkWidget as RDLinkWidget,
-  PointModel,
-} from '@projectstorm/react-diagrams-core';
+import React, { Component } from 'react';
+import { LinkWidget as RDLinkWidget } from '@projectstorm/react-diagrams-core';
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
-import { Point } from '@projectstorm/geometry';
-
-import LinkPort from '../LinkPort/LinkPort';
-import LinkPortModel from '../LinkPort/LinkPortModel';
-import LinkPointModel from '../LinkPoint/LinkPointModel';
 
 export default class LinkWidget extends Component {
   constructor(props) {
