@@ -1,3 +1,5 @@
+import { Point } from '@projectstorm/geometry';
+import { PointModel } from '@projectstorm/react-diagrams';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
 
 export default class LinkModel extends DefaultLinkModel {
@@ -66,6 +68,21 @@ export default class LinkModel extends DefaultLinkModel {
     } = event;
 
     registerModel(this);
+
+    requestAnimationFrame(() => {
+      this.points = event.data.points.map(point => {
+        const p = new PointModel({
+          link: this,
+          position: new Point(point.x, point.y),
+        });
+        p.deserialize({
+          ...event,
+          data: point,
+        });
+        return p;
+      });
+      event.engine.repaintCanvas();
+    });
 
     bifurcations.forEach(b =>
       getModel(b).then(bifurcation =>
