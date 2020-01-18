@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { LinkWidget as RDLinkWidget } from '@projectstorm/react-diagrams-core';
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
 
 export default class LinkWidget extends Component {
@@ -10,16 +9,18 @@ export default class LinkWidget extends Component {
   }
 
   componentDidUpdate() {
-    const { link } = this.props;
-
-    link.setRenderedPaths(
-      this.refPaths.map(ref => {
-        return ref.current;
-      }),
-    );
+    this.updateRenderedPaths();
   }
 
   componentDidMount() {
+    this.updateRenderedPaths();
+  }
+
+  componentWillUnmount() {
+    this.clearRenderedPaths();
+  }
+
+  updateRenderedPaths() {
     const { link } = this.props;
 
     link.setRenderedPaths(
@@ -29,13 +30,27 @@ export default class LinkWidget extends Component {
     );
   }
 
-  componentWillUnmount() {
+  clearRenderedPaths() {
     const { link } = this.props;
 
     link.setRenderedPaths([]);
   }
 
-  generateLink(path, extraProps, id) {
+  generatePointTuples() {
+    const { link } = this.props;
+
+    const points = link.getPoints();
+
+    return points
+      .map((point, i) => ({ from: points[i], to: points[i + 1] }))
+      .filter(tuple => tuple.to);
+  }
+
+  generateLinePath({ from, to }) {
+    return `M${from.getX()},${from.getY()} L ${to.getX()},${to.getY()}`;
+  }
+
+  renderSegment(path, index) {
     const { diagramEngine, link, factory, options = {} } = this.props;
 
     const { selected } = options;
@@ -45,14 +60,13 @@ export default class LinkWidget extends Component {
 
     return (
       <DefaultLinkSegmentWidget
-        key={`link-${id}`}
+        key={`link-${index}`}
         path={path}
         selected={selected}
         diagramEngine={diagramEngine}
         factory={factory}
         link={link}
         forwardRef={ref}
-        extras={extraProps}
         onSelection={() => {}}
       />
     );
@@ -73,29 +87,15 @@ export default class LinkWidget extends Component {
   render() {
     const { link } = this.props;
 
-    const points = link.getPoints();
-    const paths = [];
-
-    for (let j = 0; j < points.length - 1; j += 1) {
-      paths.push(
-        this.generateLink(
-          RDLinkWidget.generateLinePath(points[j], points[j + 1]),
-          {
-            'data-linkid': link.getID(),
-            'data-point': j,
-          },
-          j,
-        ),
-      );
-    }
-
     this.refPaths = [];
 
     return (
       <>
         {this.generateBifurcationSourcePoint(link)}
         <g data-default-link-test={link.getOptions().testName}>
-          {paths}
+          {this.generatePointTuples().map((tuple, index) =>
+            this.renderSegment(this.generateLinePath(tuple), index),
+          )}
         </g>
       </>
     );
