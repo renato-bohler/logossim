@@ -17,6 +17,10 @@ export default class LinkModel extends DefaultLinkModel {
     this.bifurcationSource = link;
   }
 
+  getBifurcationSource() {
+    return this.bifurcationSource;
+  }
+
   addBifurcation(link) {
     this.bifurcations.push(link);
   }
@@ -25,6 +29,10 @@ export default class LinkModel extends DefaultLinkModel {
     this.bifurcations = this.bifurcations.filter(
       b => b.getID() !== link.getID(),
     );
+  }
+
+  getBifurcations() {
+    return this.bifurcations;
   }
 
   getSelectionEntities() {
@@ -45,6 +53,11 @@ export default class LinkModel extends DefaultLinkModel {
   remove() {
     this.bifurcations.forEach(b => b.remove());
     this.bifurcations = [];
+
+    if (this.bifurcationSource) {
+      this.bifurcationSource.removeBifurcation(this);
+    }
+
     super.remove();
   }
 
@@ -70,31 +83,28 @@ export default class LinkModel extends DefaultLinkModel {
     registerModel(this);
 
     requestAnimationFrame(() => {
-      this.points = event.data.points.map(point => {
-        const p = new PointModel({
-          link: this,
-          position: new Point(point.x, point.y),
-        });
-        p.deserialize({
-          ...event,
-          data: point,
-        });
-        return p;
-      });
+      this.points = event.data.points.map(
+        point =>
+          new PointModel({
+            link: this,
+            position: new Point(point.x, point.y),
+          }),
+      );
+
+      bifurcations.forEach(b =>
+        getModel(b).then(bifurcation =>
+          this.addBifurcation(bifurcation),
+        ),
+      );
+
+      if (bifurcationSource) {
+        getModel(bifurcationSource).then(source =>
+          this.setBifurcationSource(source),
+        );
+      }
+
       event.engine.repaintCanvas();
     });
-
-    bifurcations.forEach(b =>
-      getModel(b).then(bifurcation =>
-        this.addBifurcation(bifurcation),
-      ),
-    );
-
-    if (bifurcationSource) {
-      getModel(bifurcationSource).then(source =>
-        this.setBifurcationSource(source),
-      );
-    }
   }
 
   setWidth(width) {

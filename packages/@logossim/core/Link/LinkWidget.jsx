@@ -72,16 +72,64 @@ export default class LinkWidget extends Component {
     );
   }
 
-  generateBifurcationSourcePoint() {
+  renderPoint(position) {
     const { link } = this.props;
 
-    if (!link.isBifurcation) return null;
-
-    const position = link.getFirstPoint().getPosition();
-
     return (
-      <circle r={5} fill="gray" cx={position.x} cy={position.y} />
+      <circle
+        r={5}
+        fill={link.isSelected() ? '#00c0ff' : 'gray'}
+        cx={position.x}
+        cy={position.y}
+      />
     );
+  }
+
+  renderBifurcationSourcePoint() {
+    const { link } = this.props;
+
+    const bifurcationSource = link.getBifurcationSource();
+    if (!bifurcationSource) return null;
+
+    const bifurcationOrigin = link.getFirstPoint().getPosition();
+    const lastSourcePoint = bifurcationSource
+      .getLastPoint()
+      .getPosition();
+
+    if (
+      bifurcationOrigin.x === lastSourcePoint.x &&
+      bifurcationOrigin.y === lastSourcePoint.y
+    ) {
+      return null;
+    }
+
+    return this.renderPoint(bifurcationOrigin);
+  }
+
+  renderLooseLinkPoint() {
+    const { link } = this.props;
+
+    if (link.getTargetPort()) return null;
+
+    const bifurcations = link.getBifurcations();
+    const lastSourcePoint = link.getLastPoint().getPosition();
+
+    const isContinued = bifurcations.some(bifurcation => {
+      const bifurcationOrigin = bifurcation
+        .getFirstPoint()
+        .getPosition();
+
+      return (
+        bifurcationOrigin.x === lastSourcePoint.x &&
+        bifurcationOrigin.y === lastSourcePoint.y
+      );
+    });
+
+    if (isContinued) {
+      return null;
+    }
+
+    return this.renderPoint(lastSourcePoint);
   }
 
   render() {
@@ -91,7 +139,8 @@ export default class LinkWidget extends Component {
 
     return (
       <>
-        {this.generateBifurcationSourcePoint(link)}
+        {this.renderBifurcationSourcePoint()}
+        {this.renderLooseLinkPoint()}
         <g data-default-link-test={link.getOptions().testName}>
           {this.generatePointTuples().map((tuple, index) =>
             this.renderSegment(this.generateLinePath(tuple), index),
