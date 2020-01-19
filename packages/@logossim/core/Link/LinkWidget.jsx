@@ -36,7 +36,7 @@ export default class LinkWidget extends Component {
     link.setRenderedPaths([]);
   }
 
-  generatePointTuples() {
+  generatePathPoints() {
     const { link } = this.props;
 
     const points = link.getPoints();
@@ -142,7 +142,7 @@ export default class LinkWidget extends Component {
         {this.renderBifurcationSourcePoint()}
         {this.renderLooseLinkPoint()}
         <g data-default-link-test={link.getOptions().testName}>
-          {this.generatePointTuples().map((tuple, index) =>
+          {this.generatePathPoints().map((tuple, index) =>
             this.renderSegment(this.generateLinePath(tuple), index),
           )}
         </g>

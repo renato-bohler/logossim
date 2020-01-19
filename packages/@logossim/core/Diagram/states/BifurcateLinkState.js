@@ -28,16 +28,12 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           this.moveDirection = undefined;
           this.hasStartedMoving = false;
 
-          const position = this.engine.getRelativeMousePoint(
-            event.event,
-          );
-
-          const snappedPosition = snap(
-            position,
-            this.engine.getModel().getOptions().gridSize,
-          );
-
           this.source = this.engine.getMouseElement(event.event);
+
+          const position = this.snapPointToSourceLink(
+            this.engine.getRelativeMousePoint(event.event),
+            this.source,
+          );
 
           if (
             !this.config.allowLinksFromLockedPorts &&
@@ -58,12 +54,8 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           }
 
           this.bifurcation.setBifurcationSource(this.source);
-          this.bifurcation
-            .getFirstPoint()
-            .setPosition(snappedPosition);
-          this.bifurcation
-            .getLastPoint()
-            .setPosition(snappedPosition);
+          this.bifurcation.getFirstPoint().setPosition(position);
+          this.bifurcation.getLastPoint().setPosition(position);
 
           this.bifurcation.setSourcePort(this.source.getSourcePort());
           this.bifurcation.setSelected(true);
@@ -110,6 +102,84 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
   cleanUp() {
     this.source.removeBifurcation(this.bifurcation);
     this.bifurcation.remove();
+  }
+
+  snapPointToSourceLink(position, source) {
+    const { gridSize } = this.engine.getModel().getOptions();
+    const sourcePoints = source.getPoints();
+
+    const closestCorner = this.getClosestCornerToPosition(
+      sourcePoints,
+      position,
+    );
+
+    if (closestCorner.distance < gridSize - 1) {
+      return new Point(
+        closestCorner.position.x,
+        closestCorner.position.y,
+      );
+    }
+
+    const closestPath = this.getClosestPathToPosition(
+      sourcePoints,
+      position,
+    );
+
+    const snappedPosition = snap(position, gridSize);
+
+    return new Point(
+      closestPath.axis === 'x'
+        ? closestPath.position
+        : snappedPosition.x,
+      closestPath.axis === 'y'
+        ? closestPath.position
+        : snappedPosition.y,
+    );
+  }
+
+  getClosestCornerToPosition(points, position) {
+    return points
+      .map(sourcePoint => ({
+        distance: Math.hypot(
+          position.x - sourcePoint.position.x,
+          position.y - sourcePoint.position.y,
+        ),
+        ...sourcePoint,
+      }))
+      .reduce((closest, point) =>
+        point.distance < closest.distance ? point : closest,
+      );
+  }
+
+  getPathPoints(points) {
+    return points
+      .map((point, i) => ({ from: points[i], to: points[i + 1] }))
+      .filter(tuple => tuple.to);
+  }
+
+  getPathDirections(points) {
+    return this.getPathPoints(points).map(pathPosition =>
+      pathPosition.from.position.x === pathPosition.to.position.x
+        ? {
+            axis: 'x',
+            position: pathPosition.from.position.x,
+          }
+        : {
+            axis: 'y',
+            position: pathPosition.from.position.y,
+          },
+    );
+  }
+
+  getClosestPathToPosition(points, position) {
+    return this.getPathDirections(points)
+      .map(path => ({
+        distance: Math.abs(position[path.axis] - path.position),
+        ...path,
+      }))
+      .reduce((closest, path) =>
+        path.distance < closest.distance ? path : closest,
+      );
   }
 
   isNearbySourcePosition({ clientX, clientY }) {
