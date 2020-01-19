@@ -51,9 +51,6 @@ export default class LinkModel extends DefaultLinkModel {
   }
 
   remove() {
-    this.bifurcations.forEach(b => b.remove());
-    this.bifurcations = [];
-
     if (this.bifurcationSource) {
       this.bifurcationSource.removeBifurcation(this);
     }
