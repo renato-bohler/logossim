@@ -50,13 +50,8 @@ export default class States extends State {
             this.transitionWithEvent(this.dragNewLink, event);
           }
           // create a bifurcation
-          else if (
-            event.event.ctrlKey &&
-            element instanceof LinkModel
-          ) {
-            if (event.event.ctrlKey) {
-              this.transitionWithEvent(this.bifurcateLink, event);
-            }
+          else if (element instanceof LinkModel) {
+            this.transitionWithEvent(this.bifurcateLink, event);
           }
           // move the items (and potentially link points)
           else {

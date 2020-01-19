@@ -1,3 +1,4 @@
+import { Point } from '@projectstorm/geometry';
 import {
   AbstractDisplacementState,
   Action,
@@ -73,25 +74,27 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       new Action({
         type: InputType.MOUSE_UP,
         fire: event => {
-          const model = this.engine.getMouseElement(event.event);
-
-          if (model instanceof PortModel) {
-            if (
-              this.bifurcation.getSourcePort().canLinkToPort(model)
-            ) {
-              this.bifurcation.setTargetPort(model);
-              model.reportPosition();
-              this.engine.repaintCanvas();
-              return;
-            }
+          if (this.isNearbySourcePosition(event.event)) {
+            this.cleanUp();
+            this.source.setSelected(true);
+            this.engine.repaintCanvas();
+            return;
           }
 
+          const model = this.engine.getMouseElement(event.event);
+
           if (
-            this.isNearbySourcePosition(event.event) ||
-            !this.config.allowLooseLinks
+            model instanceof PortModel &&
+            this.bifurcation.getSourcePort().canLinkToPort(model)
           ) {
-            this.source.removeBifurcation(this.bifurcation);
-            this.bifurcation.remove();
+            this.bifurcation.setTargetPort(model);
+            model.reportPosition();
+            this.engine.repaintCanvas();
+            return;
+          }
+
+          if (!this.config.allowLooseLinks) {
+            this.cleanUp();
             this.engine.repaintCanvas();
           }
         },
@@ -99,9 +102,17 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
     );
   }
 
-  isNearbySourcePosition(mousePosition) {
+  cleanUp() {
+    this.source.removeBifurcation(this.bifurcation);
+    this.bifurcation.remove();
+  }
+
+  isNearbySourcePosition({ clientX, clientY }) {
+    const mousePosition = new Point(clientX, clientY);
+    const { gridSize } = this.engine.getModel();
+
     return nearby(
-      mousePosition,
+      snap(mousePosition, gridSize),
       this.bifurcation.getFirstPoint().getPosition(),
       3,
     );

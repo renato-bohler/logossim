@@ -19,6 +19,10 @@ export default class PortModel extends RDPortModel {
     this.value = data.value;
   }
 
+  canLinkToPort(port) {
+    return this.getID() !== port.getID();
+  }
+
   createLinkModel() {
     return new LinkModel();
   }

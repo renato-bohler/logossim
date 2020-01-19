@@ -1,3 +1,4 @@
+import { Point } from '@projectstorm/geometry';
 import {
   AbstractDisplacementState,
   Action,
@@ -74,7 +75,9 @@ export default class DragNewLinkState extends AbstractDisplacementState {
     );
   }
 
-  isNearbySourcePort(mousePosition) {
+  isNearbySourcePort({ clientX, clientY }) {
+    const mousePosition = new Point(clientX, clientY);
+
     const sourcePort = this.link.getSourcePort();
     const sourcePortSize = sourcePort.width;
     const sourcePortPosition = sourcePort.getPosition();
