@@ -76,13 +76,15 @@ export default class DragNewLinkState extends AbstractDisplacementState {
   }
 
   isNearbySourcePort({ clientX, clientY }) {
-    const mousePosition = new Point(clientX, clientY);
+    const point = this.engine.getRelativeMousePoint(
+      new Point(clientX, clientY),
+    );
 
     const sourcePort = this.link.getSourcePort();
     const sourcePortSize = sourcePort.width;
     const sourcePortPosition = sourcePort.getPosition();
 
-    return nearby(mousePosition, sourcePortPosition, sourcePortSize);
+    return nearby(point, sourcePortPosition, sourcePortSize);
   }
 
   fireMouseMoved(event) {

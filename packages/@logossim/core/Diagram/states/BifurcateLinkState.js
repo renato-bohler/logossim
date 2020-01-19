@@ -6,7 +6,12 @@ import {
 } from '@projectstorm/react-canvas-core';
 import { PortModel } from '@projectstorm/react-diagrams-core';
 
-import { snap, nearby, handleMouseMoved } from './common';
+import {
+  snap,
+  nearby,
+  handleMouseMoved,
+  getRelativePoint,
+} from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
   constructor(options) {
@@ -29,7 +34,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
 
           const snappedPosition = snap(
             position,
-            this.engine.getModel().gridSize,
+            this.engine.getModel().getOptions().gridSize,
           );
 
           this.source = this.engine.getMouseElement(event.event);
@@ -108,13 +113,17 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
   }
 
   isNearbySourcePosition({ clientX, clientY }) {
-    const mousePosition = new Point(clientX, clientY);
-    const { gridSize } = this.engine.getModel();
+    const model = this.engine.getModel();
+
+    const point = getRelativePoint(
+      new Point(clientX, clientY),
+      model,
+    );
 
     return nearby(
-      snap(mousePosition, gridSize),
+      point,
       this.bifurcation.getFirstPoint().getPosition(),
-      3,
+      model.getOptions().gridSize / 2,
     );
   }
 

@@ -15,10 +15,16 @@ export const samePosition = (p1, p2) =>
   p1.x === p2.x && p1.y === p2.y;
 
 export const nearby = (p1, p2, tolerance) =>
-  p1.x >= p2.x &&
-  p1.x <= p2.x + tolerance &&
-  p1.y >= p2.y &&
-  p1.y <= p2.y + tolerance;
+  Math.abs(p1.x - p2.x) <= tolerance &&
+  Math.abs(p1.y - p2.y) <= tolerance;
+
+export const getRelativePoint = (point, model) => {
+  const zoomLevelPercentage = model.getZoomLevel() / 100;
+  const engineOffsetX = model.getOffsetX() / zoomLevelPercentage;
+  const engineOffsetY = model.getOffsetY() / zoomLevelPercentage;
+
+  return new Point(point.x - engineOffsetX, point.y - engineOffsetY);
+};
 
 export const nextLinkPosition = (
   event,
@@ -26,21 +32,18 @@ export const nextLinkPosition = (
   initialRelative,
   sourcePosition,
 ) => {
-  const zoomLevelPercentage = model.getZoomLevel() / 100;
-  const engineOffsetX = model.getOffsetX() / zoomLevelPercentage;
-  const engineOffsetY = model.getOffsetY() / zoomLevelPercentage;
+  const point = getRelativePoint(sourcePosition, model);
 
+  const zoomLevelPercentage = model.getZoomLevel() / 100;
   const initialXRelative = initialRelative.x / zoomLevelPercentage;
   const initialYRelative = initialRelative.y / zoomLevelPercentage;
 
   const linkNextX =
-    sourcePosition.x -
-    engineOffsetX +
+    point.x +
     (initialXRelative - sourcePosition.x) +
     event.virtualDisplacementX;
   const linkNextY =
-    sourcePosition.y -
-    engineOffsetY +
+    point.y +
     (initialYRelative - sourcePosition.y) +
     event.virtualDisplacementY;
 
