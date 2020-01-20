@@ -6,6 +6,7 @@ export default class PortModel extends RDPortModel {
   constructor(options = {}) {
     super({
       type: 'Port',
+      maximumLinks: 1,
       ...options,
     });
   }
@@ -19,11 +20,23 @@ export default class PortModel extends RDPortModel {
     this.value = data.value;
   }
 
+  isNewLinkAllowed() {
+    return (
+      Object.keys(this.getLinks()).length < this.getMaximumLinks()
+    );
+  }
+
   canLinkToPort(port) {
-    return this.getID() !== port.getID();
+    console.log('this.isNewLinkAllowed():', this.isNewLinkAllowed());
+    console.log('this.getID():', this.getID());
+    console.log('port.getID():', port.getID());
+    return this.isNewLinkAllowed() && this.getID() !== port.getID();
   }
 
   createLinkModel() {
-    return new LinkModel();
+    if (this.isNewLinkAllowed()) {
+      return new LinkModel();
+    }
+    return null;
   }
 }
