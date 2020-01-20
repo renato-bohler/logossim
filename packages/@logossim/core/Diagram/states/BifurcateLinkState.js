@@ -58,6 +58,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           this.bifurcation.getLastPoint().setPosition(position);
 
           this.bifurcation.setSelected(true);
+          this.engine.getModel().clearSelection();
 
           this.source.setSelected(false);
           this.source.addBifurcation(this.bifurcation);
@@ -72,7 +73,10 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
         fire: event => {
           if (this.isNearbySourcePosition(event.event)) {
             this.cleanUp();
-            this.source.setSelected(true);
+            this.engine.getModel().clearSelection();
+            if (!event.shiftKey) {
+              this.source.setSelected(true);
+            }
             this.engine.repaintCanvas();
             return;
           }
