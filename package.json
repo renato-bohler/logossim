@@ -4,11 +4,11 @@
     "packages/@logossim/*"
   ],
   "scripts": {
-    "start": "cd packages/@logossim/page && yarn start",
-    "build": "cd packages/@logossim/page && yarn build",
-    "test": "cd packages/@logossim/page && yarn test",
-    "serve": "serve -s packages/@logossim/page/build",
-    "analyze": "source-map-explorer 'packages/@logossim/page/build/static/js/*.js'",
+    "start": "yarn workspace @logossim/page start",
+    "build": "yarn workspace @logossim/page build",
+    "test": "yarn workspace @logossim/page test",
+    "serve": "yarn workspace @logossim/page serve",
+    "analyze": "yarn workspace @logossim/page analyze",
     "prettier": "prettier --write \"**/*.{js,jsx}\""
   },
   "dependencies": {
