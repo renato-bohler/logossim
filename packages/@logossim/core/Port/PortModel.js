@@ -27,9 +27,6 @@ export default class PortModel extends RDPortModel {
   }
 
   canLinkToPort(port) {
-    console.log('this.isNewLinkAllowed():', this.isNewLinkAllowed());
-    console.log('this.getID():', this.getID());
-    console.log('port.getID():', port.getID());
     return this.isNewLinkAllowed() && this.getID() !== port.getID();
   }
 
