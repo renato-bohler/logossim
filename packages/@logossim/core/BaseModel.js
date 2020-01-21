@@ -1,5 +1,4 @@
 import { NodeModel } from '@projectstorm/react-diagrams';
-import { Point } from '@projectstorm/geometry';
 
 import PortModel from './Port/PortModel';
 
