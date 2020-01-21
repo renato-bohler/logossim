@@ -65,7 +65,14 @@ export function handleMouseMoved(event, link) {
     first,
   );
 
-  if (this.hasStartedMoving) {
+  if (samePosition(first, last)) {
+    /**
+     * For some reason, inputs are only valid after the first and last
+     * position are equals once. Before that, the last position is
+     * (0, 0).
+     */
+    this.hasStartedMoving = true;
+  } else if (this.hasStartedMoving) {
     if (points.length === 2) {
       if (samePosition(first, last)) {
         this.moveDirection = undefined;
@@ -110,8 +117,22 @@ export function handleMouseMoved(event, link) {
         }
       }
     }
-  } else if (samePosition(first, last)) {
-    this.hasStartedMoving = true;
+  }
+
+  /**
+   * Sometimes, user input may be fast enough to skip the creation of
+   * a middle point. If this happens, we add it here.
+   */
+  if (
+    points.length === 2 &&
+    first.x !== nextPosition.x &&
+    first.y !== nextPosition.y
+  ) {
+    if (this.moveDirection === 'horizontal') {
+      link.addPoint(link.generatePoint(last.x, nextPosition.y), 1);
+    } else if (this.moveDirection === 'vertical') {
+      link.addPoint(link.generatePoint(nextPosition.x, last.y), 1);
+    }
   }
 
   link.getLastPoint().setPosition(nextPosition.x, nextPosition.y);

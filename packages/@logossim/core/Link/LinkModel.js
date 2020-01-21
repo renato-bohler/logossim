@@ -11,6 +11,7 @@ export default class LinkModel extends DefaultLinkModel {
 
     this.bifurcations = [];
     this.bifurcationSource = null;
+    console.clear();
   }
 
   setBifurcationSource(link) {
