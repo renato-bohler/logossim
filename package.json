@@ -9,7 +9,8 @@
     "test": "yarn workspace @logossim/page test",
     "serve": "yarn workspace @logossim/page serve",
     "analyze": "yarn workspace @logossim/page analyze",
-    "prettier": "prettier --write \"**/*.{js,jsx}\""
+    "prettier": "prettier --write \"**/*.{js,jsx}\"",
+    "eslint": "eslint \"**/*.{js,jsx}\""
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
