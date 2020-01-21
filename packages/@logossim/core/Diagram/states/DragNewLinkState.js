@@ -25,8 +25,9 @@ export default class DragNewLinkState extends AbstractDisplacementState {
           this.port = this.engine.getMouseElement(event.event);
 
           if (
-            !this.config.allowLinksFromLockedPorts &&
-            this.port.isLocked()
+            !(this.port instanceof PortModel) ||
+            (!this.config.allowLinksFromLockedPorts &&
+              this.port.isLocked())
           ) {
             this.eject();
             return;
