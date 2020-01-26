@@ -65,19 +65,17 @@ export function handleMouseMoved(event, link) {
     first,
   );
 
-  if (samePosition(first, last)) {
+  if (!this.hasStartedMoving && samePosition(first, last)) {
     /**
      * For some reason, inputs are only valid after the first and last
      * position are equals once. Before that, the last position is
      * (0, 0).
      */
     this.hasStartedMoving = true;
-  } else if (this.hasStartedMoving) {
-    if (points.length === 2) {
-      if (samePosition(first, last)) {
-        this.moveDirection = undefined;
-      }
+  }
 
+  if (this.hasStartedMoving) {
+    if (points.length === 2) {
       if (last.x !== nextPosition.x) {
         if (!this.moveDirection) {
           this.moveDirection = 'horizontal';
@@ -128,13 +126,10 @@ export function handleMouseMoved(event, link) {
     first.x !== nextPosition.x &&
     first.y !== nextPosition.y
   ) {
-    if (this.moveDirection === 'horizontal') {
-      link.addPoint(link.generatePoint(last.x, nextPosition.y), 1);
-    } else if (this.moveDirection === 'vertical') {
-      link.addPoint(link.generatePoint(nextPosition.x, last.y), 1);
-    }
+    link.addPoint(link.generatePoint(last.x, last.y), 1);
   }
 
   link.getLastPoint().setPosition(nextPosition.x, nextPosition.y);
+
   this.engine.repaintCanvas();
 }
