@@ -29,11 +29,41 @@ export default class MoveItemsState extends AbstractDisplacementState {
             this.engine.getModel().clearSelection();
           }
 
+          this.linkDirections = this.getLinkDirections(element);
+
           element.setSelected(true);
           this.engine.repaintCanvas();
         },
       }),
     );
+  }
+
+  getLinkDirections(node) {
+    const links = Object.values(node.getPorts())
+      .map(p => Object.entries(p.getLinks()))
+      .flat();
+
+    return links.reduce(
+      (acc, [id, link]) => ({
+        ...acc,
+        [id]: this.getLinkDirection(link),
+      }),
+      {},
+    );
+  }
+
+  getLinkDirection(link) {
+    const points = link.getPoints();
+    if (points.length !== 3) {
+      return null;
+    }
+
+    const first = link.getFirstPoint().getPosition();
+    const middle = points[1].getPosition();
+
+    if (first.x === middle.x) return 'vertical';
+    if (first.y === middle.y) return 'horizontal';
+    return null;
   }
 
   activated(previous) {
@@ -98,7 +128,7 @@ export default class MoveItemsState extends AbstractDisplacementState {
     );
   }
 
-  adjustLinkPoints(link) {
+  adjustLinkPoints = link => {
     const points = link.getPoints();
     const first = link.getFirstPoint().getPosition();
     const last = link.getLastPoint().getPosition();
@@ -111,19 +141,20 @@ export default class MoveItemsState extends AbstractDisplacementState {
       link.addPoint(link.generatePoint(first.x, last.y), 1);
     } else if (points.length === 3) {
       const middlePoint = points[1];
-      let middle = middlePoint.getPosition();
 
-      if (first.x !== middle.x) {
-        middlePoint.setPosition(first.x, middle.y);
-        middle = middlePoint.getPosition();
-      } else if (last.y !== middle.y) {
-        middlePoint.setPosition(middle.x, last.y);
-        middle = middlePoint.getPosition();
+      const linkDirection = this.linkDirections[link.getID()];
+
+      if (linkDirection === 'horizontal') {
+        middlePoint.setPosition(last.x, first.y);
+      } else {
+        middlePoint.setPosition(first.x, last.y);
       }
+
+      const middle = middlePoint.getPosition();
 
       if (samePosition(first, middle) || samePosition(middle, last)) {
         link.removePoint(middlePoint);
       }
     }
-  }
+  };
 }
