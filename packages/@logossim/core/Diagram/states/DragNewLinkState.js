@@ -42,6 +42,7 @@ export default class DragNewLinkState extends AbstractDisplacementState {
 
           this.link.setSelected(true);
           this.link.setSourcePort(this.port);
+          this.engine.getModel().clearSelection();
           this.engine.getModel().addLink(this.link);
           this.port.reportPosition();
         },
