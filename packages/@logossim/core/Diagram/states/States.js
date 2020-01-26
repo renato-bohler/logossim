@@ -8,11 +8,11 @@ import {
 import {
   PortModel,
   LinkModel,
-  DragDiagramItemsState,
 } from '@projectstorm/react-diagrams-core';
 
 import BifurcateLinkState from './BifurcateLinkState';
 import DragNewLinkState from './DragNewLinkState';
+import MoveItemsState from './MoveItemsState';
 
 export default class States extends State {
   constructor(options) {
@@ -30,7 +30,7 @@ export default class States extends State {
     this.dragCanvas = new DragCanvasState();
     this.dragNewLink = new DragNewLinkState(config);
     this.bifurcateLink = new BifurcateLinkState(config);
-    this.dragItems = new DragDiagramItemsState();
+    this.dragItems = new MoveItemsState();
 
     // determine what was clicked on
     this.registerAction(
