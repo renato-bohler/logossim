@@ -7,7 +7,7 @@ import {
 } from '@projectstorm/react-canvas-core';
 import { NodeModel } from '@projectstorm/react-diagrams-core';
 
-import { snap, samePosition } from './common';
+import { snap, samePosition, closestPointOnSegment } from './common';
 
 export default class MoveItemsState extends AbstractDisplacementState {
   constructor() {
@@ -38,12 +38,29 @@ export default class MoveItemsState extends AbstractDisplacementState {
     );
   }
 
-  getLinkDirections(node) {
-    const links = Object.values(node.getPorts())
-      .map(p => Object.entries(p.getLinks()))
-      .flat();
+  getLinksFromNode(node) {
+    if (!(node instanceof NodeModel)) return [];
 
-    return links.reduce(
+    return Object.values(node.getPorts())
+      .map(p => Object.entries(p.getLinks()))
+      .filter(entry => entry.length > 0)
+      .flat()
+      .map(([id, link]) => [
+        [id, link],
+        ...this.getBifurcatedLinks(link),
+      ])
+      .flat();
+  }
+
+  getBifurcatedLinks(link) {
+    return link
+      .getBifurcations()
+      .map(b => [[b.getID(), b], ...this.getBifurcatedLinks(b)])
+      .flat();
+  }
+
+  getLinkDirections(node) {
+    return this.getLinksFromNode(node).reduce(
       (acc, [id, link]) => ({
         ...acc,
         [id]: this.getLinkDirection(link),
@@ -130,6 +147,7 @@ export default class MoveItemsState extends AbstractDisplacementState {
 
   adjustLinkPoints = link => {
     const points = link.getPoints();
+
     const first = link.getFirstPoint().getPosition();
     const last = link.getLastPoint().getPosition();
 
@@ -156,5 +174,66 @@ export default class MoveItemsState extends AbstractDisplacementState {
         link.removePoint(middlePoint);
       }
     }
+
+    // Adjusts the origin position from bifurcations of this link
+    this.adjustLinkBifurcations(link);
   };
+
+  adjustLinkBifurcations(link) {
+    const bifurcations = link.getBifurcations();
+
+    const points = {
+      first: link.getFirstPoint().getPosition(),
+      middle:
+        link.getPoints().length === 3
+          ? link.getPoints()[1].getPosition()
+          : null,
+      last: link.getLastPoint().getPosition(),
+    };
+
+    bifurcations.forEach(bifurcation => {
+      const originPoint = bifurcation.getFirstPoint();
+
+      this.adjustBifurcationOrigin(originPoint, points);
+
+      // Adjusts the points of this bifurcation
+      this.adjustLinkPoints(bifurcation);
+    });
+  }
+
+  adjustBifurcationOrigin(originPoint, points) {
+    const { first, middle, last } = points;
+
+    const origin = originPoint.getPosition();
+    const { gridSize } = this.engine.getModel().getOptions();
+
+    if (middle === null) {
+      const closest = snap(
+        closestPointOnSegment(origin, {
+          A: first,
+          B: last,
+        }).point,
+        gridSize,
+      );
+      originPoint.setPosition(closest.x, closest.y);
+    } else {
+      const firstSegment = closestPointOnSegment(origin, {
+        A: first,
+        B: middle,
+      });
+
+      const lastSegment = closestPointOnSegment(origin, {
+        A: middle,
+        B: last,
+      });
+
+      if (firstSegment.distance <= lastSegment.distance) {
+        const closest = snap(firstSegment.point, gridSize);
+        originPoint.setPosition(closest.x, closest.y);
+      } else {
+        const closest = snap(lastSegment.point, gridSize);
+        originPoint.setPosition(closest.x, closest.y);
+      }
+    }
+  }
 }

@@ -18,6 +18,40 @@ export const nearby = (p1, p2, tolerance) =>
   Math.abs(p1.x - p2.x) <= tolerance &&
   Math.abs(p1.y - p2.y) <= tolerance;
 
+const distance = (A, B) => Math.hypot(A.x - B.x, A.y - B.y);
+
+export const closestPointOnSegment = (P, segment) => {
+  const { A, B } = segment;
+
+  const v = new Point(B.x - A.x, B.y - A.y);
+  const u = new Point(A.x - P.x, A.y - P.y);
+
+  const vu = v.x * u.x + v.y * u.y;
+  const vv = v.x ** 2 + v.y ** 2;
+
+  const t = -vu / vv;
+
+  // Closest point lies between A and B
+  if (t >= 0 && t <= 1) {
+    const closest = new Point(
+      (1 - t) * A.x + t * B.x,
+      (1 - t) * A.y + t * B.y,
+    );
+    return {
+      point: closest,
+      distance: distance(P, closest),
+    };
+  }
+
+  // Closest point is either A or B
+  const distanceToA = distance(P, A);
+  const distanceToB = distance(P, B);
+
+  return distanceToA <= distanceToB
+    ? { point: A, distance: distanceToA }
+    : { point: B, distance: distanceToB };
+};
+
 export const getRelativePoint = (point, model) => {
   const zoomLevelPercentage = model.getZoomLevel() / 100;
   const engineOffsetX = model.getOffsetX() / zoomLevelPercentage;
