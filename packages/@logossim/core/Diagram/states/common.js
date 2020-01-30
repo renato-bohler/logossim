@@ -160,7 +160,11 @@ export function handleMouseMoved(event, link) {
     first.x !== nextPosition.x &&
     first.y !== nextPosition.y
   ) {
-    link.addPoint(link.generatePoint(last.x, last.y), 1);
+    if (samePosition(first, last)) {
+      link.addPoint(link.generatePoint(nextPosition.x, first.y), 1);
+    } else {
+      link.addPoint(link.generatePoint(last.x, last.y), 1);
+    }
   }
 
   link.getLastPoint().setPosition(nextPosition.x, nextPosition.y);
