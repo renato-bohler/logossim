@@ -33,10 +33,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             this.source,
           );
 
-          if (
-            !this.config.allowLinksFromLockedPorts &&
-            this.source.isLocked()
-          ) {
+          if (this.source.isLocked()) {
             this.eject();
             return;
           }

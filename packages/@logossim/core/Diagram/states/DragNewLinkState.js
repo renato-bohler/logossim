@@ -29,8 +29,7 @@ export default class DragNewLinkState extends AbstractDisplacementState {
 
           if (
             !(this.port instanceof PortModel) ||
-            (!this.config.allowLinksFromLockedPorts &&
-              this.port.isLocked())
+            this.port.isLocked()
           ) {
             this.eject();
             return;

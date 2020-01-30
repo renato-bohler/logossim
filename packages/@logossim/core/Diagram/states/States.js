@@ -15,21 +15,15 @@ import DragNewLinkState from './DragNewLinkState';
 import MoveItemsState from './MoveItemsState';
 
 export default class States extends State {
-  constructor(options) {
+  constructor() {
     super({
       name: 'default-diagrams',
     });
 
-    const config = {
-      allowLooseLinks: true,
-      allowLinksFromLockedPorts: false,
-      ...options,
-    };
-
     this.childStates = [new SelectingState()];
     this.dragCanvas = new DragCanvasState();
-    this.dragNewLink = new DragNewLinkState(config);
-    this.bifurcateLink = new BifurcateLinkState(config);
+    this.dragNewLink = new DragNewLinkState();
+    this.bifurcateLink = new BifurcateLinkState();
     this.dragItems = new MoveItemsState();
 
     // determine what was clicked on
