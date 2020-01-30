@@ -4,7 +4,10 @@ import {
   Action,
   InputType,
 } from '@projectstorm/react-canvas-core';
-import { PortModel } from '@projectstorm/react-diagrams-core';
+import {
+  NodeModel,
+  PortModel,
+} from '@projectstorm/react-diagrams-core';
 
 import { snap, handleMouseMoved, samePosition } from './common';
 
@@ -66,12 +69,11 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       new Action({
         type: InputType.MOUSE_UP,
         fire: event => {
+          // Link selection
           if (this.isNearbySourcePosition()) {
             this.cleanUp();
             this.engine.getModel().clearSelection();
-            if (!event.shiftKey) {
-              this.source.setSelected(true);
-            }
+            this.source.setSelected(true);
             this.engine.repaintCanvas();
             return;
           }
@@ -88,7 +90,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             return;
           }
 
-          if (!this.config.allowLooseLinks) {
+          if (model instanceof NodeModel) {
             this.cleanUp();
             this.engine.repaintCanvas();
           }

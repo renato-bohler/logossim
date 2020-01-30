@@ -3,7 +3,10 @@ import {
   Action,
   InputType,
 } from '@projectstorm/react-canvas-core';
-import { PortModel } from '@projectstorm/react-diagrams-core';
+import {
+  NodeModel,
+  PortModel,
+} from '@projectstorm/react-diagrams-core';
 
 import { nearby, handleMouseMoved } from './common';
 
@@ -66,8 +69,8 @@ export default class DragNewLinkState extends AbstractDisplacementState {
           }
 
           if (
-            this.isNearbySourcePort(event.event) ||
-            !this.config.allowLooseLinks
+            model instanceof NodeModel ||
+            this.isNearbySourcePort(event.event)
           ) {
             this.link.remove();
             this.engine.repaintCanvas();
