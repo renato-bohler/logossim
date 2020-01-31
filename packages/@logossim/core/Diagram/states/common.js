@@ -171,3 +171,101 @@ export function handleMouseMoved(event, link) {
 
   this.engine.repaintCanvas();
 }
+
+const isLinkStraight = link => {
+  const points = link.getPoints();
+
+  if (points.length === 2) return true;
+
+  const first = points[0].getPosition();
+  const middle = points[1].getPosition();
+  const last = points[2].getPosition();
+
+  if (first.x === middle.x && middle.x === last.x) return true;
+  if (first.y === middle.y && middle.y === last.y) return true;
+
+  return false;
+};
+
+export const mergeWithBifurcation = link => {
+  const source = {
+    first: link.getFirstPoint().getPosition(),
+    middle:
+      link.getPoints().length === 3
+        ? link.getPoints()[1].getPosition()
+        : null,
+    last: link.getLastPoint().getPosition(),
+    secondLast: link
+      .getPoints()
+      [link.getPoints().length - 2].getPosition(),
+  };
+
+  const elegibleBifurcations = link.getBifurcations().filter(b => {
+    const bifurcation = {
+      first: b.getFirstPoint().getPosition(),
+      second: b.getPoints()[1].getPosition(),
+      middle:
+        b.getPoints().length === 3
+          ? b.getPoints()[1].getPosition()
+          : null,
+      last: b.getLastPoint().getPosition(),
+    };
+
+    if (!samePosition(bifurcation.first, source.last)) return false;
+
+    if (!source.middle && !bifurcation.middle) return true;
+
+    if (source.middle && bifurcation.middle) {
+      if (samePosition(source.middle, bifurcation.middle))
+        return true;
+      return false;
+    }
+
+    if (
+      source.last.x === source.secondLast.x &&
+      source.secondLast.x === bifurcation.second.x
+    )
+      return true;
+
+    if (
+      source.last.y === source.secondLast.y &&
+      source.secondLast.y === bifurcation.second.y
+    )
+      return true;
+
+    return false;
+  });
+
+  const bifurcationToMerge = elegibleBifurcations[0];
+
+  if (!bifurcationToMerge) return;
+
+  const newMiddle = bifurcationToMerge
+    .getPoints()
+    [bifurcationToMerge.getPoints().length - 2].getPosition();
+  const newLast = bifurcationToMerge.getLastPoint().getPosition();
+
+  if (link.getPoints().length === 2) {
+    link.addPoint(link.generatePoint(newMiddle.x, newMiddle.y), 1);
+  }
+
+  link.getLastPoint().setPosition(newLast.x, newLast.y);
+
+  if (link.getPoints().length === 3 && isLinkStraight(link)) {
+    link.removePoint(link.getPoints()[1]);
+  }
+
+  link.removeBifurcation(bifurcationToMerge);
+  bifurcationToMerge.remove();
+
+  if (
+    samePosition(
+      link.getFirstPoint().getPosition(),
+      link.getLastPoint().getPosition(),
+    )
+  ) {
+    link.remove();
+  } else {
+    link.setSelected(true);
+  }
+};

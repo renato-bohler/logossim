@@ -9,7 +9,12 @@ import {
   PortModel,
 } from '@projectstorm/react-diagrams-core';
 
-import { snap, handleMouseMoved, samePosition } from './common';
+import {
+  snap,
+  samePosition,
+  handleMouseMoved,
+  mergeWithBifurcation,
+} from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
   constructor(options) {
@@ -90,7 +95,12 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           if (model instanceof NodeModel) {
             this.cleanUp();
             this.engine.repaintCanvas();
+            return;
           }
+
+          mergeWithBifurcation(
+            this.bifurcation.getBifurcationSource(),
+          );
         },
       }),
     );
