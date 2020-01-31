@@ -1,5 +1,4 @@
 import {
-  SelectingState,
   State,
   Action,
   InputType,
@@ -13,11 +12,12 @@ import {
 import BifurcateLinkState from './BifurcateLinkState';
 import DragNewLinkState from './DragNewLinkState';
 import MoveItemsState from './MoveItemsState';
+import SelectingState from './SelectingState';
 
 export default class States extends State {
   constructor() {
     super({
-      name: 'default-diagrams',
+      name: 'diagram-states',
     });
 
     this.childStates = [new SelectingState()];
