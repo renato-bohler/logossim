@@ -14,6 +14,8 @@ import {
   samePosition,
   handleMouseMoved,
   mergeWithBifurcation,
+  getBifurcationLandingLink,
+  handleReverseBifurcation,
 } from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
@@ -96,6 +98,18 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             this.cleanUp();
             this.engine.repaintCanvas();
             return;
+          }
+
+          const landingLink = getBifurcationLandingLink(
+            this.bifurcation,
+            this.engine,
+          );
+          if (landingLink) {
+            handleReverseBifurcation.call(
+              this,
+              this.bifurcation,
+              landingLink,
+            );
           }
 
           mergeWithBifurcation(

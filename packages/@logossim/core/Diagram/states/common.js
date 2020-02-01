@@ -172,6 +172,58 @@ export function handleMouseMoved(event, link) {
   this.engine.repaintCanvas();
 }
 
+export function handleReverseBifurcation(link, landingLink) {
+  const reverseLink = this.engine
+    .getFactoryForLink(landingLink)
+    .generateModel();
+
+  reverseLink.setPoints(link.getPoints().reverse());
+  reverseLink.setTargetPort(link.getSourcePort());
+  reverseLink.setBifurcationSource(landingLink);
+
+  landingLink.addBifurcation(reverseLink);
+  landingLink.setSelected(true);
+
+  link.remove();
+  this.engine.getModel().addLink(reverseLink);
+}
+
+export const getBifurcationLandingLink = (link, engine) => {
+  const point = link.getLastPoint().getPosition();
+
+  return Object.values(
+    engine
+      .getModel()
+      .getLinkLayers()[0]
+      .getLinks(),
+  ).find(targetLink => {
+    if (targetLink.getID() === link.getID()) return false;
+
+    const targetLinkPoints = targetLink.getPoints();
+    const first = targetLink.getFirstPoint().getPosition();
+    const last = targetLink.getLastPoint().getPosition();
+
+    if (targetLinkPoints.length === 2) {
+      if (first.x === point.x && point.x === last.x) return true;
+      if (first.y === point.y && point.y === last.y) return true;
+      return false;
+    }
+
+    if (targetLinkPoints.length === 3) {
+      const middle = targetLinkPoints[1].getPosition();
+      if (first.x === point.x && point.x === middle.x) return true;
+      if (first.y === point.y && point.y === middle.y) return true;
+
+      if (middle.x === point.x && point.x === last.x) return true;
+      if (middle.y === point.y && point.y === last.y) return true;
+
+      return false;
+    }
+
+    return false;
+  });
+};
+
 const isLinkStraight = link => {
   const points = link.getPoints();
 

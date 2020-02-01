@@ -8,7 +8,12 @@ import {
   PortModel,
 } from '@projectstorm/react-diagrams-core';
 
-import { nearby, handleMouseMoved } from './common';
+import {
+  nearby,
+  handleMouseMoved,
+  getBifurcationLandingLink,
+  handleReverseBifurcation,
+} from './common';
 
 export default class DragNewLinkState extends AbstractDisplacementState {
   constructor(options = {}) {
@@ -73,6 +78,18 @@ export default class DragNewLinkState extends AbstractDisplacementState {
           ) {
             this.link.remove();
             this.engine.repaintCanvas();
+          }
+
+          const landingLink = getBifurcationLandingLink(
+            this.link,
+            this.engine,
+          );
+          if (landingLink) {
+            handleReverseBifurcation.call(
+              this,
+              this.link,
+              landingLink,
+            );
           }
         },
       }),
