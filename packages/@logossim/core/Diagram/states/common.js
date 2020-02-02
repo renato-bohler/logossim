@@ -203,6 +203,19 @@ export const getBifurcationLandingLink = (link, engine) => {
     const first = targetLink.getFirstPoint().getPosition();
     const last = targetLink.getLastPoint().getPosition();
 
+    if (
+      link.getBifurcationSource() &&
+      link.getBifurcationSource().getID() === targetLink.getID()
+    ) {
+      if (targetLinkPoints.length === 2) return false;
+
+      const middle = targetLinkPoints[1].getPosition();
+
+      if (first.x === point.x && point.x === middle.x) return true;
+      if (first.y === point.y && point.y === middle.y) return true;
+      return false;
+    }
+
     if (targetLinkPoints.length === 2) {
       if (first.x === point.x && point.x === last.x) return true;
       if (first.y === point.y && point.y === last.y) return true;
@@ -211,6 +224,9 @@ export const getBifurcationLandingLink = (link, engine) => {
 
     if (targetLinkPoints.length === 3) {
       const middle = targetLinkPoints[1].getPosition();
+      const linkMiddle = link.getPoints()[1].getPosition();
+
+      if (samePosition(middle, linkMiddle)) return false;
       if (first.x === point.x && point.x === middle.x) return true;
       if (first.y === point.y && point.y === middle.y) return true;
 
