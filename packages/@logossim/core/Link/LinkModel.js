@@ -44,12 +44,6 @@ export default class LinkModel extends DefaultLinkModel {
     this.bifurcations.forEach(b => b.setSelected(selected));
   }
 
-  addPoint(pointModel, index = 1) {
-    super.addPoint(pointModel, index);
-
-    return pointModel;
-  }
-
   remove() {
     this.bifurcations.forEach(bifurcation => bifurcation.remove());
 
@@ -104,6 +98,66 @@ export default class LinkModel extends DefaultLinkModel {
 
       event.engine.repaintCanvas();
     });
+  }
+
+  addPoint(pointModel, index = 1) {
+    super.addPoint(pointModel, index);
+
+    return pointModel;
+  }
+
+  getMiddlePoint() {
+    if (!this.hasMiddlePoint()) return null;
+
+    return this.getPoints()[1];
+  }
+
+  getSecondPoint() {
+    return this.getPoints()[1];
+  }
+
+  getSecondLastPoint() {
+    const points = this.getPoints();
+    return points[points.length - 2];
+  }
+
+  getFirstPosition() {
+    return this.getFirstPoint().getPosition();
+  }
+
+  getSecondPosition() {
+    return this.getSecondPoint().getPosition();
+  }
+
+  getMiddlePosition() {
+    if (!this.hasMiddlePoint()) return null;
+
+    return this.getMiddlePoint().getPosition();
+  }
+
+  getSecondLastPosition() {
+    return this.getSecondLastPoint().getPosition();
+  }
+
+  getLastPosition() {
+    return this.getLastPoint().getPosition();
+  }
+
+  hasMiddlePoint() {
+    return this.getPoints().length === 3;
+  }
+
+  isStraight() {
+    if (!this.hasMiddlePoint()) return true;
+
+    const first = this.getFirstPosition();
+    const middle = this.getMiddlePosition();
+    const last = this.getLastPosition();
+
+    if (first.x === middle.x && middle.x === last.x) return true;
+    if (first.y === middle.y && middle.y === last.y) return true;
+
+    return false;
   }
 
   setWidth(width) {

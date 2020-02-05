@@ -12,7 +12,7 @@ export const snap = (position, gridSize = 15) => {
 };
 
 export const samePosition = (p1, p2) =>
-  p1.x === p2.x && p1.y === p2.y;
+  p1 && p2 && p1.x === p2.x && p1.y === p2.y;
 
 export const nearby = (p1, p2, tolerance) =>
   Math.abs(p1.x - p2.x) <= tolerance &&
@@ -52,7 +52,46 @@ export const closestPointOnSegment = (P, segment) => {
     : { point: B, distance: distanceToB };
 };
 
-export const getRelativePoint = (point, model) => {
+const isPointOverSegment = (point, segment) => {
+  const { A, B } = segment;
+
+  if (A.x === point.x && point.x === B.x) {
+    const max = Math.max(A.y, B.y);
+    const min = Math.min(A.y, B.y);
+
+    return min <= point.y && point.y <= max;
+  }
+
+  if (A.y === point.y && point.y === B.y) {
+    const max = Math.max(A.x, B.x);
+    const min = Math.min(A.x, B.x);
+
+    return min <= point.x && point.x <= max;
+  }
+
+  return false;
+};
+
+const isPointOverFirstLinkSegment = (point, link) =>
+  isPointOverSegment(point, {
+    A: link.getFirstPosition(),
+    B: link.getSecondPosition(),
+  });
+
+const isPointOverSecondLinkSegment = (point, link) => {
+  if (!link.hasMiddlePoint()) return false;
+
+  return isPointOverSegment(point, {
+    A: link.getSecondPosition(),
+    B: link.getLastPosition(),
+  });
+};
+
+export const isPointOverLink = (point, link) =>
+  isPointOverFirstLinkSegment(point, link) ||
+  isPointOverSecondLinkSegment(point, link);
+
+const getRelativePoint = (point, model) => {
   const zoomLevelPercentage = model.getZoomLevel() / 100;
   const engineOffsetX = model.getOffsetX() / zoomLevelPercentage;
   const engineOffsetY = model.getOffsetY() / zoomLevelPercentage;
@@ -88,9 +127,8 @@ export const nextLinkPosition = (
 };
 
 export function handleMouseMoved(event, link) {
-  const points = link.getPoints();
-  const first = link.getFirstPoint().getPosition();
-  const last = link.getLastPoint().getPosition();
+  const first = link.getFirstPosition();
+  const last = link.getLastPosition();
 
   const nextPosition = nextLinkPosition(
     event,
@@ -109,7 +147,7 @@ export function handleMouseMoved(event, link) {
   }
 
   if (this.hasStartedMoving) {
-    if (points.length === 2) {
+    if (!link.hasMiddlePoint()) {
       if (last.x !== nextPosition.x) {
         if (!this.moveDirection) {
           this.moveDirection = 'horizontal';
@@ -127,25 +165,24 @@ export function handleMouseMoved(event, link) {
           link.addPoint(link.generatePoint(last.x, last.y), 1);
         }
       }
-    } else if (points.length === 3) {
-      const middlePoint = points[1];
-      const middle = middlePoint.getPosition();
+    } else if (link.hasMiddlePoint()) {
+      const middle = link.getMiddlePosition();
 
       if (samePosition(middle, last)) {
-        link.removePoint(middlePoint);
+        link.removePoint(link.getMiddlePoint());
       } else if (samePosition(first, middle)) {
-        link.removePoint(middlePoint);
+        link.removePoint(link.getMiddlePoint());
         this.moveDirection =
           this.moveDirection === 'horizontal'
             ? 'vertical'
             : 'horizontal';
       } else if (this.moveDirection === 'horizontal') {
         if (last.x !== nextPosition.x) {
-          middlePoint.setPosition(nextPosition.x, first.y);
+          link.getMiddlePoint().setPosition(nextPosition.x, first.y);
         }
       } else if (this.moveDirection === 'vertical') {
         if (last.y !== nextPosition.y) {
-          middlePoint.setPosition(first.x, nextPosition.y);
+          link.getMiddlePoint().setPosition(first.x, nextPosition.y);
         }
       }
     }
@@ -156,7 +193,7 @@ export function handleMouseMoved(event, link) {
    * a middle point. If this happens, we add it here.
    */
   if (
-    points.length === 2 &&
+    !link.hasMiddlePoint() &&
     first.x !== nextPosition.x &&
     first.y !== nextPosition.y
   ) {
@@ -196,108 +233,42 @@ export const getBifurcationLandingLink = (link, engine) => {
       .getModel()
       .getLinkLayers()[0]
       .getLinks(),
-  ).find(targetLink => {
-    if (targetLink.getID() === link.getID()) return false;
-
-    const targetLinkPoints = targetLink.getPoints();
-    const first = targetLink.getFirstPoint().getPosition();
-    const last = targetLink.getLastPoint().getPosition();
-
-    if (
-      link.getBifurcationSource() &&
-      link.getBifurcationSource().getID() === targetLink.getID()
-    ) {
-      if (targetLinkPoints.length === 2) return false;
-
-      const middle = targetLinkPoints[1].getPosition();
-
-      if (first.x === point.x && point.x === middle.x) return true;
-      if (first.y === point.y && point.y === middle.y) return true;
-      return false;
-    }
-
-    if (targetLinkPoints.length === 2) {
-      if (first.x === point.x && point.x === last.x) return true;
-      if (first.y === point.y && point.y === last.y) return true;
-      return false;
-    }
-
-    if (targetLinkPoints.length === 3) {
-      const middle = targetLinkPoints[1].getPosition();
-      const linkMiddle = link.getPoints()[1].getPosition();
-
-      if (samePosition(middle, linkMiddle)) return false;
-      if (first.x === point.x && point.x === middle.x) return true;
-      if (first.y === point.y && point.y === middle.y) return true;
-
-      if (middle.x === point.x && point.x === last.x) return true;
-      if (middle.y === point.y && point.y === last.y) return true;
-
-      return false;
-    }
-
-    return false;
+  ).find(target => {
+    if (target.getID() === link.getID()) return false;
+    return isPointOverLink(point, target);
   });
-};
-
-const isLinkStraight = link => {
-  const points = link.getPoints();
-
-  if (points.length === 2) return true;
-
-  const first = points[0].getPosition();
-  const middle = points[1].getPosition();
-  const last = points[2].getPosition();
-
-  if (first.x === middle.x && middle.x === last.x) return true;
-  if (first.y === middle.y && middle.y === last.y) return true;
-
-  return false;
 };
 
 export const mergeWithBifurcation = link => {
   const source = {
-    first: link.getFirstPoint().getPosition(),
-    middle:
-      link.getPoints().length === 3
-        ? link.getPoints()[1].getPosition()
-        : null,
-    last: link.getLastPoint().getPosition(),
-    secondLast: link
-      .getPoints()
-      [link.getPoints().length - 2].getPosition(),
+    first: link.getFirstPosition(),
+    middle: link.getMiddlePosition(),
+    last: link.getLastPosition(),
+    secondLast: link.getSecondLastPosition(),
   };
 
   const elegibleBifurcations = link.getBifurcations().filter(b => {
-    const bifurcation = {
-      first: b.getFirstPoint().getPosition(),
-      second: b.getPoints()[1].getPosition(),
-      middle:
-        b.getPoints().length === 3
-          ? b.getPoints()[1].getPosition()
-          : null,
-      last: b.getLastPoint().getPosition(),
-    };
+    if (!samePosition(b.getFirstPosition(), source.last))
+      return false;
 
-    if (!samePosition(bifurcation.first, source.last)) return false;
+    if (!link.hasMiddlePoint() && !b.hasMiddlePoint()) return true;
 
-    if (!source.middle && !bifurcation.middle) return true;
-
-    if (source.middle && bifurcation.middle) {
-      if (samePosition(source.middle, bifurcation.middle))
+    if (link.hasMiddlePoint() && b.hasMiddlePoint()) {
+      if (samePosition(source.middle, b.getMiddlePosition())) {
         return true;
+      }
       return false;
     }
 
     if (
       source.last.x === source.secondLast.x &&
-      source.secondLast.x === bifurcation.second.x
+      source.secondLast.x === b.getSecondPosition().x
     )
       return true;
 
     if (
       source.last.y === source.secondLast.y &&
-      source.secondLast.y === bifurcation.second.y
+      source.secondLast.y === b.getSecondPosition().y
     )
       return true;
 
@@ -308,30 +279,23 @@ export const mergeWithBifurcation = link => {
 
   if (!bifurcationToMerge) return;
 
-  const newMiddle = bifurcationToMerge
-    .getPoints()
-    [bifurcationToMerge.getPoints().length - 2].getPosition();
-  const newLast = bifurcationToMerge.getLastPoint().getPosition();
+  const newMiddle = bifurcationToMerge.getSecondLastPosition();
+  const newLast = bifurcationToMerge.getLastPosition();
 
-  if (link.getPoints().length === 2) {
+  if (!link.hasMiddlePoint()) {
     link.addPoint(link.generatePoint(newMiddle.x, newMiddle.y), 1);
   }
 
   link.getLastPoint().setPosition(newLast.x, newLast.y);
 
-  if (link.getPoints().length === 3 && isLinkStraight(link)) {
-    link.removePoint(link.getPoints()[1]);
+  if (link.isStraight() && link.hasMiddlePoint()) {
+    link.removePoint(link.getMiddlePoint());
   }
 
   link.removeBifurcation(bifurcationToMerge);
   bifurcationToMerge.remove();
 
-  if (
-    samePosition(
-      link.getFirstPoint().getPosition(),
-      link.getLastPoint().getPosition(),
-    )
-  ) {
+  if (samePosition(link.getFirstPosition(), link.getLastPosition())) {
     link.remove();
   } else {
     link.setSelected(true);

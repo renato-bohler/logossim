@@ -70,13 +70,12 @@ export default class MoveItemsState extends AbstractDisplacementState {
   }
 
   getLinkDirection(link) {
-    const points = link.getPoints();
-    if (points.length !== 3) {
+    if (!link.hasMiddlePoint()) {
       return null;
     }
 
-    const first = link.getFirstPoint().getPosition();
-    const middle = points[1].getPosition();
+    const first = link.getFirstPosition();
+    const middle = link.getMiddlePosition();
 
     if (first.x === middle.x) return 'vertical';
     if (first.y === middle.y) return 'horizontal';
@@ -146,32 +145,28 @@ export default class MoveItemsState extends AbstractDisplacementState {
   }
 
   adjustLinkPoints = link => {
-    const points = link.getPoints();
-
-    const first = link.getFirstPoint().getPosition();
-    const last = link.getLastPoint().getPosition();
+    const first = link.getFirstPosition();
+    const last = link.getLastPosition();
 
     if (
-      points.length === 2 &&
+      !link.hasMiddlePoint() &&
       first.x !== last.x &&
       first.y !== last.y
     ) {
       link.addPoint(link.generatePoint(first.x, last.y), 1);
-    } else if (points.length === 3) {
-      const middlePoint = points[1];
-
+    } else if (link.hasMiddlePoint()) {
       const linkDirection = this.linkDirections[link.getID()];
 
       if (linkDirection === 'horizontal') {
-        middlePoint.setPosition(last.x, first.y);
+        link.getMiddlePoint().setPosition(last.x, first.y);
       } else {
-        middlePoint.setPosition(first.x, last.y);
+        link.getMiddlePoint().setPosition(first.x, last.y);
       }
 
-      const middle = middlePoint.getPosition();
+      const middle = link.getMiddlePosition();
 
       if (samePosition(first, middle) || samePosition(middle, last)) {
-        link.removePoint(middlePoint);
+        link.removePoint(link.getMiddlePoint());
       }
     }
 
@@ -183,12 +178,9 @@ export default class MoveItemsState extends AbstractDisplacementState {
     const bifurcations = link.getBifurcations();
 
     const points = {
-      first: link.getFirstPoint().getPosition(),
-      middle:
-        link.getPoints().length === 3
-          ? link.getPoints()[1].getPosition()
-          : null,
-      last: link.getLastPoint().getPosition(),
+      first: link.getFirstPosition(),
+      middle: link.getMiddlePosition(),
+      last: link.getLastPosition(),
     };
 
     bifurcations.forEach(bifurcation => {

@@ -16,6 +16,7 @@ import {
   mergeWithBifurcation,
   getBifurcationLandingLink,
   handleReverseBifurcation,
+  isPointOverLink,
 } from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
@@ -100,21 +101,24 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             return;
           }
 
-          const landingLink = getBifurcationLandingLink(
-            this.bifurcation,
-            this.engine,
-          );
-          if (landingLink) {
-            handleReverseBifurcation.call(
-              this,
+          if (this.bifurcation.getSourcePort()) {
+            const landingLink = getBifurcationLandingLink(
               this.bifurcation,
-              landingLink,
+              this.engine,
             );
+            if (landingLink) {
+              handleReverseBifurcation.call(
+                this,
+                this.bifurcation,
+                landingLink,
+              );
+            }
           }
 
           mergeWithBifurcation(
             this.bifurcation.getBifurcationSource(),
           );
+          this.adjustBifurcationOverlayingSource(this.bifurcation);
         },
       }),
     );
@@ -208,6 +212,77 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       this.bifurcation.getFirstPoint().getPosition(),
       this.bifurcation.getLastPoint().getPosition(),
     );
+  }
+
+  adjustBifurcationOverlayingSource() {
+    const source = this.bifurcation.getBifurcationSource();
+
+    if (
+      samePosition(
+        this.bifurcation.getFirstPosition(),
+        source.getLastPosition(),
+      )
+    ) {
+      if (
+        isPointOverLink(this.bifurcation.getSecondPosition(), source)
+      ) {
+        this.bifurcation.removePoint(
+          this.bifurcation.getFirstPoint(),
+        );
+      }
+      return;
+    }
+
+    if (
+      isPointOverLink(this.bifurcation.getFirstPosition(), source) &&
+      isPointOverLink(this.bifurcation.getSecondPosition(), source)
+    ) {
+      if (!this.bifurcation.hasMiddlePoint()) {
+        this.bifurcation.remove();
+        source.removeBifurcation(this.bifurcation);
+        return;
+      }
+
+      this.bifurcation.removePoint(this.bifurcation.getFirstPoint());
+
+      if (
+        samePosition(
+          this.bifurcation.getFirstPosition(),
+          source.getMiddlePosition(),
+        )
+      ) {
+        if (
+          isPointOverLink(this.bifurcation.getLastPosition(), source)
+        ) {
+          this.bifurcation.remove();
+          source.removeBifurcation(this.bifurcation);
+          return;
+        }
+
+        this.bifurcation
+          .getFirstPoint()
+          .setPosition(source.getLastPosition());
+        mergeWithBifurcation(source);
+        return;
+      }
+    }
+
+    if (source.hasMiddlePoint()) {
+      if (
+        (this.bifurcation.getFirstPosition().x ===
+          source.getMiddlePosition().x &&
+          source.getMiddlePosition().x ===
+            this.bifurcation.getSecondPosition().x) ||
+        (this.bifurcation.getFirstPosition().y ===
+          source.getMiddlePosition().y &&
+          source.getMiddlePosition().y ===
+            this.bifurcation.getSecondPosition().y)
+      ) {
+        this.bifurcation
+          .getFirstPoint()
+          .setPosition(source.getMiddlePosition());
+      }
+    }
   }
 
   fireMouseMoved(event) {
