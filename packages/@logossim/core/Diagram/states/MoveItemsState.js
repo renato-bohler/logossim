@@ -10,9 +10,9 @@ import { NodeModel } from '@projectstorm/react-diagrams-core';
 import {
   snap,
   samePosition,
-  closestPointOnSegment,
   sameX,
   sameY,
+  closestPointToLink,
 } from './common';
 
 export default class MoveItemsState extends AbstractDisplacementState {
@@ -184,55 +184,21 @@ export default class MoveItemsState extends AbstractDisplacementState {
   adjustLinkBifurcations(link) {
     const bifurcations = link.getBifurcations();
 
-    const points = {
-      first: link.getFirstPosition(),
-      middle: link.getMiddlePosition(),
-      last: link.getLastPosition(),
-    };
-
     bifurcations.forEach(bifurcation => {
       const originPoint = bifurcation.getFirstPoint();
 
-      this.adjustBifurcationOrigin(originPoint, points);
+      this.adjustBifurcationOrigin(originPoint, link);
 
       // Adjusts the points of this bifurcation
       this.adjustLinkPoints(bifurcation);
     });
   }
 
-  adjustBifurcationOrigin(originPoint, points) {
-    const { first, middle, last } = points;
-
+  adjustBifurcationOrigin(originPoint, link) {
     const origin = originPoint.getPosition();
     const { gridSize } = this.engine.getModel().getOptions();
 
-    if (middle === null) {
-      const closest = snap(
-        closestPointOnSegment(origin, {
-          A: first,
-          B: last,
-        }).point,
-        gridSize,
-      );
-      originPoint.setPosition(closest.x, closest.y);
-    } else {
-      const firstSegment = closestPointOnSegment(origin, {
-        A: first,
-        B: middle,
-      });
-
-      const lastSegment = closestPointOnSegment(origin, {
-        A: middle,
-        B: last,
-      });
-
-      if (firstSegment.distance <= lastSegment.distance) {
-        const closest = snap(firstSegment.point, gridSize);
-        originPoint.setPosition(closest.x, closest.y);
-      } else {
-        const closest = snap(lastSegment.point, gridSize);
-        originPoint.setPosition(closest.x, closest.y);
-      }
-    }
+    const closest = snap(closestPointToLink(origin, link), gridSize);
+    originPoint.setPosition(closest.x, closest.y);
   }
 }

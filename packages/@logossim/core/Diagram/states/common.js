@@ -29,7 +29,7 @@ export const nearby = (p1, p2, tolerance) =>
 
 const distance = (A, B) => Math.hypot(A.x - B.x, A.y - B.y);
 
-export const closestPointOnSegment = (P, segment) => {
+const closestPointOnSegment = (P, segment) => {
   const { A, B } = segment;
 
   const v = new Point(B.x - A.x, B.y - A.y);
@@ -61,6 +61,30 @@ export const closestPointOnSegment = (P, segment) => {
     : { point: B, distance: distanceToB };
 };
 
+export const closestPointToLink = (P, link) => {
+  if (!link.hasMiddlePoint()) {
+    return closestPointOnSegment(P, {
+      A: link.getFirstPosition(),
+      B: link.getLastPosition(),
+    }).point;
+  }
+
+  const firstSegment = closestPointOnSegment(P, {
+    A: link.getFirstPosition(),
+    B: link.getMiddlePosition(),
+  });
+
+  const lastSegment = closestPointOnSegment(P, {
+    A: link.getMiddlePosition(),
+    B: link.getLastPosition(),
+  });
+
+  if (firstSegment.distance <= lastSegment.distance) {
+    return firstSegment.point;
+  }
+  return lastSegment.point;
+};
+
 const isPointOverSegment = (point, segment) => {
   const { A, B } = segment;
 
@@ -81,13 +105,13 @@ const isPointOverSegment = (point, segment) => {
   return false;
 };
 
-const isPointOverFirstLinkSegment = (point, link) =>
+export const isPointOverFirstLinkSegment = (point, link) =>
   isPointOverSegment(point, {
     A: link.getFirstPosition(),
     B: link.getSecondPosition(),
   });
 
-const isPointOverSecondLinkSegment = (point, link) => {
+export const isPointOverSecondLinkSegment = (point, link) => {
   if (!link.hasMiddlePoint()) return false;
 
   return isPointOverSegment(point, {
@@ -246,60 +270,4 @@ export const getBifurcationLandingLink = (link, engine) => {
     if (target.getID() === link.getID()) return false;
     return isPointOverLink(point, target);
   });
-};
-
-export const mergeWithBifurcation = link => {
-  const source = {
-    first: link.getFirstPosition(),
-    middle: link.getMiddlePosition(),
-    last: link.getLastPosition(),
-    secondLast: link.getSecondLastPosition(),
-  };
-
-  const elegibleBifurcations = link.getBifurcations().filter(b => {
-    if (!samePosition(b.getFirstPosition(), source.last))
-      return false;
-
-    if (!link.hasMiddlePoint() && !b.hasMiddlePoint()) return true;
-
-    if (link.hasMiddlePoint() && b.hasMiddlePoint()) {
-      if (samePosition(source.middle, b.getMiddlePosition())) {
-        return true;
-      }
-      return false;
-    }
-
-    if (
-      sameAxis(source.last, source.secondLast, b.getSecondPosition())
-    )
-      return true;
-
-    return false;
-  });
-
-  const bifurcationToMerge = elegibleBifurcations[0];
-
-  if (!bifurcationToMerge) return;
-
-  const newMiddle = bifurcationToMerge.getSecondLastPosition();
-  const newLast = bifurcationToMerge.getLastPosition();
-
-  if (!link.hasMiddlePoint()) {
-    link.addPoint(link.generatePoint(newMiddle.x, newMiddle.y), 1);
-  }
-
-  link.getLastPoint().setPosition(newLast.x, newLast.y);
-
-  if (link.isStraight() && link.hasMiddlePoint()) {
-    link.removePoint(link.getMiddlePoint());
-  }
-
-  link.removeBifurcation(bifurcationToMerge);
-  bifurcationToMerge.remove();
-
-  if (samePosition(link.getFirstPosition(), link.getLastPosition())) {
-    link.remove();
-  } else {
-    link.setSelected(true);
-  }
 };

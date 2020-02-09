@@ -13,12 +13,12 @@ import {
   snap,
   samePosition,
   handleMouseMoved,
-  mergeWithBifurcation,
   getBifurcationLandingLink,
   handleReverseBifurcation,
   isPointOverLink,
   sameX,
   sameAxis,
+  closestPointToLink,
 } from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
@@ -93,6 +93,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           ) {
             this.bifurcation.setTargetPort(model);
             model.reportPosition();
+            this.adjustBifurcationOverlayingSource(this.bifurcation);
             this.engine.repaintCanvas();
             return;
           }
@@ -117,7 +118,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             }
           }
 
-          mergeWithBifurcation(
+          this.mergeWithBifurcation(
             this.bifurcation.getBifurcationSource(),
           );
           this.adjustBifurcationOverlayingSource(this.bifurcation);
@@ -264,7 +265,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
         this.bifurcation
           .getFirstPoint()
           .setPosition(source.getLastPosition());
-        mergeWithBifurcation(source);
+        this.mergeWithBifurcation(source);
         return;
       }
     }
@@ -282,6 +283,114 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           .setPosition(source.getMiddlePosition());
       }
     }
+  }
+
+  mergeWithBifurcation(link) {
+    const source = {
+      first: link.getFirstPosition(),
+      middle: link.getMiddlePosition(),
+      last: link.getLastPosition(),
+      secondLast: link.getSecondLastPosition(),
+    };
+
+    const elegibleBifurcations = link.getBifurcations().filter(b => {
+      if (!samePosition(b.getFirstPosition(), source.last))
+        return false;
+
+      if (!link.hasMiddlePoint() && !b.hasMiddlePoint()) return true;
+
+      if (link.hasMiddlePoint() && b.hasMiddlePoint()) {
+        if (samePosition(source.middle, b.getMiddlePosition())) {
+          return true;
+        }
+        return false;
+      }
+
+      if (
+        sameAxis(
+          source.last,
+          source.secondLast,
+          b.getSecondPosition(),
+        )
+      )
+        return true;
+
+      return false;
+    });
+
+    const bifurcationToMerge = elegibleBifurcations[0];
+
+    if (!bifurcationToMerge) return;
+
+    const newMiddle = bifurcationToMerge.getSecondLastPosition();
+    const newLast = bifurcationToMerge.getLastPosition();
+
+    if (!link.hasMiddlePoint()) {
+      link.addPoint(link.generatePoint(newMiddle.x, newMiddle.y), 1);
+    }
+
+    link.getLastPoint().setPosition(newLast.x, newLast.y);
+
+    if (link.isStraight() && link.hasMiddlePoint()) {
+      link.removePoint(link.getMiddlePoint());
+    }
+
+    link.removeBifurcation(bifurcationToMerge);
+    bifurcationToMerge.remove();
+
+    if (
+      samePosition(link.getFirstPosition(), link.getLastPosition())
+    ) {
+      link.remove();
+    } else {
+      link.setSelected(true);
+    }
+
+    this.adjustBifurcationSources(link);
+  }
+
+  adjustBifurcationSources(link) {
+    const { gridSize } = this.engine.getModel().getOptions();
+
+    link
+      .getBifurcations()
+      .filter(b => !isPointOverLink(b.getFirstPosition(), link))
+      .forEach(b => {
+        const newSource = snap(
+          closestPointToLink(b.getFirstPosition(), link),
+          gridSize,
+        );
+
+        b.getFirstPoint().setPosition(newSource.x, newSource.y);
+
+        if (sameAxis(b.getFirstPosition(), b.getLastPosition()))
+          return;
+
+        // Adjust middle point aswell
+        if (b.hasMiddlePoint()) {
+          b.removePoint(b.getMiddlePoint());
+        }
+
+        if (
+          sameX(link.getFirstPosition(), link.getSecondPosition())
+        ) {
+          b.addPoint(
+            b.generatePoint(
+              b.getLastPosition().x,
+              b.getFirstPosition().y,
+            ),
+            1,
+          );
+        } else {
+          b.addPoint(
+            b.generatePoint(
+              b.getFirstPosition().x,
+              b.getLastPosition().y,
+            ),
+            1,
+          );
+        }
+      });
   }
 
   fireMouseMoved(event) {
