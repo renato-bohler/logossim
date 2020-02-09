@@ -17,6 +17,8 @@ import {
   getBifurcationLandingLink,
   handleReverseBifurcation,
   isPointOverLink,
+  sameX,
+  sameAxis,
 } from './common';
 
 export default class BifurcateLinkState extends AbstractDisplacementState {
@@ -184,7 +186,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
 
   getPathDirections(points) {
     return this.getPathPoints(points).map(pathPosition =>
-      pathPosition.from.position.x === pathPosition.to.position.x
+      sameX(pathPosition.from.position, pathPosition.to.position)
         ? {
             axis: 'x',
             position: pathPosition.from.position.x,
@@ -269,14 +271,11 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
 
     if (source.hasMiddlePoint()) {
       if (
-        (this.bifurcation.getFirstPosition().x ===
-          source.getMiddlePosition().x &&
-          source.getMiddlePosition().x ===
-            this.bifurcation.getSecondPosition().x) ||
-        (this.bifurcation.getFirstPosition().y ===
-          source.getMiddlePosition().y &&
-          source.getMiddlePosition().y ===
-            this.bifurcation.getSecondPosition().y)
+        sameAxis(
+          this.bifurcation.getFirstPosition(),
+          source.getMiddlePosition(),
+          this.bifurcation.getSecondPosition(),
+        )
       ) {
         this.bifurcation
           .getFirstPoint()

@@ -14,6 +14,15 @@ export const snap = (position, gridSize = 15) => {
 export const samePosition = (p1, p2) =>
   p1 && p2 && p1.x === p2.x && p1.y === p2.y;
 
+export const sameX = (...points) =>
+  points.map(p => p.x).every((p, i, arr) => p === arr[0]);
+
+export const sameY = (...points) =>
+  points.map(p => p.y).every((p, i, arr) => p === arr[0]);
+
+export const sameAxis = (...points) =>
+  sameX(...points) || sameY(...points);
+
 export const nearby = (p1, p2, tolerance) =>
   Math.abs(p1.x - p2.x) <= tolerance &&
   Math.abs(p1.y - p2.y) <= tolerance;
@@ -55,14 +64,14 @@ export const closestPointOnSegment = (P, segment) => {
 const isPointOverSegment = (point, segment) => {
   const { A, B } = segment;
 
-  if (A.x === point.x && point.x === B.x) {
+  if (sameX(A, point, B)) {
     const max = Math.max(A.y, B.y);
     const min = Math.min(A.y, B.y);
 
     return min <= point.y && point.y <= max;
   }
 
-  if (A.y === point.y && point.y === B.y) {
+  if (sameY(A, point, B)) {
     const max = Math.max(A.x, B.x);
     const min = Math.min(A.x, B.x);
 
@@ -261,14 +270,7 @@ export const mergeWithBifurcation = link => {
     }
 
     if (
-      source.last.x === source.secondLast.x &&
-      source.secondLast.x === b.getSecondPosition().x
-    )
-      return true;
-
-    if (
-      source.last.y === source.secondLast.y &&
-      source.secondLast.y === b.getSecondPosition().y
+      sameAxis(source.last, source.secondLast, b.getSecondPosition())
     )
       return true;
 

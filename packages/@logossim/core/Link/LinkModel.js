@@ -1,6 +1,7 @@
 import { Point } from '@projectstorm/geometry';
 import { PointModel } from '@projectstorm/react-diagrams';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
+import { sameAxis } from '../Diagram/states/common';
 
 export default class LinkModel extends DefaultLinkModel {
   constructor(options) {
@@ -154,8 +155,7 @@ export default class LinkModel extends DefaultLinkModel {
     const middle = this.getMiddlePosition();
     const last = this.getLastPosition();
 
-    if (first.x === middle.x && middle.x === last.x) return true;
-    if (first.y === middle.y && middle.y === last.y) return true;
+    if (sameAxis(first, middle, last)) return true;
 
     return false;
   }

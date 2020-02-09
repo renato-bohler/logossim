@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
+import { samePosition } from '../Diagram/states/common';
 
 export default class LinkWidget extends Component {
   constructor(props) {
@@ -96,10 +97,7 @@ export default class LinkWidget extends Component {
       .getLastPoint()
       .getPosition();
 
-    if (
-      bifurcationOrigin.x === lastSourcePoint.x &&
-      bifurcationOrigin.y === lastSourcePoint.y
-    ) {
+    if (samePosition(bifurcationOrigin, lastSourcePoint)) {
       return null;
     }
 
@@ -119,10 +117,7 @@ export default class LinkWidget extends Component {
         .getFirstPoint()
         .getPosition();
 
-      return (
-        bifurcationOrigin.x === lastSourcePoint.x &&
-        bifurcationOrigin.y === lastSourcePoint.y
-      );
+      return samePosition(bifurcationOrigin, lastSourcePoint);
     });
 
     if (isContinued) {

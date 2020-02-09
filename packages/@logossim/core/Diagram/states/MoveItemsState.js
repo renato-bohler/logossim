@@ -7,7 +7,13 @@ import {
 } from '@projectstorm/react-canvas-core';
 import { NodeModel } from '@projectstorm/react-diagrams-core';
 
-import { snap, samePosition, closestPointOnSegment } from './common';
+import {
+  snap,
+  samePosition,
+  closestPointOnSegment,
+  sameX,
+  sameY,
+} from './common';
 
 export default class MoveItemsState extends AbstractDisplacementState {
   constructor() {
@@ -77,8 +83,9 @@ export default class MoveItemsState extends AbstractDisplacementState {
     const first = link.getFirstPosition();
     const middle = link.getMiddlePosition();
 
-    if (first.x === middle.x) return 'vertical';
-    if (first.y === middle.y) return 'horizontal';
+    if (sameX(first, middle)) return 'vertical';
+    if (sameY(first, middle)) return 'horizontal';
+
     return null;
   }
 
