@@ -265,6 +265,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
         this.bifurcation
           .getFirstPoint()
           .setPosition(source.getLastPosition());
+
         this.mergeWithBifurcation(source);
         return;
       }
@@ -292,6 +293,12 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       last: link.getLastPosition(),
       secondLast: link.getSecondLastPosition(),
     };
+
+    link.getBifurcations().forEach(b => {
+      if (isPointOverLink(link.getLastPosition(), b)) {
+        b.getFirstPoint().setPosition(link.getLastPosition());
+      }
+    });
 
     const elegibleBifurcations = link.getBifurcations().filter(b => {
       if (!samePosition(b.getFirstPosition(), source.last))
