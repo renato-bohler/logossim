@@ -8,6 +8,11 @@ import {
   PointModel,
 } from '@projectstorm/react-diagrams-core';
 
+/**
+ * This State handles selection box events.
+ *
+ * Link (and link points) selection is currently disabled.
+ */
 export default class SelectionBoxState extends AbstractDisplacementState {
   constructor() {
     super({

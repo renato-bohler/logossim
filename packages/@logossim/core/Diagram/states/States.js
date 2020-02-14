@@ -14,6 +14,10 @@ import DragNewLinkState from './DragNewLinkState';
 import MoveItemsState from './MoveItemsState';
 import SelectingState from './SelectingState';
 
+/**
+ * This class defines custom handlers (called states) to respond to
+ * clicking events on certain elements.
+ */
 export default class States extends State {
   constructor() {
     super({
@@ -26,7 +30,7 @@ export default class States extends State {
     this.bifurcateLink = new BifurcateLinkState();
     this.dragItems = new MoveItemsState();
 
-    // determine what was clicked on
+    // Determine what was clicked on
     this.registerAction(
       new Action({
         type: InputType.MOUSE_DOWN,
@@ -35,19 +39,19 @@ export default class States extends State {
             .getActionEventBus()
             .getModelForEvent(event);
 
-          // the canvas was clicked on, transition to the dragging canvas state
+          // The canvas was clicked on, transition to the dragging canvas state
           if (!element) {
             this.transitionWithEvent(this.dragCanvas, event);
           }
-          // initiate dragging a new link
+          // Initiate dragging a new link
           else if (element instanceof PortModel) {
             this.transitionWithEvent(this.dragNewLink, event);
           }
-          // create a bifurcation
+          // Create a bifurcation
           else if (element instanceof LinkModel) {
             this.transitionWithEvent(this.bifurcateLink, event);
           }
-          // move the items (and potentially link points)
+          // Move items
           else {
             this.transitionWithEvent(this.dragItems, event);
           }

@@ -12,22 +12,40 @@ import {
 import {
   snap,
   samePosition,
-  handleMouseMoved,
-  getBifurcationLandingLink,
-  handleReverseBifurcation,
+  getLandingLink,
   isPointOverLink,
   sameX,
   sameAxis,
   closestPointToLink,
 } from './common';
 
-export default class BifurcateLinkState extends AbstractDisplacementState {
-  constructor(options) {
-    super({ name: 'bifurcate-link' });
+import {
+  handleMouseMoved,
+  handleReverseBifurcation,
+  handleLinkToLinkBifurcation,
+} from './handlers';
 
-    this.config = {
-      ...options,
-    };
+/**
+ * This State is responsible for handling bifurcation events.
+ *
+ * A bifurcation is just like a normal link, but instead of having a
+ * source port, it has a source link (its `bifurcationSource`).
+ *
+ * There are three ways the user can create bifurcations:
+ *
+ * 1. By dragging from a port into an existing link
+ *    (reverse bifurcation)
+ * 2. By dragging an existing link into another existing link
+ *    (link-to-link bifurcation)
+ * 3. By dragging an existing link to any other point on the canvas,
+ *    except on top of nodes
+ *
+ * If the drag start and end points are near each other, this action
+ * will behave as a link selection.
+ */
+export default class BifurcateLinkState extends AbstractDisplacementState {
+  constructor() {
+    super({ name: 'bifurcate-link' });
 
     this.registerAction(
       new Action({
@@ -87,6 +105,14 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
 
           const model = this.engine.getMouseElement(event.event);
 
+          // Disallows creation under nodes
+          if (model instanceof NodeModel) {
+            this.cleanUp();
+            this.engine.repaintCanvas();
+            return;
+          }
+
+          // Bifurcation connected to port
           if (
             model instanceof PortModel &&
             model.isNewLinkAllowed()
@@ -98,22 +124,21 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             return;
           }
 
-          if (model instanceof NodeModel) {
-            this.cleanUp();
-            this.engine.repaintCanvas();
-            return;
-          }
-
-          const landingLink = getBifurcationLandingLink(
+          // Bifurcation landing on another existing link
+          const landing = getLandingLink(
             this.bifurcation,
             this.engine,
           );
-          if (landingLink) {
-            handleReverseBifurcation.call(
-              this,
-              this.bifurcation,
-              landingLink,
-            );
+          if (landing) {
+            if (this.bifurcation.getBifurcationSource()) {
+              handleLinkToLinkBifurcation(this.bifurcation, landing);
+            } else {
+              handleReverseBifurcation.call(
+                this,
+                this.bifurcation,
+                landing,
+              );
+            }
           }
 
           this.mergeWithBifurcation(
@@ -130,6 +155,9 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
     this.bifurcation.remove();
   }
 
+  /**
+   * Snaps a point to a point which is over the source link.
+   */
   snapPointToSourceLink(position, source) {
     const { gridSize } = this.engine.getModel().getOptions();
     const sourcePoints = source.getPoints();
@@ -210,11 +238,16 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
 
   isNearbySourcePosition() {
     return samePosition(
-      this.bifurcation.getFirstPoint().getPosition(),
-      this.bifurcation.getLastPoint().getPosition(),
+      this.bifurcation.getFirstPosition(),
+      this.bifurcation.getLastPosition(),
     );
   }
 
+  /**
+   * Removes the bifurcation points which are causing the bifurcation
+   * to overlay its source link. Removes the whole bifurcation, in
+   * case it is completely overlayed by its source link.
+   */
   adjustBifurcationOverlayingSource() {
     const source = this.bifurcation.getBifurcationSource();
 
@@ -284,6 +317,9 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
     }
   }
 
+  /**
+   * Merges a link with its bifurcations, when possible.
+   */
   mergeWithBifurcation(link) {
     const source = {
       first: link.getFirstPosition(),
@@ -351,10 +387,14 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       link.setSelected(true);
     }
 
-    this.adjustBifurcationSources(link);
+    this.adjustBifurcationPoints(link);
   }
 
-  adjustBifurcationSources(link) {
+  /**
+   * Adjusts points for bifurcations on which its first point is not
+   * over its source link.
+   */
+  adjustBifurcationPoints(link) {
     const { gridSize } = this.engine.getModel().getOptions();
 
     link
@@ -398,6 +438,9 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       });
   }
 
+  /**
+   * Updates bifurcation's points upon mouse move.
+   */
   fireMouseMoved(event) {
     handleMouseMoved.call(this, event, this.bifurcation);
   }

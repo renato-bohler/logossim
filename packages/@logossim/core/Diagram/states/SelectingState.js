@@ -6,6 +6,9 @@ import {
 
 import SelectionBoxState from './SelectionBoxState';
 
+/**
+ * This State handles nodes selection.
+ */
 export default class SelectingState extends State {
   constructor() {
     super({

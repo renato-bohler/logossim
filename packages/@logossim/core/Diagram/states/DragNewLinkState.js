@@ -8,13 +8,15 @@ import {
   PortModel,
 } from '@projectstorm/react-diagrams-core';
 
+import { nearby, getLandingLink } from './common';
 import {
-  nearby,
   handleMouseMoved,
-  getBifurcationLandingLink,
   handleReverseBifurcation,
-} from './common';
+} from './handlers';
 
+/**
+ * This State is responsible for handling link creation events.
+ */
 export default class DragNewLinkState extends AbstractDisplacementState {
   constructor(options = {}) {
     super({ name: 'drag-new-link' });
@@ -62,6 +64,16 @@ export default class DragNewLinkState extends AbstractDisplacementState {
         fire: event => {
           const model = this.engine.getMouseElement(event.event);
 
+          // Disallows creation under nodes
+          if (
+            model instanceof NodeModel ||
+            this.isNearbySourcePort(event.event)
+          ) {
+            this.link.remove();
+            this.engine.repaintCanvas();
+          }
+
+          // Link connected to port
           if (
             model instanceof PortModel &&
             this.port.canLinkToPort(model)
@@ -72,24 +84,10 @@ export default class DragNewLinkState extends AbstractDisplacementState {
             return;
           }
 
-          if (
-            model instanceof NodeModel ||
-            this.isNearbySourcePort(event.event)
-          ) {
-            this.link.remove();
-            this.engine.repaintCanvas();
-          }
-
-          const landingLink = getBifurcationLandingLink(
-            this.link,
-            this.engine,
-          );
-          if (landingLink) {
-            handleReverseBifurcation.call(
-              this,
-              this.link,
-              landingLink,
-            );
+          // Link landing on another link
+          const landing = getLandingLink(this.link, this.engine);
+          if (landing) {
+            handleReverseBifurcation.call(this, this.link, landing);
           }
         },
       }),
@@ -106,6 +104,9 @@ export default class DragNewLinkState extends AbstractDisplacementState {
     return nearby(point, sourcePortPosition, sourcePortSize);
   }
 
+  /**
+   * Updates link's points upon mouse move.
+   */
   fireMouseMoved(event) {
     handleMouseMoved.call(this, event, this.link);
   }

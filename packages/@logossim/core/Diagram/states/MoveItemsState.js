@@ -15,6 +15,12 @@ import {
   closestPointToLink,
 } from './common';
 
+/**
+ * This State handles node moving.
+ *
+ * When nodes are moved, all of its links (and all bifurcations from
+ * or to this link) need to be rearranged.
+ */
 export default class MoveItemsState extends AbstractDisplacementState {
   constructor() {
     super({
@@ -44,6 +50,14 @@ export default class MoveItemsState extends AbstractDisplacementState {
     );
   }
 
+  activated(previous) {
+    super.activated(previous);
+    this.initialPositions = {};
+  }
+
+  /**
+   * Gets all links from a given node, including all its bifurcations.
+   */
   getLinksFromNode(node) {
     if (!(node instanceof NodeModel)) return [];
 
@@ -89,11 +103,6 @@ export default class MoveItemsState extends AbstractDisplacementState {
     return null;
   }
 
-  activated(previous) {
-    super.activated(previous);
-    this.initialPositions = {};
-  }
-
   fireMouseMoved(event) {
     const currentDisplacement = snap(
       new Point(
@@ -103,6 +112,7 @@ export default class MoveItemsState extends AbstractDisplacementState {
       this.engine.getModel().getOptions().gridSize,
     );
 
+    // Avoids rearranging everything before moving at least one grid
     if (samePosition(currentDisplacement, this.lastDisplacement)) {
       return;
     }
@@ -187,11 +197,16 @@ export default class MoveItemsState extends AbstractDisplacementState {
     bifurcations.forEach(bifurcation => {
       this.adjustFirstAndLastPoints(bifurcation);
 
-      // Adjusts the points of this bifurcation
+      // Adjusts the points of this bifurcation (recursion)
       this.adjustLinkPoints(bifurcation);
     });
   }
 
+  /**
+   * Assures that the first position on a bifurcation is still over
+   * the source link, and that the last position is still over the
+   * target link.
+   */
   adjustFirstAndLastPoints(bifurcation) {
     const { gridSize } = this.engine.getModel().getOptions();
 
