@@ -177,7 +177,7 @@ export default class MoveItemsState extends AbstractDisplacementState {
       }
     }
 
-    // Adjusts the origin position from bifurcations of this link
+    // Adjusts origin/target position from bifurcations of this link
     this.adjustLinkBifurcations(link);
   };
 
@@ -185,20 +185,36 @@ export default class MoveItemsState extends AbstractDisplacementState {
     const bifurcations = link.getBifurcations();
 
     bifurcations.forEach(bifurcation => {
-      const originPoint = bifurcation.getFirstPoint();
-
-      this.adjustBifurcationOrigin(originPoint, link);
+      this.adjustFirstAndLastPoints(bifurcation);
 
       // Adjusts the points of this bifurcation
       this.adjustLinkPoints(bifurcation);
     });
   }
 
-  adjustBifurcationOrigin(originPoint, link) {
-    const origin = originPoint.getPosition();
+  adjustFirstAndLastPoints(bifurcation) {
     const { gridSize } = this.engine.getModel().getOptions();
 
-    const closest = snap(closestPointToLink(origin, link), gridSize);
-    originPoint.setPosition(closest.x, closest.y);
+    const first = bifurcation.getFirstPoint();
+    const closestToFirst = snap(
+      closestPointToLink(
+        first.getPosition(),
+        bifurcation.getBifurcationSource(),
+      ),
+      gridSize,
+    );
+    first.setPosition(closestToFirst.x, closestToFirst.y);
+
+    if (bifurcation.getBifurcationTarget()) {
+      const last = bifurcation.getLastPoint();
+      const closestToLast = snap(
+        closestPointToLink(
+          last.getPosition(),
+          bifurcation.getBifurcationTarget(),
+        ),
+        gridSize,
+      );
+      last.setPosition(closestToLast.x, closestToLast.y);
+    }
   }
 }

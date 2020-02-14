@@ -243,19 +243,26 @@ export function handleMouseMoved(event, link) {
 }
 
 export function handleReverseBifurcation(link, landingLink) {
-  const reverseLink = this.engine
-    .getFactoryForLink(landingLink)
-    .generateModel();
+  if (link.getBifurcationSource()) {
+    // Link to link bifurcation
+    link.setBifurcationTarget(landingLink);
+    landingLink.addBifurcation(link);
+    landingLink.setSelected(true);
+  } else {
+    // Port to link bifurcation
+    const reverseLink = this.engine
+      .getFactoryForLink(landingLink)
+      .generateModel();
+    reverseLink.setPoints(link.getPoints().reverse());
+    reverseLink.setTargetPort(link.getSourcePort());
+    reverseLink.setBifurcationSource(landingLink);
 
-  reverseLink.setPoints(link.getPoints().reverse());
-  reverseLink.setTargetPort(link.getSourcePort());
-  reverseLink.setBifurcationSource(landingLink);
+    landingLink.addBifurcation(reverseLink);
+    landingLink.setSelected(true);
 
-  landingLink.addBifurcation(reverseLink);
-  landingLink.setSelected(true);
-
-  link.remove();
-  this.engine.getModel().addLink(reverseLink);
+    link.remove();
+    this.engine.getModel().addLink(reverseLink);
+  }
 }
 
 export const getBifurcationLandingLink = (link, engine) => {

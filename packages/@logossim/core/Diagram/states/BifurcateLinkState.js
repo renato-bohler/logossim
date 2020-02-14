@@ -104,18 +104,16 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             return;
           }
 
-          if (this.bifurcation.getSourcePort()) {
-            const landingLink = getBifurcationLandingLink(
+          const landingLink = getBifurcationLandingLink(
+            this.bifurcation,
+            this.engine,
+          );
+          if (landingLink) {
+            handleReverseBifurcation.call(
+              this,
               this.bifurcation,
-              this.engine,
+              landingLink,
             );
-            if (landingLink) {
-              handleReverseBifurcation.call(
-                this,
-                this.bifurcation,
-                landingLink,
-              );
-            }
           }
 
           this.mergeWithBifurcation(

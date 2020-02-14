@@ -12,6 +12,7 @@ export default class LinkModel extends DefaultLinkModel {
 
     this.bifurcations = [];
     this.bifurcationSource = null;
+    this.bifurcationTarget = null;
   }
 
   setBifurcationSource(link) {
@@ -20,6 +21,14 @@ export default class LinkModel extends DefaultLinkModel {
 
   getBifurcationSource() {
     return this.bifurcationSource;
+  }
+
+  setBifurcationTarget(link) {
+    this.bifurcationTarget = link;
+  }
+
+  getBifurcationTarget() {
+    return this.bifurcationTarget;
   }
 
   addBifurcation(link) {
@@ -62,6 +71,9 @@ export default class LinkModel extends DefaultLinkModel {
       bifurcationSource: this.bifurcationSource
         ? this.bifurcationSource.getID()
         : null,
+      bifurcationTarget: this.bifurcationTarget
+        ? this.bifurcationTarget.getID()
+        : null,
     };
   }
 
@@ -71,7 +83,7 @@ export default class LinkModel extends DefaultLinkModel {
     const {
       getModel,
       registerModel,
-      data: { bifurcationSource, bifurcations },
+      data: { bifurcationSource, bifurcationTarget, bifurcations },
     } = event;
 
     registerModel(this);
@@ -94,6 +106,12 @@ export default class LinkModel extends DefaultLinkModel {
       if (bifurcationSource) {
         getModel(bifurcationSource).then(source =>
           this.setBifurcationSource(source),
+        );
+      }
+
+      if (bifurcationTarget) {
+        getModel(bifurcationTarget).then(target =>
+          this.setBifurcationTarget(target),
         );
       }
 
