@@ -5,12 +5,19 @@ import { PortWidget } from '@projectstorm/react-diagrams';
 const Circle = styled.div`
   width: 10px;
   height: 10px;
-  border: 1px solid ${props => (props.connected ? 'gray' : '#333')};
+  border: var(--port-width) solid
+    ${props =>
+      props.connected
+        ? 'var(--port-connected-border)'
+        : 'var(--port-unconnected-border)'};
   border-radius: 100%;
-  background: ${props => (props.connected ? '#333' : 'gray')};
+  background: ${props =>
+    props.connected
+      ? 'var(--link-unselected)'
+      : 'var(--port-unconnected)'};
 
   &:hover {
-    background: #0c5870;
+    background: var(--port-hover);
   }
 `;
 

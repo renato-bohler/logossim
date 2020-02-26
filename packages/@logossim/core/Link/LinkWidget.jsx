@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
+
 import { samePosition } from '../Diagram/states/common';
 
 export default class LinkWidget extends Component {
@@ -73,13 +74,19 @@ export default class LinkWidget extends Component {
     );
   }
 
-  renderPoint(position) {
+  renderPoint(position, loose = false) {
     const { link } = this.props;
+
+    const color = link.isSelected()
+      ? 'var(--link-selected)'
+      : 'var(--link-unselected)';
 
     return (
       <circle
         r={5}
-        fill={link.isSelected() ? '#00c0ff' : 'gray'}
+        fill={loose ? 'var(--background)' : color}
+        stroke={loose ? color : 'none'}
+        strokeWidth="var(--link-width)"
         cx={position.x}
         cy={position.y}
       />
@@ -104,27 +111,47 @@ export default class LinkWidget extends Component {
     return this.renderPoint(bifurcationOrigin);
   }
 
+  renderBifurcationTargetPoint() {
+    const { link } = this.props;
+
+    const bifurcationTarget = link.getBifurcationTarget();
+    if (!bifurcationTarget) return null;
+
+    const bifurcationTargetPosition = link
+      .getLastPoint()
+      .getPosition();
+    const lastSourcePoint = bifurcationTarget
+      .getLastPoint()
+      .getPosition();
+
+    if (samePosition(bifurcationTargetPosition, lastSourcePoint)) {
+      return null;
+    }
+
+    return this.renderPoint(bifurcationTargetPosition);
+  }
+
   renderLooseLinkPoint() {
     const { link } = this.props;
 
     if (link.getTargetPort()) return null;
+    if (link.getBifurcationTarget()) return null;
 
     const bifurcations = link.getBifurcations();
     const lastSourcePoint = link.getLastPoint().getPosition();
 
-    const isContinued = bifurcations.some(bifurcation => {
-      const bifurcationOrigin = bifurcation
-        .getFirstPoint()
-        .getPosition();
+    const isContinued = bifurcations.some(
+      bifurcation =>
+        samePosition(
+          bifurcation.getFirstPosition(),
+          lastSourcePoint,
+        ) ||
+        samePosition(bifurcation.getLastPosition(), lastSourcePoint),
+    );
 
-      return samePosition(bifurcationOrigin, lastSourcePoint);
-    });
+    if (isContinued) return null;
 
-    if (isContinued) {
-      return null;
-    }
-
-    return this.renderPoint(lastSourcePoint);
+    return this.renderPoint(lastSourcePoint, true);
   }
 
   render() {
@@ -134,13 +161,14 @@ export default class LinkWidget extends Component {
 
     return (
       <>
-        {this.renderBifurcationSourcePoint()}
-        {this.renderLooseLinkPoint()}
         <g data-default-link-test={link.getOptions().testName}>
           {this.generatePathPoints().map((tuple, index) =>
             this.renderSegment(this.generateLinePath(tuple), index),
           )}
         </g>
+        {this.renderBifurcationSourcePoint()}
+        {this.renderBifurcationTargetPoint()}
+        {this.renderLooseLinkPoint()}
       </>
     );
   }
