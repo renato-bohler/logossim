@@ -47,7 +47,7 @@ export function handleMouseMoved(event, link) {
   const first = link.getFirstPosition();
   const last = link.getLastPosition();
 
-  const nextPosition = nextLinkPosition(
+  const next = nextLinkPosition(
     event,
     this.engine.getModel(),
     { x: this.initialXRelative, y: this.initialYRelative },
@@ -65,26 +65,25 @@ export function handleMouseMoved(event, link) {
 
   if (this.hasStartedMoving) {
     if (!link.hasMiddlePoint()) {
-      if (last.x !== nextPosition.x) {
+      if (last.x !== next.x) {
         if (!this.moveDirection) {
           this.moveDirection = 'horizontal';
         }
 
         if (this.moveDirection === 'vertical') {
-          link.addPoint(link.generatePoint(last.x, last.y), 1);
+          link.addPoint(link.generatePoint(last.x, next.y), 1);
         }
-      } else if (last.y !== nextPosition.y) {
+      } else if (last.y !== next.y) {
         if (!this.moveDirection) {
           this.moveDirection = 'vertical';
         }
 
         if (this.moveDirection === 'horizontal') {
-          link.addPoint(link.generatePoint(last.x, last.y), 1);
+          link.addPoint(link.generatePoint(next.x, last.y), 1);
         }
       }
-    } else if (link.hasMiddlePoint()) {
+    } else {
       const middle = link.getMiddlePosition();
-
       if (samePosition(middle, last)) {
         link.removePoint(link.getMiddlePoint());
       } else if (samePosition(first, middle)) {
@@ -94,12 +93,12 @@ export function handleMouseMoved(event, link) {
             ? 'vertical'
             : 'horizontal';
       } else if (this.moveDirection === 'horizontal') {
-        if (last.x !== nextPosition.x) {
-          link.getMiddlePoint().setPosition(nextPosition.x, first.y);
+        if (last.x !== next.x) {
+          link.getMiddlePoint().setPosition(next.x, first.y);
         }
       } else if (this.moveDirection === 'vertical') {
-        if (last.y !== nextPosition.y) {
-          link.getMiddlePoint().setPosition(first.x, nextPosition.y);
+        if (last.y !== next.y) {
+          link.getMiddlePoint().setPosition(first.x, next.y);
         }
       }
     }
@@ -111,17 +110,19 @@ export function handleMouseMoved(event, link) {
    */
   if (
     !link.hasMiddlePoint() &&
-    first.x !== nextPosition.x &&
-    first.y !== nextPosition.y
+    first.x !== next.x &&
+    first.y !== next.y
   ) {
     if (samePosition(first, last)) {
-      link.addPoint(link.generatePoint(nextPosition.x, first.y), 1);
+      link.addPoint(link.generatePoint(next.x, first.y), 1);
+    } else if (this.moveDirection === 'horizontal') {
+      link.addPoint(link.generatePoint(next.x, first.y), 1);
     } else {
-      link.addPoint(link.generatePoint(last.x, last.y), 1);
+      link.addPoint(link.generatePoint(first.x, next.y), 1);
     }
   }
 
-  link.getLastPoint().setPosition(nextPosition.x, nextPosition.y);
+  link.getLastPoint().setPosition(next.x, next.y);
 
   this.engine.repaintCanvas();
 }
