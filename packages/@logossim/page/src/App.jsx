@@ -9,7 +9,7 @@ import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
 
 import './App.css';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
@@ -34,9 +34,9 @@ class App extends Component {
     }, []);
 
   handleClickSave = () => {
-    const serialized = this.diagram.serialize();
+    const serialized = JSON.stringify(this.diagram.serialize());
     this.setState({ circuit: serialized });
-    console.log(serialized);
+    console.log(JSON.parse(serialized));
   };
 
   handleClickLoad = () => {
@@ -47,7 +47,7 @@ class App extends Component {
       return;
     }
 
-    this.diagram.load(circuit);
+    this.diagram.load(JSON.parse(circuit));
   };
 
   handleClickLock = () => {
@@ -88,5 +88,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;

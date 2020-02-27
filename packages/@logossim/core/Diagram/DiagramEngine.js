@@ -1,8 +1,11 @@
 import createEngine, {
   DiagramModel,
-  RightAngleLinkFactory,
 } from '@projectstorm/react-diagrams';
 import { Point } from '@projectstorm/geometry';
+
+import States from './states/States';
+
+import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
 
 export default class DiagramEngine {
@@ -19,17 +22,10 @@ export default class DiagramEngine {
       registerDefaultZoomCanvasAction: false,
     });
 
-    // TODO: this may not be the best way to disallow loose links
-    const state = this.engine.getStateMachine().getCurrentState();
-    if (state) {
-      state.dragNewLink.config.allowLooseLinks = false;
-    }
+    this.engine.getStateMachine().pushState(new States());
 
     this.engine.getPortFactories().registerFactory(new PortFactory());
-
-    this.engine
-      .getLinkFactories()
-      .registerFactory(new RightAngleLinkFactory());
+    this.engine.getLinkFactories().registerFactory(new LinkFactory());
 
     this.registerComponents();
   };
@@ -62,7 +58,7 @@ export default class DiagramEngine {
       offsetX: this.model.getOffsetX(),
       offsetY: this.model.getOffsetY(),
     });
-    setTimeout(() => this.engine.repaintCanvas());
+    requestAnimationFrame(() => this.engine.repaintCanvas());
   };
 
   setLocked = locked => {
@@ -72,9 +68,10 @@ export default class DiagramEngine {
 
   isLocked = () => this.locked;
 
-  realignGrid = ({ offsetX, offsetY }) => {
-    document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
-  };
+  realignGrid = ({ offsetX, offsetY }) =>
+    requestAnimationFrame(() => {
+      document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+    });
 
   getSnappedRelativeMousePoint = event => {
     const { x, y } = this.engine.getRelativeMousePoint(event);

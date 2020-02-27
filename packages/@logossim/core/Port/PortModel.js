@@ -1,12 +1,12 @@
-import {
-  PortModel as RDPortModel,
-  RightAngleLinkModel,
-} from '@projectstorm/react-diagrams';
+import { PortModel as RDPortModel } from '@projectstorm/react-diagrams';
+
+import LinkModel from '../Link/LinkModel';
 
 export default class PortModel extends RDPortModel {
   constructor(options = {}) {
     super({
       type: 'Port',
+      maximumLinks: 1,
       ...options,
     });
   }
@@ -15,12 +15,25 @@ export default class PortModel extends RDPortModel {
     return { ...super.serialize(), value: this.value };
   }
 
-  deSerialize(data, engine) {
-    super.deSerialize(data, engine);
+  deserialize(data, engine) {
+    super.deserialize(data, engine);
     this.value = data.value;
   }
 
+  isNewLinkAllowed() {
+    return (
+      Object.keys(this.getLinks()).length < this.getMaximumLinks()
+    );
+  }
+
+  canLinkToPort(port) {
+    return port.isNewLinkAllowed() && this.getID() !== port.getID();
+  }
+
   createLinkModel() {
-    return new RightAngleLinkModel();
+    if (this.isNewLinkAllowed()) {
+      return new LinkModel();
+    }
+    return null;
   }
 }

@@ -1,4 +1,5 @@
 import { NodeModel } from '@projectstorm/react-diagrams';
+
 import PortModel from './Port/PortModel';
 
 export default class BaseModel extends NodeModel {

@@ -4,16 +4,18 @@
     "packages/@logossim/*"
   ],
   "scripts": {
-    "start": "cd packages/@logossim/page && yarn start",
-    "build": "cd packages/@logossim/page && yarn build",
-    "test": "cd packages/@logossim/page && yarn test",
-    "serve": "serve -s packages/@logossim/page/build",
-    "analyze": "source-map-explorer 'packages/@logossim/page/build/static/js/*.js'",
-    "prettier": "prettier --write \"**/*.{js,jsx}\""
+    "start": "yarn workspace @logossim/page start",
+    "build": "yarn workspace @logossim/page build",
+    "test": "yarn workspace @logossim/page test",
+    "serve": "yarn workspace @logossim/page serve",
+    "analyze": "yarn workspace @logossim/page analyze",
+    "prettier": "prettier --write \"**/*.{js,jsx}\"",
+    "eslint": "eslint \"**/*.{js,jsx}\""
   },
   "dependencies": {
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
+    "@projectstorm/geometry": "^6.0.1-beta.7",
     "@projectstorm/react-canvas-core": "^6.0.1-beta.7",
     "@projectstorm/react-diagrams": "^6.0.1-beta.7",
     "@projectstorm/react-diagrams-core": "^6.0.1-beta.7",
@@ -36,7 +38,7 @@
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
     "resize-observer-polyfill": "^1.5.1",
-    "styled-components": "^4.3.2"
+    "styled-components": "^5.0.0"
   },
   "devDependencies": {
     "eslint": "^6.5.0",
