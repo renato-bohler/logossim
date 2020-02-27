@@ -14,10 +14,13 @@ const Wrapper = styled.div`
   transition: 100ms linear;
   svg {
     fill: ${props =>
-      `rgba(115, 190, 255, ${props.selected ? 0.5 : 0.95})`};
+      props.selected
+        ? 'var(--body-selected)'
+        : 'var(--body-unselected)'};
     stroke: ${props =>
-      props.selected ? 'rgba(115,190,255,0.95)' : '#598897'};
-    stroke-dasharray: ${props => (props.selected ? 5 : 0)};
+      props.selected
+        ? 'var(--border-selected)'
+        : 'var(--border-unselected)'};
   }
 `;
 
@@ -43,9 +46,9 @@ export const Shape = ({ size = 90 }) => (
     height={size}
     width={size}
     viewBox="0 0 23.812499 23.812501"
-    fill="rgba(115, 190, 255, 0.95)"
-    stroke="#598897"
-    strokeWidth="2"
+    fill="var(--body-unselected)"
+    stroke="var(--border-unselected)"
+    strokeWidth="var(--border-width)"
   >
     <g>
       <path

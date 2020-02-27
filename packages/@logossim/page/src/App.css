@@ -1,5 +1,5 @@
 body {
-  background-color: #eee;
+  background-color: var(--background);
   background-size: 45px 45px;
   background-image: linear-gradient(to right,
                     rgba(0, 0, 0, 0.15) 1px,
@@ -31,7 +31,27 @@ body {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; 
+  user-select: none;
+
+  /* Variables */
+  --background: #eee;
+
+  --link-unselected: gray;
+  --link-selected: #3ec1ff;
+  --link-width: 3;
+
+  --port-unconnected: #ddd;
+  --port-hover: black;
+  --port-connected-border: #4f4f4f;
+  --port-unconnected-border: #333;
+  --port-width: 2px;
+
+  --border-selected: rgba(115,190,255,0.95);
+  --border-unselected: #598897;
+  --border-width: 2;
+
+  --body-unselected: rgba(115, 190, 255, 0.95);
+  --body-selected: rgba(115, 190, 255, 0.5);
 }
 
 * {

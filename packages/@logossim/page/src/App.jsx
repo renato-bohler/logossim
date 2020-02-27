@@ -34,9 +34,9 @@ class App extends Component {
     }, []);
 
   handleClickSave = () => {
-    const serialized = this.diagram.serialize();
+    const serialized = JSON.stringify(this.diagram.serialize());
     this.setState({ circuit: serialized });
-    console.log(serialized);
+    console.log(JSON.parse(serialized));
   };
 
   handleClickLoad = () => {
@@ -47,7 +47,7 @@ class App extends Component {
       return;
     }
 
-    this.diagram.load(circuit);
+    this.diagram.load(JSON.parse(circuit));
   };
 
   handleClickLock = () => {

@@ -1,89 +1,181 @@
-import { BaseModel } from '@projectstorm/react-canvas-core';
 import { Point } from '@projectstorm/geometry';
-import { PointModel } from '@projectstorm/react-diagrams-core';
+import { PointModel } from '@projectstorm/react-diagrams';
 import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
-
-import LinkPointModel from '../LinkPoint/LinkPointModel';
+import { sameAxis } from '../Diagram/states/common';
 
 export default class LinkModel extends DefaultLinkModel {
-  constructor(options = {}) {
+  constructor(options) {
     super({
       type: 'link',
       ...options,
     });
 
-    this.lastHoverIndexOfPath = 0;
-    this.lastPathXdirection = false;
-    this.firstPathXdirection = false;
+    this.bifurcations = [];
+    this.bifurcationSource = null;
+    this.bifurcationTarget = null;
+  }
+
+  setBifurcationSource(link) {
+    this.bifurcationSource = link;
+  }
+
+  getBifurcationSource() {
+    return this.bifurcationSource;
+  }
+
+  setBifurcationTarget(link) {
+    this.bifurcationTarget = link;
+  }
+
+  getBifurcationTarget() {
+    return this.bifurcationTarget;
   }
 
   addBifurcation(link) {
-    console.log('[LinkModel] addBifurcation', link);
+    this.bifurcations.push(link);
   }
 
-  setFirstAndLastPathsDirection() {
-    const points = this.getPoints();
-
-    for (let i = 1; i < points.length; i += points.length - 2) {
-      const dx = Math.abs(points[i].getX() - points[i - 1].getX());
-      const dy = Math.abs(points[i].getY() - points[i - 1].getY());
-
-      if (i - 1 === 0) {
-        this.firstPathXdirection = dx > dy;
-      } else {
-        this.lastPathXdirection = dx > dy;
-      }
-    }
+  removeBifurcation(link) {
+    this.bifurcations = this.bifurcations.filter(
+      b => b.getID() !== link.getID(),
+    );
   }
 
-  addPoint(pointModel, index = 1) {
-    super.addPoint(pointModel, index);
-    this.setFirstAndLastPathsDirection();
+  getBifurcations() {
+    return this.bifurcations;
+  }
 
-    return pointModel;
+  getSelectionEntities() {
+    return [...super.getSelectionEntities(), ...this.bifurcations];
+  }
+
+  setSelected(selected) {
+    super.setSelected(selected);
+    this.bifurcations.forEach(b => b.setSelected(selected));
   }
 
   remove() {
-    this.getPoints()
-      .filter(point => point instanceof LinkPointModel)
-      .forEach(point => point.removePort());
+    this.bifurcations.forEach(bifurcation => bifurcation.remove());
+
+    if (this.bifurcationSource) {
+      this.bifurcationSource.removeBifurcation(this);
+    }
+
     super.remove();
+  }
+
+  serialize() {
+    return {
+      ...super.serialize(),
+      bifurcations: this.bifurcations.map(b => b.getID()),
+      bifurcationSource: this.bifurcationSource
+        ? this.bifurcationSource.getID()
+        : null,
+      bifurcationTarget: this.bifurcationTarget
+        ? this.bifurcationTarget.getID()
+        : null,
+    };
   }
 
   deserialize(event) {
     super.deserialize(event);
 
-    // TODO: we shouldn't be doing this, I feel
-    setTimeout(() => {
-      this.points = event.data.points.map(point => {
-        const Model =
-          point.type === 'point' ? PointModel : LinkPointModel;
+    const {
+      getModel,
+      registerModel,
+      data: { bifurcationSource, bifurcationTarget, bifurcations },
+    } = event;
 
-        const p = new Model({
-          link: this,
-          position: new Point(point.x, point.y),
-        });
-        p.deserialize({
-          ...event,
-          data: point,
-        });
-        return p;
-      });
-      this.setFirstAndLastPathsDirection();
+    registerModel(this);
+
+    requestAnimationFrame(() => {
+      this.points = event.data.points.map(
+        point =>
+          new PointModel({
+            link: this,
+            position: new Point(point.x, point.y),
+          }),
+      );
+
+      bifurcations.forEach(b =>
+        getModel(b).then(bifurcation =>
+          this.addBifurcation(bifurcation),
+        ),
+      );
+
+      if (bifurcationSource) {
+        getModel(bifurcationSource).then(source =>
+          this.setBifurcationSource(source),
+        );
+      }
+
+      if (bifurcationTarget) {
+        getModel(bifurcationTarget).then(target =>
+          this.setBifurcationTarget(target),
+        );
+      }
+
+      event.engine.repaintCanvas();
     });
   }
 
-  setManuallyFirstAndLastPathsDirection(first, last) {
-    this.firstPathXdirection = first;
-    this.lastPathXdirection = last;
+  addPoint(pointModel, index = 1) {
+    super.addPoint(pointModel, index);
+
+    return pointModel;
   }
 
-  getLastPathXdirection() {
-    return this.lastPathXdirection;
+  getMiddlePoint() {
+    if (!this.hasMiddlePoint()) return null;
+
+    return this.getPoints()[1];
   }
 
-  getFirstPathXdirection() {
-    return this.firstPathXdirection;
+  getSecondPoint() {
+    return this.getPoints()[1];
+  }
+
+  getSecondLastPoint() {
+    const points = this.getPoints();
+    return points[points.length - 2];
+  }
+
+  getFirstPosition() {
+    return this.getFirstPoint().getPosition();
+  }
+
+  getSecondPosition() {
+    return this.getSecondPoint().getPosition();
+  }
+
+  getMiddlePosition() {
+    if (!this.hasMiddlePoint()) return null;
+
+    return this.getMiddlePoint().getPosition();
+  }
+
+  getSecondLastPosition() {
+    return this.getSecondLastPoint().getPosition();
+  }
+
+  getLastPosition() {
+    return this.getLastPoint().getPosition();
+  }
+
+  hasMiddlePoint() {
+    return this.getPoints().length === 3;
+  }
+
+  isStraight() {
+    if (!this.hasMiddlePoint()) return true;
+
+    const first = this.getFirstPosition();
+    const middle = this.getMiddlePosition();
+    const last = this.getLastPosition();
+
+    if (sameAxis(first, middle, last)) return true;
+
+    return false;
   }
 
   setWidth(width) {

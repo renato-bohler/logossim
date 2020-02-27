@@ -1,68 +1,91 @@
+import { Point } from '@projectstorm/geometry';
 import {
   AbstractDisplacementState,
   Action,
   InputType,
 } from '@projectstorm/react-canvas-core';
-import { PortModel } from '@projectstorm/react-diagrams-core';
+import {
+  NodeModel,
+  PortModel,
+} from '@projectstorm/react-diagrams-core';
 
+import {
+  snap,
+  samePosition,
+  getLandingLink,
+  isPointOverLink,
+  sameX,
+  sameAxis,
+  closestPointToLink,
+} from './common';
+
+import {
+  handleMouseMoved,
+  handleReverseBifurcation,
+  handleLinkToLinkBifurcation,
+} from './handlers';
+
+/**
+ * This State is responsible for handling bifurcation events.
+ *
+ * A bifurcation is just like a normal link, but instead of having a
+ * source port, it has a source link (its `bifurcationSource`).
+ *
+ * There are three ways the user can create bifurcations:
+ *
+ * 1. By dragging from a port into an existing link
+ *    (reverse bifurcation)
+ * 2. By dragging an existing link into another existing link
+ *    (link-to-link bifurcation)
+ * 3. By dragging an existing link to any other point on the canvas,
+ *    except on top of nodes
+ *
+ * If the drag start and end points are near each other, this action
+ * will behave as a link selection.
+ */
 export default class BifurcateLinkState extends AbstractDisplacementState {
-  constructor(options) {
+  constructor() {
     super({ name: 'bifurcate-link' });
-
-    this.config = {
-      allowLooseLinks: false,
-      allowLinksFromLockedPorts: false,
-      ...options,
-    };
-
-    // console.log('Create bifurcation');
-    // console.log(
-    //   'Link points position:',
-    //   element.points.map(p => p.position),
-    // );
-    // console.log(
-    //   'At relative mouse point:',
-    //   this.engine.getRelativeMousePoint(event.event),
-    // );
 
     this.registerAction(
       new Action({
         type: InputType.MOUSE_DOWN,
         fire: event => {
-          const position = this.engine.getRelativeMousePoint(
-            event.event,
+          this.moveDirection = undefined;
+          this.hasStartedMoving = false;
+
+          this.source = this.engine.getMouseElement(event.event);
+
+          const position = this.snapPointToSourceLink(
+            this.engine.getRelativeMousePoint(event.event),
+            this.source,
           );
 
-          console.log('[BifurcateLinkState] MOUSE_DOWN');
-
-          this.sourceLink = this.engine.getMouseElement(event.event);
-          console.log('this.sourceLink:', this.sourceLink);
-
-          if (
-            !this.config.allowLinksFromLockedPorts &&
-            this.sourceLink.isLocked()
-          ) {
+          if (this.source.isLocked()) {
             this.eject();
             return;
           }
 
-          this.newLink = this.engine
+          this.bifurcation = this.engine
             .getLinkFactories()
-            .getFactory(this.sourceLink.getType())
+            .getFactory(this.source.getType())
             .generateModel();
-          this.newLink.point(position.x, position.y, 1);
-          this.newLink.point(position.x, position.y, 2);
 
-          if (!this.newLink) {
+          if (!this.bifurcation) {
             this.eject();
             return;
           }
 
-          this.newLink.setSelected(true);
-          // this.newLink.setBifucrationSource(this.sourceLink);
-          this.sourceLink.addBifurcation(this.newLink);
-          // this.engine.getModel().addLink(this.link);
-          // this.port.reportPosition();
+          this.bifurcation.setBifurcationSource(this.source);
+          this.bifurcation.getFirstPoint().setPosition(position);
+          this.bifurcation.getLastPoint().setPosition(position);
+
+          this.bifurcation.setSelected(true);
+          this.engine.getModel().clearSelection();
+
+          this.source.setSelected(false);
+          this.source.addBifurcation(this.bifurcation);
+          this.engine.getModel().addLink(this.bifurcation);
         },
       }),
     );
@@ -71,79 +94,354 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       new Action({
         type: InputType.MOUSE_UP,
         fire: event => {
+          // Link selection
+          if (this.isNearbySourcePosition()) {
+            this.cleanUp();
+            this.engine.getModel().clearSelection();
+            this.source.setSelected(true);
+            this.engine.repaintCanvas();
+            return;
+          }
+
           const model = this.engine.getMouseElement(event.event);
 
-          console.log('[BifurcateLinkState] MOUSE_UP');
+          // Disallows creation under nodes
+          if (model instanceof NodeModel) {
+            this.cleanUp();
+            this.engine.repaintCanvas();
+            return;
+          }
 
-          // // check to see if we connected to a new port
-          // if (model instanceof PortModel) {
-          //   if (this.port.canLinkToPort(model)) {
-          //     this.link.setTargetPort(model);
-          //     model.reportPosition();
-          //     this.engine.repaintCanvas();
-          //     return;
-          //   }
-          // }
+          // Bifurcation connected to port
+          if (
+            model instanceof PortModel &&
+            model.isNewLinkAllowed()
+          ) {
+            this.bifurcation.setTargetPort(model);
+            model.reportPosition();
+            this.adjustBifurcationOverlayingSource(this.bifurcation);
+            this.engine.repaintCanvas();
+            return;
+          }
 
-          // if (
-          //   this.isNearbySourcePort(event.event) ||
-          //   !this.config.allowLooseLinks
-          // ) {
-          //   this.link.remove();
-          //   this.engine.repaintCanvas();
-          // }
+          // Bifurcation landing on another existing link
+          const landing = getLandingLink(
+            this.bifurcation,
+            this.engine,
+          );
+          if (landing) {
+            if (this.bifurcation.getBifurcationSource()) {
+              handleLinkToLinkBifurcation(this.bifurcation, landing);
+            } else {
+              handleReverseBifurcation.call(
+                this,
+                this.bifurcation,
+                landing,
+              );
+            }
+          }
+
+          this.mergeWithBifurcation(
+            this.bifurcation.getBifurcationSource(),
+          );
+          this.adjustBifurcationOverlayingSource(this.bifurcation);
         },
       }),
     );
   }
 
-  /**
-   * Checks whether the mouse event appears to happen in proximity of the link's source port
-   * @param event
-   */
-  isNearbySourcePort({ clientX, clientY }) {
-    const sourcePort = this.newLink.getSourcePort();
-    const sourcePortPosition = this.newLink
-      .getSourcePort()
-      .getPosition();
+  cleanUp() {
+    this.source.removeBifurcation(this.bifurcation);
+    this.bifurcation.remove();
+  }
 
-    return (
-      clientX >= sourcePortPosition.x &&
-      clientX <= sourcePortPosition.x + sourcePort.width &&
-      clientY >= sourcePortPosition.y &&
-      clientY <= sourcePortPosition.y + sourcePort.height
+  /**
+   * Snaps a point to a point which is over the source link.
+   */
+  snapPointToSourceLink(position, source) {
+    const { gridSize } = this.engine.getModel().getOptions();
+    const sourcePoints = source.getPoints();
+
+    const closestCorner = this.getClosestCornerToPosition(
+      sourcePoints,
+      position,
+    );
+
+    if (closestCorner.distance < gridSize - 1) {
+      return new Point(
+        closestCorner.position.x,
+        closestCorner.position.y,
+      );
+    }
+
+    const closestPath = this.getClosestPathToPosition(
+      sourcePoints,
+      position,
+    );
+
+    const snappedPosition = snap(position, gridSize);
+
+    return new Point(
+      closestPath.axis === 'x'
+        ? closestPath.position
+        : snappedPosition.x,
+      closestPath.axis === 'y'
+        ? closestPath.position
+        : snappedPosition.y,
+    );
+  }
+
+  getClosestCornerToPosition(points, position) {
+    return points
+      .map(sourcePoint => ({
+        distance: Math.hypot(
+          position.x - sourcePoint.position.x,
+          position.y - sourcePoint.position.y,
+        ),
+        ...sourcePoint,
+      }))
+      .reduce((closest, point) =>
+        point.distance < closest.distance ? point : closest,
+      );
+  }
+
+  getPathPoints(points) {
+    return points
+      .map((point, i) => ({ from: points[i], to: points[i + 1] }))
+      .filter(tuple => tuple.to);
+  }
+
+  getPathDirections(points) {
+    return this.getPathPoints(points).map(pathPosition =>
+      sameX(pathPosition.from.position, pathPosition.to.position)
+        ? {
+            axis: 'x',
+            position: pathPosition.from.position.x,
+          }
+        : {
+            axis: 'y',
+            position: pathPosition.from.position.y,
+          },
+    );
+  }
+
+  getClosestPathToPosition(points, position) {
+    return this.getPathDirections(points)
+      .map(path => ({
+        distance: Math.abs(position[path.axis] - path.position),
+        ...path,
+      }))
+      .reduce((closest, path) =>
+        path.distance < closest.distance ? path : closest,
+      );
+  }
+
+  isNearbySourcePosition() {
+    return samePosition(
+      this.bifurcation.getFirstPosition(),
+      this.bifurcation.getLastPosition(),
     );
   }
 
   /**
-   * Calculates the link's far-end point position on mouse move.
-   * In order to be as precise as possible the mouse initialXRelative & initialYRelative are taken into account as well
-   * as the possible engine offset
+   * Removes the bifurcation points which are causing the bifurcation
+   * to overlay its source link. Removes the whole bifurcation, in
+   * case it is completely overlayed by its source link.
+   */
+  adjustBifurcationOverlayingSource() {
+    const source = this.bifurcation.getBifurcationSource();
+
+    if (
+      samePosition(
+        this.bifurcation.getFirstPosition(),
+        source.getLastPosition(),
+      )
+    ) {
+      if (
+        isPointOverLink(this.bifurcation.getSecondPosition(), source)
+      ) {
+        this.bifurcation.removePoint(
+          this.bifurcation.getFirstPoint(),
+        );
+      }
+      return;
+    }
+
+    if (
+      isPointOverLink(this.bifurcation.getFirstPosition(), source) &&
+      isPointOverLink(this.bifurcation.getSecondPosition(), source)
+    ) {
+      if (!this.bifurcation.hasMiddlePoint()) {
+        this.bifurcation.remove();
+        source.removeBifurcation(this.bifurcation);
+        return;
+      }
+
+      this.bifurcation.removePoint(this.bifurcation.getFirstPoint());
+
+      if (
+        samePosition(
+          this.bifurcation.getFirstPosition(),
+          source.getMiddlePosition(),
+        )
+      ) {
+        if (
+          isPointOverLink(this.bifurcation.getLastPosition(), source)
+        ) {
+          this.bifurcation.remove();
+          source.removeBifurcation(this.bifurcation);
+          return;
+        }
+
+        this.bifurcation
+          .getFirstPoint()
+          .setPosition(source.getLastPosition());
+
+        this.mergeWithBifurcation(source);
+        return;
+      }
+    }
+
+    if (source.hasMiddlePoint()) {
+      if (
+        sameAxis(
+          this.bifurcation.getFirstPosition(),
+          source.getMiddlePosition(),
+          this.bifurcation.getSecondPosition(),
+        )
+      ) {
+        this.bifurcation
+          .getFirstPoint()
+          .setPosition(source.getMiddlePosition());
+      }
+    }
+  }
+
+  /**
+   * Merges a link with its bifurcations, when possible.
+   */
+  mergeWithBifurcation(link) {
+    const source = {
+      first: link.getFirstPosition(),
+      middle: link.getMiddlePosition(),
+      last: link.getLastPosition(),
+      secondLast: link.getSecondLastPosition(),
+    };
+
+    link.getBifurcations().forEach(b => {
+      if (isPointOverLink(link.getLastPosition(), b)) {
+        b.getFirstPoint().setPosition(link.getLastPosition());
+      }
+    });
+
+    const elegibleBifurcations = link.getBifurcations().filter(b => {
+      if (!samePosition(b.getFirstPosition(), source.last))
+        return false;
+
+      if (!link.hasMiddlePoint() && !b.hasMiddlePoint()) return true;
+
+      if (link.hasMiddlePoint() && b.hasMiddlePoint()) {
+        if (samePosition(source.middle, b.getMiddlePosition())) {
+          return true;
+        }
+        return false;
+      }
+
+      if (
+        sameAxis(
+          source.last,
+          source.secondLast,
+          b.getSecondPosition(),
+        )
+      )
+        return true;
+
+      return false;
+    });
+
+    const bifurcationToMerge = elegibleBifurcations[0];
+
+    if (!bifurcationToMerge) return;
+
+    const newMiddle = bifurcationToMerge.getSecondLastPosition();
+    const newLast = bifurcationToMerge.getLastPosition();
+
+    if (!link.hasMiddlePoint()) {
+      link.addPoint(link.generatePoint(newMiddle.x, newMiddle.y), 1);
+    }
+
+    link.getLastPoint().setPosition(newLast.x, newLast.y);
+
+    if (link.isStraight() && link.hasMiddlePoint()) {
+      link.removePoint(link.getMiddlePoint());
+    }
+
+    link.removeBifurcation(bifurcationToMerge);
+    bifurcationToMerge.remove();
+
+    if (
+      samePosition(link.getFirstPosition(), link.getLastPosition())
+    ) {
+      link.remove();
+    } else {
+      link.setSelected(true);
+    }
+
+    this.adjustBifurcationPoints(link);
+  }
+
+  /**
+   * Adjusts points for bifurcations on which its first point is not
+   * over its source link.
+   */
+  adjustBifurcationPoints(link) {
+    const { gridSize } = this.engine.getModel().getOptions();
+
+    link
+      .getBifurcations()
+      .filter(b => !isPointOverLink(b.getFirstPosition(), link))
+      .forEach(b => {
+        const newSource = snap(
+          closestPointToLink(b.getFirstPosition(), link),
+          gridSize,
+        );
+
+        b.getFirstPoint().setPosition(newSource.x, newSource.y);
+
+        if (sameAxis(b.getFirstPosition(), b.getLastPosition()))
+          return;
+
+        // Adjust middle point aswell
+        if (b.hasMiddlePoint()) {
+          b.removePoint(b.getMiddlePoint());
+        }
+
+        if (
+          sameX(link.getFirstPosition(), link.getSecondPosition())
+        ) {
+          b.addPoint(
+            b.generatePoint(
+              b.getLastPosition().x,
+              b.getFirstPosition().y,
+            ),
+            1,
+          );
+        } else {
+          b.addPoint(
+            b.generatePoint(
+              b.getFirstPosition().x,
+              b.getLastPosition().y,
+            ),
+            1,
+          );
+        }
+      });
+  }
+
+  /**
+   * Updates bifurcation's points upon mouse move.
    */
   fireMouseMoved(event) {
-    const portPos = this.newLink.getFirstPoint();
-    const zoomLevelPercentage =
-      this.engine.getModel().getZoomLevel() / 100;
-    const engineOffsetX =
-      this.engine.getModel().getOffsetX() / zoomLevelPercentage;
-    const engineOffsetY =
-      this.engine.getModel().getOffsetY() / zoomLevelPercentage;
-    const initialXRelative =
-      this.initialXRelative / zoomLevelPercentage;
-    const initialYRelative =
-      this.initialYRelative / zoomLevelPercentage;
-    const linkNextX =
-      portPos.x -
-      engineOffsetX +
-      (initialXRelative - portPos.x) +
-      event.virtualDisplacementX;
-    const linkNextY =
-      portPos.y -
-      engineOffsetY +
-      (initialYRelative - portPos.y) +
-      event.virtualDisplacementY;
-
-    this.newLink.getLastPoint().setPosition(linkNextX, linkNextY);
-    this.engine.repaintCanvas();
+    handleMouseMoved.call(this, event, this.bifurcation);
   }
 }

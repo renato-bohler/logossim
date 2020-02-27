@@ -1,5 +1,4 @@
 import {
-  SelectingState,
   State,
   Action,
   InputType,
@@ -8,24 +7,30 @@ import {
 import {
   PortModel,
   LinkModel,
-  DragNewLinkState,
-  DragDiagramItemsState,
 } from '@projectstorm/react-diagrams-core';
 
 import BifurcateLinkState from './BifurcateLinkState';
+import DragNewLinkState from './DragNewLinkState';
+import MoveItemsState from './MoveItemsState';
+import SelectingState from './SelectingState';
 
+/**
+ * This class defines custom handlers (called states) to respond to
+ * clicking events on certain elements.
+ */
 export default class States extends State {
   constructor() {
     super({
-      name: 'default-diagrams',
+      name: 'diagram-states',
     });
+
     this.childStates = [new SelectingState()];
     this.dragCanvas = new DragCanvasState();
     this.dragNewLink = new DragNewLinkState();
     this.bifurcateLink = new BifurcateLinkState();
-    this.dragItems = new DragDiagramItemsState();
+    this.dragItems = new MoveItemsState();
 
-    // determine what was clicked on
+    // Determine what was clicked on
     this.registerAction(
       new Action({
         type: InputType.MOUSE_DOWN,
@@ -34,24 +39,19 @@ export default class States extends State {
             .getActionEventBus()
             .getModelForEvent(event);
 
-          // the canvas was clicked on, transition to the dragging canvas state
+          // The canvas was clicked on, transition to the dragging canvas state
           if (!element) {
             this.transitionWithEvent(this.dragCanvas, event);
           }
-          // initiate dragging a new link
+          // Initiate dragging a new link
           else if (element instanceof PortModel) {
             this.transitionWithEvent(this.dragNewLink, event);
           }
-          // create a bifurcation
-          else if (
-            event.event.ctrlKey &&
-            element instanceof LinkModel
-          ) {
-            if (event.event.ctrlKey) {
-              this.transitionWithEvent(this.bifurcateLink, event);
-            }
+          // Create a bifurcation
+          else if (element instanceof LinkModel) {
+            this.transitionWithEvent(this.bifurcateLink, event);
           }
-          // move the items (and potentially link points)
+          // Move items
           else {
             this.transitionWithEvent(this.dragItems, event);
           }
