@@ -3,8 +3,6 @@ import createEngine, {
 } from '@projectstorm/react-diagrams';
 import { Point } from '@projectstorm/geometry';
 
-import initial from './initial';
-
 import States from './states/States';
 
 import LinkFactory from '../Link/LinkFactory';
@@ -17,8 +15,6 @@ export default class DiagramEngine {
 
     this.initializeEngine();
     this.initializeModel();
-
-    this.load(initial);
   }
 
   initializeEngine = () => {
