@@ -9,7 +9,7 @@ import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
 
 import './App.css';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
@@ -88,5 +88,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
