@@ -20,9 +20,7 @@ const nodeStub = {
 const modelStub = new Proxy(
   {},
   {
-    get: () => {
-      return () => {};
-    },
+    get: () => () => {},
   },
 );
 
