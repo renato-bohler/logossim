@@ -4,6 +4,7 @@ const engineStub = {
   registerListener: () => {},
   getCanvas: () => {},
   getPortCoords: () => {},
+  getModel: () => ({ isLocked: () => false }),
 };
 
 const nodeStub = {
@@ -11,6 +12,17 @@ const nodeStub = {
   getID: () => {},
   options: { selected: false },
 };
+
+/**
+ * Proxy is used here to return a function for whatever object key is
+ * asked for.
+ */
+const modelStub = new Proxy(
+  {},
+  {
+    get: () => () => {},
+  },
+);
 
 const DraggableComponent = ({
   component: { type, Widget },
@@ -34,12 +46,13 @@ const DraggableComponent = ({
         }),
       );
 
-      setTimeout(handleClose);
+      requestAnimationFrame(handleClose);
     }}
   >
     <Widget
       engine={engineStub}
       node={{ ...nodeStub, configurations }}
+      model={modelStub}
     />
   </div>
 );
