@@ -71,26 +71,26 @@ export default class SelectionBoxState extends AbstractDisplacementState {
       Math.abs(event.virtualDisplacementY),
     );
 
-    this.engine
-      .getModel()
-      .getSelectionEntities()
-      .forEach(model => {
-        if (model.getBoundingBox) {
-          if (!this.allowSelection(model)) {
-            return;
-          }
+    if (!this.engine.getModel().isLocked()) {
+      this.engine
+        .getModel()
+        .getSelectionEntities()
+        .forEach(model => {
+          if (model.getBoundingBox) {
+            if (!this.allowSelection(model)) return;
 
-          const bounds = model.getBoundingBox();
-          if (
-            rect.containsPoint(bounds.getTopLeft()) &&
-            rect.containsPoint(bounds.getBottomRight())
-          ) {
-            model.setSelected(true);
-          } else {
-            model.setSelected(false);
+            const bounds = model.getBoundingBox();
+            if (
+              rect.containsPoint(bounds.getTopLeft()) &&
+              rect.containsPoint(bounds.getBottomRight())
+            ) {
+              model.setSelected(true);
+            } else {
+              model.setSelected(false);
+            }
           }
-        }
-      });
+        });
+    }
 
     this.engine.repaintCanvas();
   }
