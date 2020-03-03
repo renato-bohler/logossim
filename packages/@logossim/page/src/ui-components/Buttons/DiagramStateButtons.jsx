@@ -37,8 +37,6 @@ const Button = styled.button.attrs(({ ...props }) => ({
 const DiagramStateButtons = ({
   handleClickSave,
   handleClickLoad,
-  handleClickLock,
-  isLocked,
 }) => (
   <Container>
     <Button color="green" onClick={handleClickSave}>
@@ -46,9 +44,6 @@ const DiagramStateButtons = ({
     </Button>
     <Button color="orange" onClick={handleClickLoad}>
       Load
-    </Button>
-    <Button onClick={handleClickLock}>
-      {isLocked ? 'Unlock' : 'Lock'}
     </Button>
   </Container>
 );
