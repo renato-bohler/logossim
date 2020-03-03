@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 
-import { DiagramEngine, Diagram } from '@logossim/core';
+import {
+  DiagramEngine,
+  Diagram,
+  SimulationWorker,
+} from '@logossim/core';
 import components from '@logossim/components';
 
 import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
+import SimulationControlButtons from './ui-components/Buttons/SimulationControlButtons';
 import ComponentSelectButton from './ui-components/Buttons/ComponentSelectButton';
 import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
 
@@ -20,7 +25,20 @@ export default class App extends Component {
     };
 
     this.groups = this.groupComponents();
+
+    this.simulation = new SimulationWorker();
+    this.simulation.addCallback(this.handleSimulation);
   }
+
+  componentWillUnmount() {
+    this.simulation.removeCallback(this.handleSimulation);
+  }
+
+  handleSimulation = message => {
+    // TODO: test setting layer.allowRepaint to false and then true
+    console.log('TODO: handle simulation', message.data);
+    this.forceUpdate();
+  };
 
   groupComponents = () =>
     components.reduce((acc, component) => {
@@ -50,8 +68,22 @@ export default class App extends Component {
     this.diagram.load(JSON.parse(circuit));
   };
 
-  handleClickLock = () => {
-    this.diagram.setLocked(!this.diagram.isLocked());
+  handleClickStart = () => {
+    this.diagram.setLocked(true);
+    this.forceUpdate();
+
+    this.simulation.start(
+      this.simulation.getRunState() === 'paused' ? undefined : 0,
+    );
+  };
+
+  handleClickPause = () => {
+    this.simulation.pause();
+  };
+
+  handleClickStop = () => {
+    this.simulation.stop();
+    this.diagram.setLocked(false);
     this.forceUpdate();
   };
 
@@ -73,8 +105,12 @@ export default class App extends Component {
         <DiagramStateButtons
           handleClickSave={this.handleClickSave}
           handleClickLoad={this.handleClickLoad}
-          handleClickLock={this.handleClickLock}
-          isLocked={this.diagram.isLocked()}
+        />
+        <SimulationControlButtons
+          state={this.simulation.getRunState()}
+          handleClickStart={this.handleClickStart}
+          handleClickPause={this.handleClickPause}
+          handleClickStop={this.handleClickStop}
         />
         <ComponentSelectButton handleClick={this.showAddComponent} />
         <ComponentSelect
