@@ -25,7 +25,7 @@ export default class Port extends PortWidget {
   render() {
     const {
       name,
-      node,
+      model,
       port: { links },
       className = '',
     } = this.props;
@@ -34,7 +34,7 @@ export default class Port extends PortWidget {
       <Circle
         className={`port ${className}`}
         data-name={name}
-        data-nodeid={node.getID()}
+        data-nodeid={model.getID()}
         connected={Object.keys(links).length > 0}
       />
     );

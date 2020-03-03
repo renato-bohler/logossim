@@ -60,26 +60,26 @@ export const Shape = ({ size = 90 }) => (
 );
 
 const OrWidget = props => {
-  const { node, engine } = props;
+  const { model, engine } = props;
 
   return (
-    <Wrapper selected={node.options.selected}>
+    <Wrapper selected={model.options.selected}>
       <PositionedPort
         name="in0"
-        node={node}
-        port={node.getPort('in0')}
+        model={model}
+        port={model.getPort('in0')}
         engine={engine}
       />
       <PositionedPort
         name="in1"
-        node={node}
-        port={node.getPort('in1')}
+        model={model}
+        port={model.getPort('in1')}
         engine={engine}
       />
       <PositionedPort
         name="out"
-        node={node}
-        port={node.getPort('out')}
+        model={model}
+        port={model.getPort('out')}
         engine={engine}
       />
       <Shape />

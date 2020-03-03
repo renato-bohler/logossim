@@ -74,17 +74,17 @@ export const Shape = ({ size = 30 }) => (
 );
 
 const ButtonWidget = props => {
-  const { model, node, engine } = props;
+  const { model, engine } = props;
   const {
     options: { selected },
-  } = node;
+  } = model;
 
   return (
     <Wrapper selected={selected}>
       <PositionedPort
         name="out"
-        node={node}
-        port={node.getPort('out')}
+        model={model}
+        port={model.getPort('out')}
         engine={engine}
       />
       <Shape />

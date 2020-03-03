@@ -7,22 +7,22 @@ const engineStub = {
   getModel: () => ({ isLocked: () => false }),
 };
 
-const nodeStub = {
-  getPort: () => ({ links: {}, updateCoords: () => {} }),
-  getID: () => {},
-  options: { selected: false },
-};
-
 /**
- * Proxy is used here to return a function for whatever object key is
- * asked for.
+ * Proxy is used here to return a function for whatever unknown object
+ * key is asked for.
  */
-const modelStub = new Proxy(
-  {},
-  {
-    get: () => () => {},
-  },
-);
+const createModelStub = configurations =>
+  new Proxy(
+    {
+      configurations,
+      getPort: () => ({ links: {}, updateCoords: () => {} }),
+      options: { selected: false },
+    },
+    {
+      get: (target, name) =>
+        name in target ? target[name] : () => {},
+    },
+  );
 
 const DraggableComponent = ({
   component: { type, Widget },
@@ -51,8 +51,7 @@ const DraggableComponent = ({
   >
     <Widget
       engine={engineStub}
-      node={{ ...nodeStub, configurations }}
-      model={modelStub}
+      model={createModelStub(configurations)}
     />
   </div>
 );

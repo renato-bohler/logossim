@@ -70,11 +70,11 @@ export const Shape = ({ size = 90 }) => (
 );
 
 const AndWidget = props => {
-  const { node, engine } = props;
+  const { model, engine } = props;
   const {
     configurations,
     options: { selected },
-  } = node;
+  } = model;
 
   const INPUT_PORTS_NUMBER = parseInt(
     configurations.INPUT_PORTS_NUMBER,
@@ -85,13 +85,13 @@ const AndWidget = props => {
     <Wrapper selected={selected}>
       {[...new Array(INPUT_PORTS_NUMBER)].map((_, i) => {
         const name = `in${i}`;
-        const port = node.getPort(name);
+        const port = model.getPort(name);
 
         return (
           <PositionedPort
             key={name}
             name={name}
-            node={node}
+            model={model}
             port={port}
             engine={engine}
             numberOfPorts={INPUT_PORTS_NUMBER}
@@ -101,8 +101,8 @@ const AndWidget = props => {
       })}
       <PositionedPort
         name="out"
-        node={node}
-        port={node.getPort('out')}
+        model={model}
+        port={model.getPort('out')}
         engine={engine}
       />
       <Shape />
