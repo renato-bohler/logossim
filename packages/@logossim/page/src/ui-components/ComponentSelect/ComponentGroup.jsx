@@ -85,6 +85,8 @@ const ComponentGroup = ({
           <ComponentButton
             onClick={() => handleComponentSelect(component)}
             key={component.name}
+            data-for="tooltip"
+            data-tip={component.description}
           >
             <ComponentIcon>
               <component.Icon />
