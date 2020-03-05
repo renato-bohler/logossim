@@ -1,4 +1,5 @@
 import React from 'react';
+import Tooltip from 'react-tooltip';
 
 const engineStub = {
   registerListener: () => {},
@@ -46,8 +47,14 @@ const DraggableComponent = ({
         }),
       );
 
-      requestAnimationFrame(handleClose);
+      requestAnimationFrame(() => {
+        Tooltip.hide();
+        handleClose();
+      });
     }}
+    data-for="tooltip"
+    data-tip="Drag me!"
+    data-place="bottom"
   >
     <Widget
       engine={engineStub}
