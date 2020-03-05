@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Tooltip from 'react-tooltip';
 
 import {
   DiagramEngine,
@@ -122,6 +123,7 @@ export default class App extends Component {
           handleComponentDrop={this.diagram.handleComponentDrop}
         />
         <Diagram engine={this.diagram} />
+        <Tooltip id="tooltip" globalEventOff="click" />
       </>
     );
   }
