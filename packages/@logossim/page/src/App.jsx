@@ -27,7 +27,11 @@ export default class App extends Component {
     this.groups = this.groupComponents();
 
     this.simulation = new SimulationWorker();
+  }
+
+  componentDidMount() {
     this.simulation.addCallback(this.handleSimulation);
+    this.simulation.stop();
   }
 
   componentWillUnmount() {
@@ -72,9 +76,7 @@ export default class App extends Component {
     this.diagram.setLocked(true);
     this.forceUpdate();
 
-    this.simulation.start(
-      this.simulation.getRunState() === 'paused' ? undefined : 0,
-    );
+    this.simulation.start();
   };
 
   handleClickPause = () => {

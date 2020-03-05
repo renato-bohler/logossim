@@ -38,40 +38,42 @@ export default class SimulationWorker {
     return this.runState;
   }
 
+  /**
+   * This code runs on the Web Worker thread, so simulation workload
+   * runs on another thread, in order to avoid blocking the UI (main)
+   * thread.
+   */
+  /* eslint-disable no-restricted-globals */
   thread = () => {
-    this.addEventListener(
+    self.addEventListener(
       'message',
       ({ data: { command, initial } }) => {
+        const doWork = () => {
+          self.state += 1;
+        };
+
+        const doUpdate = () =>
+          self.requestAnimationFrame(() => postMessage(self.state));
+
         switch (command) {
           case 'start':
             if (initial !== undefined) {
-              this.state = initial;
+              self.state = initial;
             }
 
-            this.workInterval = setInterval(() => {
-              this.state += 1;
-            });
-
-            this.updateInterval = setInterval(
-              () =>
-                this.requestAnimationFrame(() =>
-                  postMessage(this.state),
-                ),
-              1000,
-            );
+            self.workInterval = setInterval(doWork);
+            self.updateInterval = setInterval(doUpdate);
             break;
           case 'pause':
           case 'stop':
             if (command === 'stop') {
-              this.state = 0;
+              self.state = 0;
             }
-            if (this.workInterval) {
-              clearInterval(this.workInterval);
-            }
-            if (this.updateInterval) {
-              clearInterval(this.updateInterval);
-            }
-            postMessage(this.state);
+
+            clearInterval(self.workInterval);
+            clearInterval(self.updateInterval);
+
+            postMessage(self.state);
             break;
           default:
             break;
