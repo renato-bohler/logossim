@@ -1,5 +1,26 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
-// expect(element).toHaveTextContent(/react/i)
-// learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
+
+window.URL.createObjectURL = () => '';
+
+window.Worker = class Worker {
+  constructor(stringUrl) {
+    this.url = stringUrl;
+    this.onmessage = () => {};
+  }
+
+  postMessage(msg) {
+    this.onmessage(msg);
+  }
+
+  addEventListener(type, fn) {
+    if (type === 'message') {
+      this.onmessage = fn;
+    }
+  }
+
+  removeEventListener(type) {
+    if (type === 'message') {
+      this.onmessage = () => {};
+    }
+  }
+};
