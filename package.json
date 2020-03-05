@@ -37,6 +37,7 @@
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
+    "react-tooltip": "^4.1.0",
     "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.0.0"
   },
