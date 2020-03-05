@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import Tooltip from 'react-tooltip';
 import styled from 'styled-components';
 import { Formik } from 'formik';
 
@@ -193,65 +194,81 @@ const ComponentConfiguration = ({
   handleClose,
   handleBack,
   handleComponentDrop,
-}) => (
-  <>
-    <Header>
-      <IconButton first onClick={handleBack}>
-        <Back />
-      </IconButton>
-      <Title>Configure component</Title>
-      <IconButton last onClick={handleClose}>
-        <Close />
-      </IconButton>
-    </Header>
+}) => {
+  useEffect(Tooltip.rebuild);
 
-    <Content>
-      <Formik initialValues={getInitialValues(component)}>
-        {({ values, handleChange }) => (
-          <>
-            <DragArea>
-              <DraggableComponent
-                component={component}
-                configurations={values}
-                handleClose={handleClose}
-              />
-            </DragArea>
+  return (
+    <>
+      <Header>
+        <IconButton
+          first
+          onClick={handleBack}
+          data-for="tooltip"
+          data-tip="Go back..."
+          data-place="right"
+        >
+          <Back />
+        </IconButton>
+        <Title>Configure component</Title>
+        <IconButton
+          last
+          onClick={handleClose}
+          data-for="tooltip"
+          data-tip="Close"
+          data-place="left"
+        >
+          <Close />
+        </IconButton>
+      </Header>
 
-            <FormScroll autoComplete="off">
-              {component.configurations.map(configuration => (
-                <ComponentConfigurationInputContainer
-                  key={configuration.name}
+      <Content>
+        <Formik initialValues={getInitialValues(component)}>
+          {({ values, handleChange }) => (
+            <>
+              <DragArea>
+                <DraggableComponent
+                  component={component}
+                  configurations={values}
+                  handleClose={handleClose}
+                />
+              </DragArea>
+
+              <FormScroll autoComplete="off">
+                {component.configurations.map(configuration => (
+                  <ComponentConfigurationInputContainer
+                    key={configuration.name}
+                  >
+                    <ComponentConfigurationInput
+                      handleChange={handleChange}
+                      value={values[configuration.name]}
+                      componentType={component.type}
+                      {...configuration}
+                    />
+                  </ComponentConfigurationInputContainer>
+                ))}
+              </FormScroll>
+
+              <Footer>
+                <Hint>(hint: you can also drag the component)</Hint>
+                <SubmitButton
+                  type="button"
+                  onClick={() => {
+                    handleComponentDrop(null, {
+                      type: component.type,
+                      configurations: values,
+                    });
+                    handleClose();
+                  }}
                 >
-                  <ComponentConfigurationInput
-                    handleChange={handleChange}
-                    value={values[configuration.name]}
-                    componentType={component.type}
-                    {...configuration}
-                  />
-                </ComponentConfigurationInputContainer>
-              ))}
-            </FormScroll>
-
-            <Footer>
-              <Hint>(hint: you can also drag the component)</Hint>
-              <SubmitButton
-                type="button"
-                onClick={() => {
-                  handleComponentDrop(null, {
-                    type: component.type,
-                    configurations: values,
-                  });
-                  handleClose();
-                }}
-              >
-                Add to circuit
-              </SubmitButton>
-            </Footer>
-          </>
-        )}
-      </Formik>
-    </Content>
-  </>
-);
+                  Add to circuit
+                </SubmitButton>
+              </Footer>
+            </>
+          )}
+        </Formik>
+      </Content>
+    </>
+  );
+};
 
 export default ComponentConfiguration;

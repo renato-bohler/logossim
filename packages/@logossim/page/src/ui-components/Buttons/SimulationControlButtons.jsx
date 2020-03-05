@@ -72,16 +72,28 @@ const SimulationControlButtons = ({
   handleClickStop,
 }) => (
   <Container>
-    <Button onClick={handleClickStart} disabled={state === 'started'}>
+    <Button
+      onClick={handleClickStart}
+      disabled={state === 'started'}
+      data-for="tooltip"
+      data-tip="Start simulation"
+    >
       <Play />
     </Button>
     <Button
       onClick={handleClickPause}
       disabled={state === 'paused' || state === 'stopped'}
+      data-for="tooltip"
+      data-tip="Pause simulation"
     >
       <Pause />
     </Button>
-    <Button onClick={handleClickStop} disabled={state === 'stopped'}>
+    <Button
+      onClick={handleClickStop}
+      disabled={state === 'stopped'}
+      data-for="tooltip"
+      data-tip="Stop simulation"
+    >
       <Stop />
     </Button>
   </Container>

@@ -30,7 +30,14 @@ const Button = styled.button.attrs(({ ...props }) => ({
 
 const ComponentSelectButton = ({ handleClick }) => (
   <Container>
-    <Button onClick={handleClick}>+</Button>
+    <Button
+      onClick={handleClick}
+      data-for="tooltip"
+      data-tip="Add component..."
+      data-place="left"
+    >
+      +
+    </Button>
   </Container>
 );
 
