@@ -107,6 +107,7 @@ export default class App extends Component {
     this.diagram.setLocked(false);
     this.applySimulationDiff();
     this.forceUpdate();
+    this.diff = {};
   };
 
   showAddComponent = () =>
