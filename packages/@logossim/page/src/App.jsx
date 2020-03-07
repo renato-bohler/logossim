@@ -6,7 +6,7 @@ import {
   Diagram,
   SimulationWorker,
 } from '@logossim/core';
-import components from '@logossim/components';
+import components, { groupedComponents } from '@logossim/components';
 
 import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
 import SimulationControlButtons from './ui-components/Buttons/SimulationControlButtons';
@@ -24,8 +24,6 @@ export default class App extends Component {
       circuit: undefined,
       isComponentSelectOpen: false,
     };
-
-    this.groups = this.groupComponents();
 
     this.simulation = new SimulationWorker();
     this.diff = {};
@@ -59,17 +57,6 @@ export default class App extends Component {
 
     requestAnimationFrame(this.renderSimulation);
   };
-
-  groupComponents = () =>
-    components.reduce((acc, component) => {
-      const group = acc.find(g => g.name === component.group);
-
-      if (group) group.components.push(component);
-      else
-        acc.push({ name: component.group, components: [component] });
-
-      return acc;
-    }, []);
 
   handleClickSave = () => {
     const serialized = JSON.stringify(this.diagram.serialize());
@@ -138,7 +125,7 @@ export default class App extends Component {
         <ComponentSelectButton handleClick={this.showAddComponent} />
         <ComponentSelect
           isOpen={isComponentSelectOpen}
-          groups={this.groups}
+          groups={groupedComponents}
           handleClose={this.hideAddComponent}
           handleComponentDrop={this.diagram.handleComponentDrop}
         />
