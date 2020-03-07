@@ -94,6 +94,7 @@ export default class App extends Component {
   };
 
   handleClickStart = () => {
+    this.diagram.clearSelection();
     this.diagram.setLocked(true);
     this.forceUpdate();
 

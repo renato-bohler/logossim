@@ -98,4 +98,9 @@ export default class DiagramEngine {
 
     this.engine.repaintCanvas();
   };
+
+  clearSelection = () =>
+    this.getEngine()
+      .getModel()
+      .clearSelection();
 }
