@@ -46,12 +46,7 @@ export default class App extends Component {
 
   applySimulationDiff = () => {
     Object.entries(this.diff).forEach(([id, value]) =>
-      // TODO: we shouldn't access `react-diagrams` classes direcly
-      this.diagram
-        .getEngine()
-        .getModel()
-        .getLink(id)
-        .setValue(value),
+      this.diagram.getLink(id).setValue(value),
     );
 
     this.diagram.repaint();

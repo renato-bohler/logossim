@@ -103,4 +103,9 @@ export default class DiagramEngine {
     this.getEngine()
       .getModel()
       .clearSelection();
+
+  getLink = id =>
+    this.getEngine()
+      .getModel()
+      .getLink(id);
 }
