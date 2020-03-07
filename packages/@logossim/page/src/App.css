@@ -40,8 +40,12 @@ body {
   --link-selected: #3ec1ff;
   --link-width: 3;
 
+  --value-on: rgb(19, 230, 19);
+  --value-off: rgb(7, 59, 7);
+  --value-error: red;
+
   --port-unconnected: #ddd;
-  --port-hover: black;
+  --port-hover: var(--link-selected);
   --port-connected-border: #4f4f4f;
   --port-unconnected-border: #333;
   --port-width: 2px;

@@ -1,9 +1,13 @@
 import { Point } from '@projectstorm/geometry';
-import { PointModel } from '@projectstorm/react-diagrams';
-import { DefaultLinkModel } from '@projectstorm/react-diagrams-defaults';
+import {
+  PointModel,
+  LabelModel,
+  LinkModel as RDLinkModel,
+} from '@projectstorm/react-diagrams';
+import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 import { sameAxis } from '../Diagram/states/common';
 
-export default class LinkModel extends DefaultLinkModel {
+export default class LinkModel extends RDLinkModel {
   constructor(options) {
     super({
       type: 'link',
@@ -13,6 +17,18 @@ export default class LinkModel extends DefaultLinkModel {
     this.bifurcations = [];
     this.bifurcationSource = null;
     this.bifurcationTarget = null;
+
+    this.value = null;
+  }
+
+  addLabel(label) {
+    if (label instanceof LabelModel) {
+      return super.addLabel(label);
+    }
+
+    const newLabel = new DefaultLabelModel();
+    newLabel.setLabel(label);
+    return super.addLabel(newLabel);
   }
 
   setBifurcationSource(link) {
@@ -52,6 +68,13 @@ export default class LinkModel extends DefaultLinkModel {
   setSelected(selected) {
     super.setSelected(selected);
     this.bifurcations.forEach(b => b.setSelected(selected));
+
+    if (this.getSourcePort()) {
+      this.getSourcePort().setSelected(selected);
+    }
+    if (this.getTargetPort()) {
+      this.getTargetPort().setSelected(selected);
+    }
   }
 
   remove() {
@@ -74,6 +97,7 @@ export default class LinkModel extends DefaultLinkModel {
       bifurcationTarget: this.bifurcationTarget
         ? this.bifurcationTarget.getID()
         : null,
+      value: this.value,
     };
   }
 
@@ -178,13 +202,19 @@ export default class LinkModel extends DefaultLinkModel {
     return false;
   }
 
-  setWidth(width) {
-    this.options.width = width;
-    this.fireEvent({ width }, 'widthChanged');
+  getValue() {
+    return this.value;
   }
 
-  setColor(color) {
-    this.options.color = color;
-    this.fireEvent({ color }, 'colorChanged');
+  setValue(value) {
+    this.value = value;
+  }
+
+  getColor() {
+    if (this.isSelected()) return 'var(--link-selected)';
+    if (this.value === null) return 'var(--link-unselected)';
+    if (this.value === 1) return 'var(--value-on)';
+    if (this.value === 0) return 'var(--value-off)';
+    return 'var(--value-error)';
   }
 }

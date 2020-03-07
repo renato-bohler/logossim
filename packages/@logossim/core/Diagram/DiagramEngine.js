@@ -68,6 +68,8 @@ export default class DiagramEngine {
 
   isLocked = () => this.locked;
 
+  repaint = () => this.engine.repaintCanvas();
+
   realignGrid = ({ offsetX, offsetY }) =>
     requestAnimationFrame(() => {
       document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;

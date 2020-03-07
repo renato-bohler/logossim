@@ -31,9 +31,7 @@ export default class LinkFactory extends DefaultLinkFactory {
   generateLinkSegment(model, selected, path) {
     return (
       <Path
-        stroke={
-          selected ? 'var(--link-selected)' : 'var(--link-unselected)'
-        }
+        stroke={model.getColor()}
         strokeWidth="var(--link-width)"
         d={path}
       />

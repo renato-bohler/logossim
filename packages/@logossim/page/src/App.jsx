@@ -28,6 +28,7 @@ export default class App extends Component {
     this.groups = this.groupComponents();
 
     this.simulation = new SimulationWorker();
+    this.diff = {};
   }
 
   componentDidMount() {
@@ -39,10 +40,29 @@ export default class App extends Component {
     this.simulation.removeCallback(this.handleSimulation);
   }
 
-  handleSimulation = message => {
-    // TODO: test setting layer.allowRepaint to false and then true
-    console.log('TODO: handle simulation', message.data);
-    this.forceUpdate();
+  handleSimulation = ({ data: diff }) => {
+    this.diff = { ...this.diff, ...diff };
+  };
+
+  applySimulationDiff = () => {
+    Object.entries(this.diff).forEach(([id, value]) =>
+      // TODO: we shouldn't access `react-diagrams` classes direcly
+      this.diagram
+        .getEngine()
+        .getModel()
+        .getLink(id)
+        .setValue(value),
+    );
+
+    this.diagram.repaint();
+  };
+
+  renderSimulation = () => {
+    if (this.simulation.getState() !== 'started') return;
+
+    this.applySimulationDiff();
+
+    requestAnimationFrame(this.renderSimulation);
   };
 
   groupComponents = () =>
@@ -77,16 +97,19 @@ export default class App extends Component {
     this.diagram.setLocked(true);
     this.forceUpdate();
 
-    this.simulation.start();
+    this.simulation.start(JSON.stringify(this.diagram.serialize()));
+    this.renderSimulation();
   };
 
   handleClickPause = () => {
     this.simulation.pause();
+    this.forceUpdate();
   };
 
-  handleClickStop = () => {
-    this.simulation.stop();
+  handleClickStop = async () => {
+    await this.simulation.stop();
     this.diagram.setLocked(false);
+    this.applySimulationDiff();
     this.forceUpdate();
   };
 
@@ -110,7 +133,7 @@ export default class App extends Component {
           handleClickLoad={this.handleClickLoad}
         />
         <SimulationControlButtons
-          state={this.simulation.getRunState()}
+          state={this.simulation.getState()}
           handleClickStart={this.handleClickStart}
           handleClickPause={this.handleClickPause}
           handleClickStop={this.handleClickStop}

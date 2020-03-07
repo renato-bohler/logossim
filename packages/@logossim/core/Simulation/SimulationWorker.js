@@ -8,7 +8,7 @@ export default class SimulationWorker {
     const blob = new Blob([`(${code})()`]);
 
     this.worker = new Worker(URL.createObjectURL(blob));
-    this.runState = 'stopped';
+    this.state = 'stopped';
   }
 
   addCallback(callback) {
@@ -19,23 +19,33 @@ export default class SimulationWorker {
     return this.worker.removeEventListener('message', callback);
   }
 
-  start(circuit) {
-    this.worker.postMessage({ command: 'start', initial: circuit });
-    this.runState = 'started';
+  start(initial) {
+    this.worker.postMessage({ command: 'start', initial });
+    this.state = 'started';
   }
 
   pause() {
     this.worker.postMessage({ command: 'pause' });
-    this.runState = 'paused';
+    this.state = 'paused';
   }
 
-  stop() {
-    this.worker.postMessage({ command: 'stop' });
-    this.runState = 'stopped';
+  async stop() {
+    return new Promise(resolve => {
+      const waitForEnd = ({ data }) => {
+        if (Object.values(data).every(d => d === null)) {
+          this.worker.removeEventListener('message', waitForEnd);
+          this.state = 'stopped';
+          resolve();
+        }
+      };
+      this.worker.addEventListener('message', waitForEnd);
+
+      this.worker.postMessage({ command: 'stop' });
+    });
   }
 
-  getRunState() {
-    return this.runState;
+  getState() {
+    return this.state;
   }
 
   /**
@@ -48,32 +58,46 @@ export default class SimulationWorker {
     self.addEventListener(
       'message',
       ({ data: { command, initial } }) => {
-        const doWork = () => {
-          self.state += 1;
+        const getAllLinks = () => {
+          if (!self.circuit) return [];
+
+          return Object.entries(self.circuit.layers[0].models);
         };
 
-        const doUpdate = () =>
-          self.requestAnimationFrame(() => postMessage(self.state));
+        const setAllToRandom = () =>
+          postMessage(
+            Object.fromEntries(
+              getAllLinks().map(([id]) => [
+                id,
+                Math.random() < 0.5 ? 0 : 1,
+              ]),
+            ),
+          );
+
+        const clearAll = () =>
+          postMessage(
+            Object.fromEntries(
+              getAllLinks().map(([id]) => [id, null]),
+            ),
+          );
 
         switch (command) {
           case 'start':
             if (initial !== undefined) {
-              self.state = initial;
+              self.circuit = JSON.parse(initial);
             }
 
-            self.workInterval = setInterval(doWork);
-            self.updateInterval = setInterval(doUpdate);
+            self.workInterval = setInterval(setAllToRandom);
             break;
           case 'pause':
-          case 'stop':
-            if (command === 'stop') {
-              self.state = 0;
-            }
-
             clearInterval(self.workInterval);
-            clearInterval(self.updateInterval);
-
-            postMessage(self.state);
+            break;
+          case 'stop':
+            clearInterval(self.workInterval);
+            setTimeout(() => {
+              clearAll();
+              self.circuit = null;
+            });
             break;
           default:
             break;
