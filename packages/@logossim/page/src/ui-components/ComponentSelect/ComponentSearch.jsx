@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Header, Content, IconButton } from './ComponentLayout';
 import ComponentGroup from './ComponentGroup';
-import Close from '../Icons/Close';
+import { Close } from '../Icons';
 
 const SearchBar = styled.input`
   flex-grow: 1;

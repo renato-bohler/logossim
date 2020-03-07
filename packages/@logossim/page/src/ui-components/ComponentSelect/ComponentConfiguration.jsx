@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import { Formik } from 'formik';
 
 import { Header, Content, IconButton } from './ComponentLayout';
-import Back from '../Icons/Back';
-import Close from '../Icons/Close';
+import { Back, Close } from '../Icons';
 import DraggableComponent from './DraggableComponent';
 
 const DragArea = styled.div`

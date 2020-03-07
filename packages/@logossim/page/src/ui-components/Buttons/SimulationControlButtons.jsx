@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import Play from '../Icons/Play';
-import Pause from '../Icons/Pause';
-import Stop from '../Icons/Stop';
+import { Play, Pause, Stop } from '../Icons';
 
 const Container = styled.div`
   position: absolute;

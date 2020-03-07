@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import Chevron from '../Icons/Chevron';
+import { Chevron } from '../Icons';
 
 const Container = styled.div`
   margin-bottom: 32px;
