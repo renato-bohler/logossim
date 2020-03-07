@@ -8,8 +8,8 @@ window.Worker = class Worker {
     this.onmessage = () => {};
   }
 
-  postMessage(msg) {
-    this.onmessage(msg);
+  postMessage(data) {
+    this.onmessage({ data });
   }
 
   addEventListener(type, fn) {
