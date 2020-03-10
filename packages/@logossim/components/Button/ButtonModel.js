@@ -9,8 +9,12 @@ export default class ButtonModel extends BaseModel {
     console.log('ButtonModel onSimulationStart');
   }
 
-  onSimulationEnd() {
-    console.log('ButtonModel onSimulationEnd');
+  onSimulationPause() {
+    console.log('ButtonModel onSimulationPause');
+  }
+
+  onSimulationStop() {
+    console.log('ButtonModel onSimulationStop');
   }
 
   step(inputs) {
