@@ -13,15 +13,10 @@ export default class AndModel extends BaseModel {
     this.addPort('out');
   }
 
-  onSimulationStart() {
-    console.log('AndModel onSimulationStart');
-  }
-
-  onSimulationEnd() {
-    console.log('AndModel onSimulationEnd');
-  }
-
   step(inputs) {
-    console.log('AndModel step', inputs);
+    if (inputs.in0 === 1) return { in0: 0, in1: 1, out: 2 };
+    if (inputs.in0 === 0) return { in0: 2, in1: 0, out: 1 };
+    if (inputs.in0 === 2) return { in0: 1, in1: 2, out: 0 };
+    return {};
   }
 }
