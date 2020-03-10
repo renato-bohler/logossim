@@ -10,9 +10,11 @@ export default class BaseModel extends NodeModel {
 
     this.configurations = configurations;
 
+    // TODO: is this really needed?
     this.functions = {
       onSimulationStart: this.onSimulationStart,
-      onSimulationEnd: this.onSimulationEnd,
+      onSimulationPause: this.onSimulationPause,
+      onSimulationStop: this.onSimulationStop,
       step: this.step,
     };
   }
@@ -20,6 +22,7 @@ export default class BaseModel extends NodeModel {
   serialize() {
     return {
       ...super.serialize(),
+      // TODO: is this really needed?
       functions: this.functions,
       configurations: this.configurations,
     };
@@ -37,7 +40,9 @@ export default class BaseModel extends NodeModel {
 
   onSimulationStart() {}
 
-  onSimulationEnd() {}
+  onSimulationPause() {}
+
+  onSimulationStop() {}
 
   step() {}
 }
