@@ -16,7 +16,13 @@ const createModelStub = configurations =>
   new Proxy(
     {
       configurations,
-      getPort: () => ({ links: {}, updateCoords: () => {} }),
+      getPort: () => ({
+        links: {},
+        updateCoords: () => {},
+        getMainLink: () => null,
+        getColor: () => 'var(--port-unconnected)',
+        getID: () => '',
+      }),
       options: { selected: false },
     },
     {
