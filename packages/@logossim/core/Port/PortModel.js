@@ -9,6 +9,8 @@ export default class PortModel extends RDPortModel {
       maximumLinks: 1,
       ...options,
     });
+
+    this.value = null;
   }
 
   serialize() {
@@ -18,6 +20,14 @@ export default class PortModel extends RDPortModel {
   deserialize(data, engine) {
     super.deserialize(data, engine);
     this.value = data.value;
+  }
+
+  getValue() {
+    return this.value;
+  }
+
+  setValue(value) {
+    this.value = value;
   }
 
   isNewLinkAllowed() {
@@ -35,5 +45,21 @@ export default class PortModel extends RDPortModel {
       return new LinkModel();
     }
     return null;
+  }
+
+  getMainLink() {
+    const links = Object.values(this.getLinks());
+    return links.length > 0 ? links[0] : null;
+  }
+
+  getColor() {
+    if (this.value === null) {
+      const link = this.getMainLink();
+      if (link) return link.getColor();
+      return 'var(--port-unconnected)';
+    }
+    if (this.value === 1) return 'var(--value-on)';
+    if (this.value === 0) return 'var(--value-off)';
+    return 'var(--value-error)';
   }
 }

@@ -11,8 +11,7 @@ const Circle = styled.div`
         ? 'var(--port-connected-border)'
         : 'var(--port-unconnected-border)'};
   border-radius: 100%;
-  background: ${props =>
-    props.link ? props.link.getColor() : 'var(--port-unconnected)'};
+  background: ${props => props.port.getColor()};
 
   &:hover {
     background: var(--port-hover);
@@ -21,22 +20,16 @@ const Circle = styled.div`
 
 export default class Port extends PortWidget {
   render() {
-    const {
-      name,
-      model,
-      port: { links },
-      className = '',
-    } = this.props;
-
-    const link =
-      Object.keys(links).length > 0 ? Object.values(links)[0] : null;
+    const { name, model, port, className = '' } = this.props;
 
     return (
       <Circle
         className={`port ${className}`}
         data-name={name}
         data-nodeid={model.getID()}
-        link={link}
+        data-portid={port.getID()}
+        port={port}
+        link={port.getMainLink()}
       />
     );
   }
