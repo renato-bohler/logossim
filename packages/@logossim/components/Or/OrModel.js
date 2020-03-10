@@ -11,8 +11,12 @@ export default class OrModel extends BaseModel {
     console.log('OrModel onSimulationStart');
   }
 
-  onSimulationEnd() {
-    console.log('OrModel onSimulationEnd');
+  onSimulationPause() {
+    console.log('OrModel onSimulationPause');
+  }
+
+  onSimulationStop() {
+    console.log('OrModel onSimulationStop');
   }
 
   step(inputs) {
