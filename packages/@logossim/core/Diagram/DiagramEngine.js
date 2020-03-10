@@ -104,8 +104,36 @@ export default class DiagramEngine {
       .getModel()
       .clearSelection();
 
+  // TODO: change to setLinkValue
   getLink = id =>
     this.getEngine()
       .getModel()
       .getLink(id);
+
+  // TODO: change to setPortValue
+  getComponent = id =>
+    this.getEngine()
+      .getModel()
+      .getNode(id);
+
+  clearAllValues = () => {
+    this.clearLinkValues();
+    this.clearPortValues();
+  };
+
+  clearLinkValues = () =>
+    this.getEngine()
+      .getModel()
+      .getLinks()
+      .forEach(link => link.setValue(null));
+
+  clearPortValues = () =>
+    this.getEngine()
+      .getModel()
+      .getNodes()
+      .forEach(node =>
+        Object.values(node.getPorts()).forEach(port =>
+          port.setValue(null),
+        ),
+      );
 }
