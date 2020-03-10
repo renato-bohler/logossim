@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Tooltip from 'react-tooltip';
 
 import {
+  SimulationEngine,
   DiagramEngine,
   Diagram,
-  SimulationWorker,
 } from '@logossim/core';
 import components, { groupedComponents } from '@logossim/components';
 
@@ -19,14 +19,19 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    this.diagram = new DiagramEngine(components);
     this.state = {
       circuit: undefined,
       isComponentSelectOpen: false,
     };
 
-    this.simulation = new SimulationWorker();
-    this.diff = {};
+    this.diagram = new DiagramEngine(components);
+
+    this.simulation = new SimulationEngine(components);
+    // TODO: move simulation diff controlling into SimulationEngine
+    this.diff = {
+      components: {},
+      links: {},
+    };
   }
 
   componentDidMount() {
@@ -38,14 +43,33 @@ export default class App extends Component {
     this.simulation.removeCallback(this.handleSimulation);
   }
 
-  handleSimulation = ({ data: diff }) => {
-    this.diff = { ...this.diff, ...diff };
+  handleSimulation = ({ data: { type, diff } }) => {
+    if (type === 'diff') {
+      this.diff = {
+        components: { ...this.diff.components, ...diff.components },
+        links: { ...this.diff.links, ...diff.links },
+      };
+    }
   };
 
   applySimulationDiff = () => {
-    Object.entries(this.diff).forEach(([id, value]) =>
+    // TODO: change to setPortValue
+    Object.entries(this.diff.components).forEach(([id, value]) => {
+      const component = this.diagram.getComponent(id);
+      Object.entries(value).forEach(([portName, portValue]) =>
+        component.getPort(portName).setValue(portValue),
+      );
+    });
+
+    // TODO: change to setLinkValue
+    Object.entries(this.diff.links).forEach(([id, value]) =>
       this.diagram.getLink(id).setValue(value),
     );
+
+    this.diff = {
+      components: {},
+      links: {},
+    };
 
     this.diagram.repaint();
   };
@@ -80,7 +104,7 @@ export default class App extends Component {
     this.diagram.setLocked(true);
     this.forceUpdate();
 
-    this.simulation.start(JSON.stringify(this.diagram.serialize()));
+    this.simulation.start(this.diagram.getEngine().getModel());
     this.renderSimulation();
   };
 
@@ -91,10 +115,13 @@ export default class App extends Component {
 
   handleClickStop = async () => {
     await this.simulation.stop();
+    this.diagram.clearAllValues();
     this.diagram.setLocked(false);
-    this.applySimulationDiff();
     this.forceUpdate();
-    this.diff = {};
+    this.diff = {
+      components: {},
+      links: {},
+    };
   };
 
   showAddComponent = () =>
