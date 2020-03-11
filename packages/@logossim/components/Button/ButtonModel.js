@@ -2,7 +2,7 @@ import { BaseModel } from '@logossim/core';
 
 export default class ButtonModel extends BaseModel {
   initialize() {
-    this.addPort('out');
+    this.addOutPort('out');
   }
 
   onSimulationStart() {
