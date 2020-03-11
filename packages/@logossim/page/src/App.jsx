@@ -8,10 +8,12 @@ import {
 } from '@logossim/core';
 import components, { groupedComponents } from '@logossim/components';
 
-import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
-import SimulationControlButtons from './ui-components/Buttons/SimulationControlButtons';
-import ComponentSelectButton from './ui-components/Buttons/ComponentSelectButton';
-import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
+import {
+  DiagramStateButtons,
+  SimulationControlButtons,
+  ComponentSelectButton,
+  ComponentSelect,
+} from './ui-components';
 
 import './App.css';
 
