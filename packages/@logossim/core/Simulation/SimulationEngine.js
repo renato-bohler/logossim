@@ -1,4 +1,4 @@
-import worker from './simulation.worker';
+import SimulationWorker from './simulation.worker';
 
 export default class SimulationEngine {
   constructor(components) {
@@ -7,10 +7,7 @@ export default class SimulationEngine {
   }
 
   reset() {
-    const code = worker.toString();
-    const blob = new Blob([`(${code})()`]);
-
-    this.worker = new Worker(URL.createObjectURL(blob));
+    this.worker = new SimulationWorker();
     this.state = 'stopped';
   }
 

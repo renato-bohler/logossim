@@ -4,171 +4,173 @@
  * This code runs the simulation workload on a Web Worker thread, to
  * avoid blocking the UI (main) thread.
  */
-const worker = () => {
-  // TODO: move to another file (2)
-  class GenericComponent {
-    constructor(properties, methods) {
-      Object.entries(properties).forEach(([key, value]) => {
-        this[key] = value;
-      });
 
-      Object.entries(methods).forEach(([name, method]) => {
-        this[name] = method.bind(this);
-      });
+// TODO: move to another file (2)
+class GenericComponent {
+  constructor(properties, methods) {
+    Object.entries(properties).forEach(([key, value]) => {
+      this[key] = value;
+    });
 
-      this.initialize(properties.configurations);
-    }
+    Object.entries(methods).forEach(([name, method]) => {
+      this[name] = method.bind(this);
+    });
 
-    setPortValues(values) {
-      this.ports = this.ports.map(port => ({
-        ...port,
-        value:
-          values[port.name] !== undefined
-            ? values[port.name]
-            : port.value,
-      }));
-    }
-
-    // Defaults
-    onSimulationStart() {}
-
-    onSimulationPause() {}
-
-    onSimulationStop() {}
-
-    step() {}
-
-    // Diagram stubs
-    addPort() {}
-
-    removePort() {}
+    this.initialize(properties.configurations);
   }
 
-  // TODO: move to another file
-  const createModelMethods = model =>
-    Object.fromEntries(
-      Object.entries(model.methods).map(([key, stringFn]) => [
-        key,
-        // eslint-disable-next-line no-new-func
-        new Function(`return function ${stringFn}`)(),
-      ]),
+  setPortValues(values) {
+    this.ports = this.ports.map(port => ({
+      ...port,
+      value:
+        values[port.name] !== undefined
+          ? values[port.name]
+          : port.value,
+    }));
+  }
+
+  // Defaults
+  onSimulationStart() {}
+
+  onSimulationPause() {}
+
+  onSimulationStop() {}
+
+  step() {}
+
+  // Diagram stubs
+  addPort() {}
+
+  removePort() {}
+}
+
+// TODO: move to another file
+const createModelMethods = model =>
+  Object.fromEntries(
+    Object.entries(model.methods).map(([key, stringFn]) => [
+      key,
+      // eslint-disable-next-line no-new-func
+      new Function(
+        `return ${
+          /**
+           * We need to add the `function` token when on development
+           * environment.
+           */
+          process.env.NODE_ENV === 'development' ? 'function ' : ''
+        }${stringFn}`,
+      )(),
+    ]),
+  );
+
+// TODO: move to another file
+const mountModels = diagram =>
+  diagram.models
+    .map(model => ({
+      ...model,
+      methods: createModelMethods(model),
+    }))
+    .reduce(
+      (obj, model) => ({
+        ...obj,
+        [model.type]: model.methods,
+      }),
+      {},
     );
 
-  // TODO: move to another file
-  const mountModels = diagram =>
-    diagram.models
-      .map(model => ({
-        ...model,
-        methods: createModelMethods(model),
-      }))
-      .reduce(
-        (obj, model) => ({
-          ...obj,
-          [model.type]: model.methods,
-        }),
-        {},
-      );
+// TODO: move to another file
+const mount = diagram => {
+  const models = mountModels(diagram);
 
-  // TODO: move to another file
-  const mount = diagram => {
-    const models = mountModels(diagram);
+  return {
+    ...diagram,
+    components: diagram.components.map(
+      component =>
+        new GenericComponent(
+          {
+            ...component.properties,
+            id: component.id,
+            configurations: component.configurations,
+            ports: component.ports.map(port => ({
+              ...port,
+              value: 0,
+            })),
+          },
+          models[component.type],
+        ),
+    ),
+  };
+};
 
-    return {
-      ...diagram,
-      components: diagram.components.map(
-        component =>
-          new GenericComponent(
-            {
-              ...component.properties,
-              id: component.id,
-              configurations: component.configurations,
-              ports: component.ports.map(port => ({
-                ...port,
-                value: 0,
-              })),
-            },
-            models[component.type],
-          ),
-      ),
+self.addEventListener('message', ({ data: { command, diagram } }) => {
+  // TODO: move to another file (2)
+  const resetDiff = () => {
+    self.diff = {
+      components: {},
+      links: {},
     };
   };
 
-  self.addEventListener(
-    'message',
-    ({ data: { command, diagram } }) => {
-      // TODO: move to another file (2)
-      const resetDiff = () => {
-        self.diff = {
-          components: {},
-          links: {},
-        };
-      };
+  // TODO: move to another file (2)
+  const getAllComponents = () => {
+    if (!self.circuit) return [];
 
-      // TODO: move to another file (2)
-      const getAllComponents = () => {
-        if (!self.circuit) return [];
+    return self.circuit.components;
+  };
 
-        return self.circuit.components;
-      };
+  const setAllToStepReturn = () => {
+    getAllComponents().forEach(component => {
+      const result = component.step(
+        component.ports.reduce(
+          (obj, c) => ({ ...obj, [c.name]: c.value }),
+          {},
+        ),
+      );
 
-      const setAllToStepReturn = () => {
-        getAllComponents().forEach(component => {
-          const result = component.step(
-            component.ports.reduce(
-              (obj, c) => ({ ...obj, [c.name]: c.value }),
-              {},
-            ),
-          );
+      if (!result) return;
 
-          if (!result) return;
+      component.setPortValues(result);
 
-          component.setPortValues(result);
+      self.diff.components[component.id] = result;
+    });
 
-          self.diff.components[component.id] = result;
-        });
+    postMessage({ type: 'diff', diff: self.diff });
+    resetDiff();
+  };
 
-        postMessage({ type: 'diff', diff: self.diff });
+  const clearAll = () => postMessage({ type: 'clear' });
+
+  switch (command) {
+    case 'start':
+      if (diagram !== undefined) {
         resetDiff();
-      };
-
-      const clearAll = () => postMessage({ type: 'clear' });
-
-      switch (command) {
-        case 'start':
-          if (diagram !== undefined) {
-            resetDiff();
-            self.circuit = mount(diagram);
-          }
-
-          getAllComponents().forEach(component =>
-            component.onSimulationStart(),
-          );
-
-          setAllToStepReturn();
-          self.workInterval = setInterval(setAllToStepReturn);
-          break;
-        case 'pause':
-          getAllComponents().forEach(component =>
-            component.onSimulationPause(),
-          );
-          clearInterval(self.workInterval);
-          break;
-        case 'stop':
-          getAllComponents().forEach(component =>
-            component.onSimulationStop(),
-          );
-          clearInterval(self.workInterval);
-          setTimeout(() => {
-            clearAll();
-            self.circuit = null;
-            self.diff = null;
-          });
-          break;
-        default:
-          break;
+        self.circuit = mount(diagram);
       }
-    },
-  );
-};
 
-export default worker;
+      getAllComponents().forEach(component =>
+        component.onSimulationStart(),
+      );
+
+      setAllToStepReturn();
+      self.workInterval = setInterval(setAllToStepReturn);
+      break;
+    case 'pause':
+      getAllComponents().forEach(component =>
+        component.onSimulationPause(),
+      );
+      clearInterval(self.workInterval);
+      break;
+    case 'stop':
+      getAllComponents().forEach(component =>
+        component.onSimulationStop(),
+      );
+      clearInterval(self.workInterval);
+      setTimeout(() => {
+        clearAll();
+        self.circuit = null;
+        self.diff = null;
+      });
+      break;
+    default:
+      break;
+  }
+});
