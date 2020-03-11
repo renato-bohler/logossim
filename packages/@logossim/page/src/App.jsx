@@ -27,34 +27,17 @@ export default class App extends Component {
     this.diagram = new DiagramEngine(components);
 
     this.simulation = new SimulationEngine(components);
-    // TODO: move simulation diff controlling into SimulationEngine
-    this.diff = {
-      components: {},
-      links: {},
-    };
   }
 
   componentDidMount() {
-    this.simulation.addCallback(this.handleSimulation);
     this.simulation.stop();
   }
 
-  componentWillUnmount() {
-    this.simulation.removeCallback(this.handleSimulation);
-  }
-
-  handleSimulation = ({ data: { type, diff } }) => {
-    if (type === 'diff') {
-      this.diff = {
-        components: { ...this.diff.components, ...diff.components },
-        links: { ...this.diff.links, ...diff.links },
-      };
-    }
-  };
-
   applySimulationDiff = () => {
+    const diff = this.simulation.getDiff();
+
     // TODO: change to setPortValue
-    Object.entries(this.diff.components).forEach(([id, value]) => {
+    Object.entries(diff.components).forEach(([id, value]) => {
       const component = this.diagram.getComponent(id);
       Object.entries(value).forEach(([portName, portValue]) =>
         component.getPort(portName).setValue(portValue),
@@ -62,15 +45,11 @@ export default class App extends Component {
     });
 
     // TODO: change to setLinkValue
-    Object.entries(this.diff.links).forEach(([id, value]) =>
+    Object.entries(diff.links).forEach(([id, value]) =>
       this.diagram.getLink(id).setValue(value),
     );
 
-    this.diff = {
-      components: {},
-      links: {},
-    };
-
+    this.simulation.clearDiff();
     this.diagram.repaint();
   };
 
@@ -118,10 +97,7 @@ export default class App extends Component {
     this.diagram.clearAllValues();
     this.diagram.setLocked(false);
     this.forceUpdate();
-    this.diff = {
-      components: {},
-      links: {},
-    };
+    this.simulation.clearDiff();
   };
 
   showAddComponent = () =>

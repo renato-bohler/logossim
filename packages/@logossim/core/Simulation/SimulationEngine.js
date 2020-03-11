@@ -1,24 +1,32 @@
 import SimulationWorker from './simulation.worker';
 import serialize from './serialize';
+import { cleanDiff } from './utils';
 
+/**
+ * SimulationEngine encapsulates SimulationWorker to act as an
+ * interface to the application. It handles messaging with the worker,
+ * keeping track of the `diff` being generated so the application can
+ * use it to update itself.
+ */
 export default class SimulationEngine {
   constructor(components) {
     this.components = components;
+    this.callback = () => {};
     this.reset();
   }
 
   reset() {
     this.worker = new SimulationWorker();
+    this.worker.addEventListener('message', this.onSimulationMessage);
     this.state = 'stopped';
+    this.clearDiff();
   }
 
-  addCallback(callback) {
-    return this.worker.addEventListener('message', callback);
-  }
-
-  removeCallback(callback) {
-    return this.worker.removeEventListener('message', callback);
-  }
+  onSimulationMessage = ({ data: { type, diff } }) => {
+    if (type === 'diff') {
+      this.appendDiff(diff);
+    }
+  };
 
   start(diagram) {
     this.worker.postMessage({
@@ -50,5 +58,20 @@ export default class SimulationEngine {
 
   getState() {
     return this.state;
+  }
+
+  getDiff() {
+    return this.diff;
+  }
+
+  clearDiff() {
+    this.diff = cleanDiff;
+  }
+
+  appendDiff(diff) {
+    this.diff = {
+      components: { ...this.diff.components, ...diff.components },
+      links: { ...this.diff.links, ...diff.links },
+    };
   }
 }
