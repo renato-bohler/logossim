@@ -1,6 +1,8 @@
 import { BaseModel } from '@logossim/core';
 
 export default class AndModel extends BaseModel {
+  mod = 0;
+
   initialize(configurations) {
     const INPUT_PORTS_NUMBER = parseInt(
       configurations.INPUT_PORTS_NUMBER,
@@ -13,10 +15,12 @@ export default class AndModel extends BaseModel {
     this.addPort('out');
   }
 
-  step(inputs) {
-    if (inputs.in0 === 1) return { in0: 0, in1: 1, out: 2 };
-    if (inputs.in0 === 0) return { in0: 2, in1: 0, out: 1 };
-    if (inputs.in0 === 2) return { in0: 1, in1: 2, out: 0 };
+  step() {
+    this.mod = (this.mod + 1) % 3;
+
+    if (this.mod === 0) return { in0: 1, in1: 0, out: 0 };
+    if (this.mod === 1) return { in0: 0, in1: 1, out: 0 };
+    if (this.mod === 2) return { in0: 0, in1: 0, out: 1 };
     return {};
   }
 }
