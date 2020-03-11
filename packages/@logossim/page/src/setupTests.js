@@ -1,26 +1,18 @@
 import '@testing-library/jest-dom/extend-expect';
 
-window.URL.createObjectURL = () => '';
+jest.mock('@logossim/core', () => ({
+  ...jest.requireActual('@logossim/core'),
+  SimulationEngine: class SimulationEngine {
+    addCallback() {}
 
-window.Worker = class Worker {
-  constructor(stringUrl) {
-    this.url = stringUrl;
-    this.onmessage = () => {};
-  }
+    removeCallback() {}
 
-  postMessage(data) {
-    this.onmessage({ data });
-  }
+    start() {}
 
-  addEventListener(type, fn) {
-    if (type === 'message') {
-      this.onmessage = fn;
-    }
-  }
+    pause() {}
 
-  removeEventListener(type) {
-    if (type === 'message') {
-      this.onmessage = () => {};
-    }
-  }
-};
+    stop() {}
+
+    getState() {}
+  },
+}));
