@@ -10,9 +10,9 @@ export default class AndModel extends BaseModel {
     );
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
-      this.addPort(`in${i}`);
+      this.addInPort(`in${i}`);
     }
-    this.addPort('out');
+    this.addOutPort('out');
   }
 
   step() {
