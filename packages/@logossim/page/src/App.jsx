@@ -126,7 +126,10 @@ export default class App extends Component {
           handleClickPause={this.handleClickPause}
           handleClickStop={this.handleClickStop}
         />
-        <ComponentSelectButton handleClick={this.showAddComponent} />
+        <ComponentSelectButton
+          handleClick={this.showAddComponent}
+          disabled={this.simulation.getState() !== 'stopped'}
+        />
         <ComponentSelect
           isOpen={isComponentSelectOpen}
           groups={groupedComponents}

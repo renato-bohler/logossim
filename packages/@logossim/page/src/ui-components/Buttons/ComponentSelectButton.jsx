@@ -26,12 +26,19 @@ const Button = styled.button.attrs(({ ...props }) => ({
   font-size: 2em;
   line-height: 1em;
   color: white;
+
+  &:disabled {
+    cursor: not-allowed;
+    background: gray;
+    box-shadow: inset 0 0 10px black;
+  }
 `;
 
-const ComponentSelectButton = ({ handleClick }) => (
+const ComponentSelectButton = ({ handleClick, disabled }) => (
   <Container>
     <Button
       onClick={handleClick}
+      disabled={disabled}
       data-for="tooltip"
       data-tip="Add component..."
       data-place="left"
