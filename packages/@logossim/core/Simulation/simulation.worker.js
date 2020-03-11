@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-globals */
 import deserialize from './deserialize';
-import { getAllComponents, cleanDiff } from './utils';
+import { getAllComponents, isInputValid, cleanDiff } from './utils';
 
 /**
  * This code runs the simulation workload on a Web Worker thread, to
@@ -9,12 +9,17 @@ import { getAllComponents, cleanDiff } from './utils';
 self.addEventListener('message', ({ data: { command, diagram } }) => {
   const setAllToStepReturn = () => {
     getAllComponents(self.circuit).forEach(component => {
-      const result = component.step(
-        component.ports.reduce(
-          (obj, c) => ({ ...obj, [c.name]: c.value }),
-          {},
-        ),
+      const inputs = component.ports.reduce(
+        (obj, c) => ({ ...obj, [c.name]: c.value }),
+        {},
       );
+
+      let result = {};
+      if (isInputValid(inputs)) {
+        result = component.step(inputs);
+      } else {
+        result = component.stepError(inputs);
+      }
 
       if (!result) return;
 

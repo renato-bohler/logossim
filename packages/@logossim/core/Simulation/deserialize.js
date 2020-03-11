@@ -41,7 +41,16 @@ export class GenericComponent {
 
   onSimulationStop() {}
 
-  step() {}
+  step() {
+    return {};
+  }
+
+  stepError() {
+    return this.ports.reduce(
+      (obj, port) => ({ ...obj, [port.name]: 'error' }),
+      {},
+    );
+  }
 
   // Diagram stubs
   addPort() {}
