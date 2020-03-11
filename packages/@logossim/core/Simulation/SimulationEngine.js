@@ -23,7 +23,6 @@ export default class SimulationEngine {
           'width',
           'height',
           'configurations',
-          'functions',
           'parent',
         ].includes(key),
     );

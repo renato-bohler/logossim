@@ -9,21 +9,11 @@ export default class BaseModel extends NodeModel {
     this.initialize(configurations);
 
     this.configurations = configurations;
-
-    // TODO: is this really needed?
-    this.functions = {
-      onSimulationStart: this.onSimulationStart,
-      onSimulationPause: this.onSimulationPause,
-      onSimulationStop: this.onSimulationStop,
-      step: this.step,
-    };
   }
 
   serialize() {
     return {
       ...super.serialize(),
-      // TODO: is this really needed?
-      functions: this.functions,
       configurations: this.configurations,
     };
   }
