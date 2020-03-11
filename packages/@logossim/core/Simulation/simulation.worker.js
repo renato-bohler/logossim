@@ -1,29 +1,14 @@
 /* eslint-disable no-restricted-globals */
 import deserialize from './deserialize';
+import { getAllComponents, cleanDiff } from './utils';
 
 /**
  * This code runs the simulation workload on a Web Worker thread, to
  * avoid blocking the UI (main) thread.
  */
-
 self.addEventListener('message', ({ data: { command, diagram } }) => {
-  // TODO: move to another file (2)
-  const resetDiff = () => {
-    self.diff = {
-      components: {},
-      links: {},
-    };
-  };
-
-  // TODO: move to another file (2)
-  const getAllComponents = () => {
-    if (!self.circuit) return [];
-
-    return self.circuit.components;
-  };
-
   const setAllToStepReturn = () => {
-    getAllComponents().forEach(component => {
+    getAllComponents(self.circuit).forEach(component => {
       const result = component.step(
         component.ports.reduce(
           (obj, c) => ({ ...obj, [c.name]: c.value }),
@@ -39,7 +24,7 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
     });
 
     postMessage({ type: 'diff', diff: self.diff });
-    resetDiff();
+    self.diff = cleanDiff;
   };
 
   const clearAll = () => postMessage({ type: 'clear' });
@@ -47,8 +32,8 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
   switch (command) {
     case 'start':
       if (diagram !== undefined) {
-        resetDiff();
         self.circuit = deserialize(diagram);
+        self.diff = cleanDiff;
       }
 
       getAllComponents().forEach(component =>
