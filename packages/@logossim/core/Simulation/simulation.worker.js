@@ -1,105 +1,10 @@
 /* eslint-disable no-restricted-globals */
+import deserialize from './deserialize';
 
 /**
  * This code runs the simulation workload on a Web Worker thread, to
  * avoid blocking the UI (main) thread.
  */
-
-// TODO: move to another file (2)
-class GenericComponent {
-  constructor(properties, methods) {
-    Object.entries(properties).forEach(([key, value]) => {
-      this[key] = value;
-    });
-
-    Object.entries(methods).forEach(([name, method]) => {
-      this[name] = method.bind(this);
-    });
-
-    this.initialize(properties.configurations);
-  }
-
-  setPortValues(values) {
-    this.ports = this.ports.map(port => ({
-      ...port,
-      value:
-        values[port.name] !== undefined
-          ? values[port.name]
-          : port.value,
-    }));
-  }
-
-  // Defaults
-  onSimulationStart() {}
-
-  onSimulationPause() {}
-
-  onSimulationStop() {}
-
-  step() {}
-
-  // Diagram stubs
-  addPort() {}
-
-  removePort() {}
-}
-
-// TODO: move to another file
-const createModelMethods = model =>
-  Object.fromEntries(
-    Object.entries(model.methods).map(([key, stringFn]) => [
-      key,
-      // eslint-disable-next-line no-new-func
-      new Function(
-        `return ${
-          /**
-           * We need to add the `function` token when on development
-           * environment.
-           */
-          process.env.NODE_ENV === 'development' ? 'function ' : ''
-        }${stringFn}`,
-      )(),
-    ]),
-  );
-
-// TODO: move to another file
-const mountModels = diagram =>
-  diagram.models
-    .map(model => ({
-      ...model,
-      methods: createModelMethods(model),
-    }))
-    .reduce(
-      (obj, model) => ({
-        ...obj,
-        [model.type]: model.methods,
-      }),
-      {},
-    );
-
-// TODO: move to another file
-const mount = diagram => {
-  const models = mountModels(diagram);
-
-  return {
-    ...diagram,
-    components: diagram.components.map(
-      component =>
-        new GenericComponent(
-          {
-            ...component.properties,
-            id: component.id,
-            configurations: component.configurations,
-            ports: component.ports.map(port => ({
-              ...port,
-              value: 0,
-            })),
-          },
-          models[component.type],
-        ),
-    ),
-  };
-};
 
 self.addEventListener('message', ({ data: { command, diagram } }) => {
   // TODO: move to another file (2)
@@ -143,7 +48,7 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
     case 'start':
       if (diagram !== undefined) {
         resetDiff();
-        self.circuit = mount(diagram);
+        self.circuit = deserialize(diagram);
       }
 
       getAllComponents().forEach(component =>
