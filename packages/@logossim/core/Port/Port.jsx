@@ -27,7 +27,6 @@ export default class Port extends PortWidget {
         className={`port ${className}`}
         data-name={name}
         data-nodeid={model.getID()}
-        data-portid={port.getID()}
         port={port}
         link={port.getMainLink()}
       />

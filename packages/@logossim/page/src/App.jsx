@@ -36,17 +36,16 @@ export default class App extends Component {
   applySimulationDiff = () => {
     const diff = this.simulation.getDiff();
 
-    // TODO: change to setPortValue
-    Object.entries(diff.components).forEach(([id, value]) => {
-      const component = this.diagram.getComponent(id);
+    // Handles port value diff
+    Object.entries(diff.components).forEach(([id, value]) =>
       Object.entries(value).forEach(([portName, portValue]) =>
-        component.getPort(portName).setValue(portValue),
-      );
-    });
+        this.diagram.setPortValue(id, portName, portValue),
+      ),
+    );
 
-    // TODO: change to setLinkValue
+    // Handles link value diff
     Object.entries(diff.links).forEach(([id, value]) =>
-      this.diagram.getLink(id).setValue(value),
+      this.diagram.setLinkValue(id, value),
     );
 
     this.simulation.clearDiff();

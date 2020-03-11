@@ -104,17 +104,18 @@ export default class DiagramEngine {
       .getModel()
       .clearSelection();
 
-  // TODO: change to setLinkValue
-  getLink = id =>
+  setLinkValue = (id, value) =>
     this.getEngine()
       .getModel()
-      .getLink(id);
+      .getLink(id)
+      .setValue(value);
 
-  // TODO: change to setPortValue
-  getComponent = id =>
+  setPortValue = (componentId, name, value) =>
     this.getEngine()
       .getModel()
-      .getNode(id);
+      .getNode(componentId)
+      .getPort(name)
+      .setValue(value);
 
   clearAllValues = () => {
     this.clearLinkValues();
