@@ -11,15 +11,37 @@ export default class PortModel extends RDPortModel {
     });
 
     this.value = null;
+    this.input = null;
   }
 
   serialize() {
-    return { ...super.serialize(), value: this.value };
+    return {
+      ...super.serialize(),
+      input: this.input,
+      value: this.value,
+    };
   }
 
   deserialize(data, engine) {
     super.deserialize(data, engine);
     this.value = data.value;
+    this.input = data.input;
+  }
+
+  setAsInput() {
+    this.input = true;
+  }
+
+  setAsOutput() {
+    this.input = false;
+  }
+
+  isInput() {
+    return this.input === true;
+  }
+
+  isOutput() {
+    return this.input === false;
   }
 
   getValue() {

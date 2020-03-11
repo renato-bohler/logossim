@@ -2,6 +2,11 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 
+const getPort = port => {
+  if (port instanceof PortModel) return port;
+  return new PortModel({ name: port });
+};
+
 export default class BaseModel extends NodeModel {
   constructor(type, configurations) {
     super({ type });
@@ -18,12 +23,22 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addPort(port) {
-    if (port instanceof PortModel) {
-      super.addPort(port);
-    } else {
-      super.addPort(new PortModel({ name: port }));
-    }
+  addInPort(arg) {
+    const port = getPort(arg);
+    port.setAsInput();
+    super.addPort(port);
+  }
+
+  addOutPort(arg) {
+    const port = getPort(arg);
+    port.setAsOutput();
+    super.addPort(port);
+  }
+
+  addPort() {
+    throw new Error(
+      '[logossim] Use either `addInPort` or `addOutPort`',
+    );
   }
 
   initialize() {}
