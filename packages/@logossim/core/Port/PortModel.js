@@ -1,6 +1,7 @@
 import { PortModel as RDPortModel } from '@projectstorm/react-diagrams';
 
 import LinkModel from '../Link/LinkModel';
+import { isValueValid } from '../Simulation/utils';
 
 export default class PortModel extends RDPortModel {
   constructor(options = {}) {
@@ -80,8 +81,10 @@ export default class PortModel extends RDPortModel {
       if (link) return link.getColor();
       return 'var(--port-unconnected)';
     }
+
+    if (!isValueValid(this.value)) return 'var(--value-error)';
     if (this.value === 1) return 'var(--value-on)';
     if (this.value === 0) return 'var(--value-off)';
-    return 'var(--value-error)';
+    return 'none';
   }
 }
