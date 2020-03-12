@@ -53,7 +53,9 @@ export class GenericComponent {
   }
 
   // Diagram stubs
-  addPort() {}
+  addInPort() {}
+
+  addOutPort() {}
 
   removePort() {}
 }
