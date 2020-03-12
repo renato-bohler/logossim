@@ -5,6 +5,8 @@ import {
   LinkModel as RDLinkModel,
 } from '@projectstorm/react-diagrams';
 import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
+
+import { isValueValid } from '../Simulation/utils';
 import { sameAxis } from '../Diagram/states/common';
 
 export default class LinkModel extends RDLinkModel {
@@ -212,9 +214,11 @@ export default class LinkModel extends RDLinkModel {
 
   getColor() {
     if (this.isSelected()) return 'var(--link-selected)';
-    if (this.value === null) return 'var(--link-unselected)';
+
+    if (!isValueValid(this.value)) return 'var(--value-error)';
     if (this.value === 1) return 'var(--value-on)';
     if (this.value === 0) return 'var(--value-off)';
-    return 'var(--value-error)';
+
+    return 'var(--link-unselected)';
   }
 }

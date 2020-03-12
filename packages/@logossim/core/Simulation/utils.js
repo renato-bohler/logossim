@@ -1,7 +1,8 @@
+export const isValueValid = value =>
+  value === null || value === 0 || value === 1;
+
 export const isInputValid = input =>
-  Object.values(input).every(
-    value => value === null || value === 0 || value === 1,
-  );
+  Object.values(input).every(isValueValid);
 
 export const cleanDiff = {
   components: {},
