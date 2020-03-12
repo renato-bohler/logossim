@@ -62,20 +62,21 @@ export const Shape = ({ size = 90 }) => (
 const OrWidget = props => {
   const { model, engine } = props;
 
+  const inputPorts = Object.values(model.getPorts()).filter(port =>
+    port.isInput(),
+  );
+
   return (
     <Wrapper selected={model.options.selected}>
-      <PositionedPort
-        name="in0"
-        model={model}
-        port={model.getPort('in0')}
-        engine={engine}
-      />
-      <PositionedPort
-        name="in1"
-        model={model}
-        port={model.getPort('in1')}
-        engine={engine}
-      />
+      {inputPorts.map(port => (
+        <PositionedPort
+          key={port.getName()}
+          name={port.getName()}
+          model={model}
+          port={port}
+          engine={engine}
+        />
+      ))}
       <PositionedPort
         name="out"
         model={model}
