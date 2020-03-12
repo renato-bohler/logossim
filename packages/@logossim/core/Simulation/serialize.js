@@ -54,6 +54,7 @@ const serializePorts = ports =>
   Object.values(ports).map(port => ({
     id: port.getID(),
     name: port.getName(),
+    input: port.isInput(),
   }));
 
 /**

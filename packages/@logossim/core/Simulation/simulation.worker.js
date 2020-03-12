@@ -9,23 +9,29 @@ import { getAllComponents, isInputValid, cleanDiff } from './utils';
 self.addEventListener('message', ({ data: { command, diagram } }) => {
   const setAllToStepReturn = () => {
     getAllComponents(self.circuit).forEach(component => {
-      const inputs = component.ports.reduce(
+      const input = component.ports.input.reduce(
         (obj, c) => ({ ...obj, [c.name]: c.value }),
         {},
       );
 
       let result = {};
-      if (isInputValid(inputs)) {
-        result = component.step(inputs);
+      if (isInputValid(input)) {
+        result = component.step(input);
       } else {
-        result = component.stepError(inputs);
+        result = component.stepError(input);
       }
 
       if (!result) return;
 
-      component.setPortValues(result);
+      const output = Object.fromEntries(
+        Object.entries(result).filter(([name]) =>
+          component.ports.output.find(o => o.name === name),
+        ),
+      );
 
-      self.diff.components[component.id] = result;
+      component.setOutputValues(output);
+
+      self.diff.components[component.id] = output;
     });
 
     postMessage({ type: 'diff', diff: self.diff });

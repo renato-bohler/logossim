@@ -24,8 +24,18 @@ export class GenericComponent {
     this.initialize(properties.configurations);
   }
 
-  setPortValues(values) {
-    this.ports = this.ports.map(port => ({
+  setInputValues(values) {
+    this.ports.input = this.ports.input.map(port => ({
+      ...port,
+      value:
+        values[port.name] !== undefined
+          ? values[port.name]
+          : port.value,
+    }));
+  }
+
+  setOutputValues(values) {
+    this.ports.output = this.ports.output.map(port => ({
       ...port,
       value:
         values[port.name] !== undefined
@@ -111,10 +121,20 @@ const deserialize = serialized => {
             ...component.properties,
             id: component.id,
             configurations: component.configurations,
-            ports: component.ports.map(port => ({
-              ...port,
-              value: 0,
-            })),
+            ports: {
+              input: component.ports
+                .filter(port => port.input)
+                .map(port => ({
+                  ...port,
+                  value: 0,
+                })),
+              output: component.ports
+                .filter(port => !port.input)
+                .map(port => ({
+                  ...port,
+                  value: 0,
+                })),
+            },
           },
           models[component.type],
         ),
