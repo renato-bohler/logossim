@@ -1,6 +1,6 @@
-export const isInputValid = inputs =>
-  Object.values(inputs).every(
-    input => input === null || input === 0 || input === 1,
+export const isInputValid = input =>
+  Object.values(input).every(
+    value => value === null || value === 0 || value === 1,
   );
 
 export const cleanDiff = {

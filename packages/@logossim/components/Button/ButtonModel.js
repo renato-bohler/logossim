@@ -17,8 +17,8 @@ export default class ButtonModel extends BaseModel {
     console.log('ButtonModel onSimulationStop');
   }
 
-  step(inputs) {
-    console.log('ButtonModel step', inputs);
+  step(input) {
+    console.log('ButtonModel step', input);
   }
 
   onClick() {
