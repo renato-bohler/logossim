@@ -7,19 +7,7 @@ export default class OrModel extends BaseModel {
     this.addOutPort('out');
   }
 
-  onSimulationStart() {
-    console.log('OrModel onSimulationStart');
-  }
-
-  onSimulationPause() {
-    console.log('OrModel onSimulationPause');
-  }
-
-  onSimulationStop() {
-    console.log('OrModel onSimulationStop');
-  }
-
   step(input) {
-    console.log('OrModel step', input);
+    return input.in0 || input.in1;
   }
 }
