@@ -35,7 +35,19 @@ export default class BaseModel extends NodeModel {
     super.addPort(port);
   }
 
-  addPort() {
+  addPort(arg) {
+    const port = getPort(arg);
+
+    if (port.isInput()) {
+      this.addInPort(port);
+      return;
+    }
+
+    if (port.isOutput()) {
+      this.addOutPort(port);
+      return;
+    }
+
     throw new Error(
       '[logossim] Use either `addInPort` or `addOutPort`',
     );
