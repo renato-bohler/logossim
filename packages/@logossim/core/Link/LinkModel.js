@@ -49,6 +49,12 @@ export default class LinkModel extends RDLinkModel {
     return this.bifurcationTarget;
   }
 
+  isBifurcation() {
+    return !!(
+      this.getBifurcationSource() || this.getBifurcationTarget()
+    );
+  }
+
   addBifurcation(link) {
     this.bifurcations.push(link);
   }
