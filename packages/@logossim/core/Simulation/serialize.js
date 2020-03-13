@@ -73,18 +73,26 @@ const serializeComponents = components =>
     ),
   }));
 
+const getPortInfo = port =>
+  port
+    ? { componentId: port.getParent().getID(), name: port.getName() }
+    : null;
+
+const getLinkId = link => (link ? link.getID() : null);
+
 const serializeLinks = links =>
   links.map(link => ({
     id: link.getID(),
-    source: link.getSourcePort()
-      ? link.getSourcePort().getID()
-      : null,
-    target: link.getTargetPort()
-      ? link.getTargetPort().getID()
-      : null,
+    source: getPortInfo(link.getSourcePort()),
+    target: getPortInfo(link.getTargetPort()),
     bifurcations: link
       .getBifurcations()
       .map(bifurcation => bifurcation.getID()),
+    bifurcation: {
+      source: getLinkId(link.getBifurcationSource()),
+      target: getLinkId(link.getBifurcationTarget()),
+    },
+    isBifurcation: link.isBifurcation(),
   }));
 
 /**
