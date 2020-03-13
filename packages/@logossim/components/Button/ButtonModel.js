@@ -5,22 +5,6 @@ export default class ButtonModel extends BaseModel {
     this.addOutPort('out');
   }
 
-  onSimulationStart() {
-    console.log('ButtonModel onSimulationStart');
-  }
-
-  onSimulationPause() {
-    console.log('ButtonModel onSimulationPause');
-  }
-
-  onSimulationStop() {
-    console.log('ButtonModel onSimulationStop');
-  }
-
-  step(input) {
-    console.log('ButtonModel step', input);
-  }
-
   onClick() {
     console.log('ButtonModel onClick');
   }
