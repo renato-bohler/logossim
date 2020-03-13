@@ -23,10 +23,10 @@ export default class PortModel extends RDPortModel {
     };
   }
 
-  deserialize(data, engine) {
-    super.deserialize(data, engine);
-    this.value = data.value;
-    this.input = data.input;
+  deserialize(event, engine) {
+    super.deserialize(event, engine);
+    this.value = event.data.value;
+    this.input = event.data.input;
   }
 
   setAsInput() {
