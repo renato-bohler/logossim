@@ -1,6 +1,11 @@
 /* eslint-disable no-restricted-globals */
 import deserialize from './deserialize';
-import { getAllComponents, isInputValid, cleanDiff } from './utils';
+import {
+  getAllComponents,
+  isInputValid,
+  cleanDiff,
+  getMeshInputValue,
+} from './utils';
 
 /**
  * This code runs the simulation workload on a Web Worker thread, to
@@ -34,6 +39,16 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
       self.diff.components[component.id] = output;
     });
 
+    self.circuit.meshes.forEach(mesh => {
+      const meshValue = getMeshInputValue(
+        mesh,
+        self.circuit.components,
+      );
+      mesh.links.forEach(link => {
+        self.diff.links[link] = meshValue;
+      });
+    });
+
     postMessage({ type: 'diff', diff: self.diff });
     self.diff = cleanDiff;
   };
@@ -52,7 +67,7 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
       );
 
       setAllToStepReturn();
-      self.workInterval = setInterval(setAllToStepReturn);
+      self.workInterval = setInterval(setAllToStepReturn, 1000);
       break;
     case 'pause':
       getAllComponents().forEach(component =>
