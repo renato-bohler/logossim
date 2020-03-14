@@ -40,9 +40,9 @@ body {
   --link-selected: #3ec1ff;
   --link-width: 3;
 
-  --value-on: rgb(19, 230, 19);
-  --value-off: rgb(7, 59, 7);
-  --value-error: red;
+  --value-on: #13e613;
+  --value-off: #069206;
+  --value-error: #c80a0a;
 
   --port-unconnected: #ddd;
   --port-hover: var(--link-selected);
