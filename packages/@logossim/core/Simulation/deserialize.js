@@ -5,6 +5,7 @@
  */
 
 /* ---------------------------------------------------------------- */
+import findMeshes from './mesh';
 
 /**
  * This class represents a generic component. It receives deserialized
@@ -22,6 +23,14 @@ export class GenericComponent {
     });
 
     this.initialize(properties.configurations);
+  }
+
+  getInputPort(name) {
+    return this.ports.input.find(port => port.name === name);
+  }
+
+  getOutputPort(name) {
+    return this.ports.output.find(port => port.name === name);
   }
 
   setInputValues(values) {
@@ -113,7 +122,6 @@ const deserialize = serialized => {
   const models = deserializeModels(serialized.models);
 
   return {
-    ...serialized,
     components: serialized.components.map(
       component =>
         new GenericComponent(
@@ -139,6 +147,7 @@ const deserialize = serialized => {
           models[component.type],
         ),
     ),
+    meshes: findMeshes(serialized.links),
   };
 };
 
