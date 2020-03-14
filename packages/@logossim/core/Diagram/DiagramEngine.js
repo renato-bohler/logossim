@@ -104,18 +104,45 @@ export default class DiagramEngine {
       .getModel()
       .clearSelection();
 
-  setLinkValue = (id, value) =>
-    this.getEngine()
+  // TODO: find out why this error is happening and refactor this
+  setLinkValue = (id, value) => {
+    const link = this.getEngine()
       .getModel()
-      .getLink(id)
-      .setValue(value);
+      .getLink(id);
 
-  setPortValue = (componentId, name, value) =>
-    this.getEngine()
+    if (!link) {
+      console.error(
+        `[logossim] Link with id ${id} could not be found`,
+      );
+      return;
+    }
+
+    link.setValue(value);
+  };
+
+  // TODO: find out why this error is happening and refactor this
+  setPortValue = (componentId, name, value) => {
+    const node = this.getEngine()
       .getModel()
-      .getNode(componentId)
-      .getPort(name)
-      .setValue(value);
+      .getNode(componentId);
+
+    if (!node) {
+      console.error(
+        `[logossim] Component with id ${componentId} could not be found`,
+      );
+      return;
+    }
+
+    const port = node.getPort(name);
+    if (!port) {
+      console.error(
+        `[logossim] Port with name ${name} on component ${componentId} could not be found`,
+      );
+      return;
+    }
+
+    port.setValue(value);
+  };
 
   clearAllValues = () => {
     this.clearLinkValues();
