@@ -23,13 +23,13 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addInPort(arg) {
+  addInputPort(arg) {
     const port = getPort(arg);
     port.setAsInput();
     super.addPort(port);
   }
 
-  addOutPort(arg) {
+  addOutputPort(arg) {
     const port = getPort(arg);
     port.setAsOutput();
     super.addPort(port);
@@ -39,17 +39,38 @@ export default class BaseModel extends NodeModel {
     const port = getPort(arg);
 
     if (port.isInput()) {
-      this.addInPort(port);
+      this.addInputPort(port);
       return;
     }
 
     if (port.isOutput()) {
-      this.addOutPort(port);
+      this.addOutputPort(port);
       return;
     }
 
     throw new Error(
-      '[logossim] Use either `addInPort` or `addOutPort`',
+      '[logossim] Use either `addInputPort` or `addOutputPort`',
+    );
+  }
+
+  removePort(arg) {
+    const port = getPort(arg);
+    super.removePort(port);
+  }
+
+  getInputPorts() {
+    return Object.fromEntries(
+      Object.entries(this.getPorts()).filter(([, port]) =>
+        port.isInput(),
+      ),
+    );
+  }
+
+  getOutputPorts() {
+    return Object.fromEntries(
+      Object.entries(this.getPorts()).filter(
+        ([, port]) => !port.isInput(),
+      ),
     );
   }
 

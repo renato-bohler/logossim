@@ -19,8 +19,18 @@ const Circle = styled.div`
 `;
 
 export default class Port extends PortWidget {
+  report() {
+    if (this.props.port) super.report();
+  }
+
+  componentDidUpdate() {
+    if (this.props.port) super.componentDidUpdate();
+  }
+
   render() {
     const { name, model, port, className = '' } = this.props;
+
+    if (!port) return null;
 
     return (
       <Circle

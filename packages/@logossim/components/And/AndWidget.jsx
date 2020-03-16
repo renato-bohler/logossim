@@ -72,9 +72,7 @@ export const Shape = ({ size = 90 }) => (
 const AndWidget = props => {
   const { model, engine } = props;
 
-  const inputPorts = Object.values(model.getPorts()).filter(port =>
-    port.isInput(),
-  );
+  const inputPorts = Object.values(model.getInputPorts());
 
   return (
     <Wrapper selected={model.isSelected()}>

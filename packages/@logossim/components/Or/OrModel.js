@@ -4,9 +4,9 @@ export default class OrModel extends BaseModel {
   mod = 1;
 
   initialize() {
-    this.addInPort('in0');
-    this.addInPort('in1');
-    this.addOutPort('out');
+    this.addInputPort('in0');
+    this.addInputPort('in1');
+    this.addOutputPort('out');
   }
 
   step() {
