@@ -117,18 +117,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             model instanceof PortModel &&
             model.isNewLinkAllowed()
           ) {
-            if (model.isInput()) {
-              this.bifurcation.setTargetPort(model);
-            } else {
-              this.bifurcation.setBifurcationTarget(
-                this.bifurcation.getBifurcationSource(),
-              );
-              this.bifurcation.setBifurcationSource(
-                this.bifurcation.getBifurcationTarget(),
-              );
-              this.bifurcation.setSourcePort(model);
-              this.bifurcation.getPoints().reverse();
-            }
+            this.bifurcation.setTargetPort(model);
 
             model.reportPosition();
             this.adjustBifurcationOverlayingSource(this.bifurcation);
@@ -389,6 +378,11 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
     }
 
     link.removeBifurcation(bifurcationToMerge);
+    const bifurcationTarget = bifurcationToMerge.getBifurcationTarget();
+    if (bifurcationTarget) {
+      link.setBifurcationTarget(bifurcationTarget);
+      bifurcationTarget.addBifurcation(link);
+    }
     bifurcationToMerge.remove();
 
     if (

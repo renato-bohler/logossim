@@ -75,7 +75,11 @@ const serializeComponents = components =>
 
 const getPortInfo = port =>
   port
-    ? { componentId: port.getParent().getID(), name: port.getName() }
+    ? {
+        componentId: port.getParent().getID(),
+        name: port.getName(),
+        input: port.isInput(),
+      }
     : null;
 
 const getLinkId = link => (link ? link.getID() : null);

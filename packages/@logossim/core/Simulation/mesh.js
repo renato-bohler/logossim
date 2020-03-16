@@ -27,15 +27,19 @@ const findMeshes = allLinks => {
     );
   };
 
+  // Output ports are inputs in the mesh's perspective
   const findInputs = meshLinks =>
-    meshLinks
-      .map(link => findLinkById(link).source)
-      .filter(source => source !== null);
+    [
+      ...meshLinks.map(link => findLinkById(link).source),
+      ...meshLinks.map(link => findLinkById(link).target),
+    ].filter(port => port && !port.input);
 
+  // Input ports are outputs in the mesh's perspective
   const findOutputs = meshLinks =>
-    meshLinks
-      .map(link => findLinkById(link).target)
-      .filter(target => target !== null);
+    [
+      ...meshLinks.map(link => findLinkById(link).source),
+      ...meshLinks.map(link => findLinkById(link).target),
+    ].filter(port => port && port.input);
 
   // Start with no meshes
   const meshes = [];

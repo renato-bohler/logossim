@@ -139,23 +139,17 @@ export function handleLinkToLinkBifurcation(link, landingLink) {
 /**
  * Handles new links created targeting existing links.
  */
-export function handleReverseBifurcation(original, landingLink) {
-  let link;
+export function handleReverseBifurcation(link, landingLink) {
+  const reverseLink = this.engine
+    .getFactoryForLink(landingLink)
+    .generateModel();
+  reverseLink.setPoints(link.getPoints().reverse());
+  reverseLink.setTargetPort(link.getSourcePort());
+  reverseLink.setBifurcationSource(landingLink);
 
-  if (original.getSourcePort().isOutput()) {
-    link = original;
-    link.setBifurcationTarget(landingLink);
-  } else {
-    link = this.engine.getFactoryForLink(landingLink).generateModel();
-
-    link.setBifurcationSource(landingLink);
-    link.setTargetPort(original.getSourcePort());
-    link.setPoints(original.getPoints().reverse());
-
-    original.remove();
-    this.engine.getModel().addLink(link);
-  }
-
-  landingLink.addBifurcation(link);
+  landingLink.addBifurcation(reverseLink);
   landingLink.setSelected(true);
+
+  link.remove();
+  this.engine.getModel().addLink(reverseLink);
 }
