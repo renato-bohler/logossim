@@ -9,11 +9,7 @@ export default class OrModel extends BaseModel {
     this.addOutputPort('out');
   }
 
-  step() {
-    this.mod = (this.mod + 1) % 2;
-
-    if (this.mod === 0) return { out: 0 };
-    if (this.mod === 1) return { out: 1 };
-    return {};
+  step(input) {
+    return { out: input.in0 || input.in1 };
   }
 }

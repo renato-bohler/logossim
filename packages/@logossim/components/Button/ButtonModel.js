@@ -6,10 +6,10 @@ export default class ButtonModel extends BaseModel {
   }
 
   onClick() {
-    console.log('ButtonModel onClick');
+    this.emit({ out: 1 });
   }
 
   onRelease() {
-    console.log('ButtonModel onRelease');
+    this.emit({ out: 0 });
   }
 }

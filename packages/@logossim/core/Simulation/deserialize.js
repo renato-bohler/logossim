@@ -65,11 +65,13 @@ export class GenericComponent {
   }
 
   stepError() {
-    return this.ports.reduce(
+    return this.ports.output.reduce(
       (obj, port) => ({ ...obj, [port.name]: 'error' }),
       {},
     );
   }
+
+  emit() {}
 
   // Diagram stubs
   addInputPort() {}

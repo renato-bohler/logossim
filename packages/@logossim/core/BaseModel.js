@@ -1,6 +1,7 @@
 import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
+import { emit } from './Simulation/SimulationEngine';
 
 const getPort = port => {
   if (port instanceof PortModel) return port;
@@ -83,4 +84,8 @@ export default class BaseModel extends NodeModel {
   onSimulationStop() {}
 
   step() {}
+
+  emit(value) {
+    emit(this.getID(), value);
+  }
 }

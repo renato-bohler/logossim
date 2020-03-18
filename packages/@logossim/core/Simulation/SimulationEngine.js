@@ -2,6 +2,8 @@ import SimulationWorker from './simulation.worker';
 import serialize from './serialize';
 import { getCleanDiff } from './utils';
 
+const worker = new SimulationWorker();
+
 /**
  * SimulationEngine encapsulates SimulationWorker to act as an
  * interface to the application. It handles messaging with the worker,
@@ -11,12 +13,8 @@ import { getCleanDiff } from './utils';
 export default class SimulationEngine {
   constructor(components) {
     this.components = components;
-    this.callback = () => {};
-    this.reset();
-  }
 
-  reset() {
-    this.worker = new SimulationWorker();
+    this.worker = worker;
     this.worker.addEventListener('message', this.onSimulationMessage);
     this.state = 'stopped';
     this.clearDiff();
@@ -75,3 +73,13 @@ export default class SimulationEngine {
     };
   }
 }
+
+/**
+ * Emit is exported as a separate function so it can be used on
+ * `BaseModel`.
+ */
+export const emit = (from, value) =>
+  worker.postMessage({
+    command: 'emit',
+    emitted: { from, value },
+  });

@@ -17,6 +17,12 @@ import {
 
 import './App.css';
 
+// TODO: remove
+import { complex as test } from './circuit';
+
+// TODO: remove
+const circuit = JSON.stringify(test);
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +33,6 @@ export default class App extends Component {
     };
 
     this.diagram = new DiagramEngine(components);
-
     this.simulation = new SimulationEngine(components);
   }
 
@@ -69,8 +74,8 @@ export default class App extends Component {
   };
 
   handleClickLoad = () => {
-    const { circuit } = this.state;
-
+    // TODO: revert
+    // const { circuit } = this.state;
     if (!circuit) {
       window.alert('No circuit has been saved yet');
       return;
