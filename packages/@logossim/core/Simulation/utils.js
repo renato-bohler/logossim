@@ -26,10 +26,10 @@ export const getMeshInputValue = (mesh, components) => {
   return isCoherent ? allInputValues[0] : 'error';
 };
 
-export const cleanDiff = {
+export const getCleanDiff = () => ({
   components: {},
   links: {},
-};
+});
 
 export const getAllComponents = circuit => {
   if (!circuit) return [];

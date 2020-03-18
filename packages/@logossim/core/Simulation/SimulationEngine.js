@@ -1,6 +1,6 @@
 import SimulationWorker from './simulation.worker';
 import serialize from './serialize';
-import { cleanDiff } from './utils';
+import { getCleanDiff } from './utils';
 
 /**
  * SimulationEngine encapsulates SimulationWorker to act as an
@@ -65,7 +65,7 @@ export default class SimulationEngine {
   }
 
   clearDiff() {
-    this.diff = cleanDiff;
+    this.diff = getCleanDiff();
   }
 
   appendDiff(diff) {

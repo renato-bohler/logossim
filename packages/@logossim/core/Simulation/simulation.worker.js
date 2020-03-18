@@ -3,7 +3,7 @@ import deserialize from './deserialize';
 import {
   getAllComponents,
   isInputValid,
-  cleanDiff,
+  getCleanDiff,
   getMeshInputValue,
 } from './utils';
 
@@ -50,7 +50,7 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
     });
 
     postMessage({ type: 'diff', diff: self.diff });
-    self.diff = cleanDiff;
+    self.diff = getCleanDiff();
   };
 
   const clearAll = () => postMessage({ type: 'clear' });
@@ -59,7 +59,7 @@ self.addEventListener('message', ({ data: { command, diagram } }) => {
     case 'start':
       if (diagram !== undefined) {
         self.circuit = deserialize(diagram);
-        self.diff = cleanDiff;
+        self.diff = getCleanDiff();
       }
 
       getAllComponents().forEach(component =>
