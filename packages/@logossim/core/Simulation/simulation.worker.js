@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import deserialize from './deserialize';
 import { getCleanDiff, isInputValid } from './utils';
 
@@ -65,8 +64,45 @@ const getMeshInputValue = mesh => {
   return isCoherent ? allInputValues[0] : 'error';
 };
 
-// TODO: give this a better name
-const doStep = () => {
+const appendComponentDiff = (componentId, value) => {
+  if (!diff.components[componentId]) {
+    diff.components[componentId] = {};
+  }
+  diff.components[componentId] = {
+    ...diff.components[componentId],
+    ...value,
+  };
+};
+
+const propagate = emitted => {
+  const affectedMeshes = getAffectedMeshes(emitted);
+  affectedMeshes.forEach(mesh => {
+    const meshValue = getMeshInputValue(mesh);
+    mesh.links.forEach(link => {
+      diff.links[link] = meshValue;
+    });
+
+    const connectedComponents = getMeshOutputComponents(mesh);
+    connectedComponents.forEach(component => {
+      const portsConnectedToMesh = mesh.outputs
+        .filter(meshOutput => meshOutput.componentId === component.id)
+        .map(meshOutput => meshOutput.name);
+
+      const portsWithNewValue = portsConnectedToMesh.reduce(
+        (obj, portName) => ({ ...obj, [portName]: meshValue }),
+        {},
+      );
+
+      component.setInputValues(portsWithNewValue);
+
+      appendComponentDiff(component.id, portsWithNewValue);
+
+      stepQueue.push(component);
+    });
+  });
+};
+
+const executeNextStep = () => {
   const component = stepQueue.shift();
   if (!component) return;
 
@@ -91,19 +127,15 @@ const doStep = () => {
   );
 
   component.setOutputValues(output);
-  diff.components[component.id] = output;
 
-  /**
-   * TODO: propagate component output to mesh input
-   *
-   * It feels like a lot of code could be reused between emitted
-   * events handling and collateral effects propagation.
-   */
-  doStep();
+  appendComponentDiff(component.id, output);
+
+  propagate({ from: component.id, value: output });
+
+  executeNextStep();
 };
 
-// TODO: give this a better name
-const next = () => {
+const executeNextEmitted = () => {
   if (!circuit) return;
 
   const emitted = emitQueue.shift();
@@ -111,43 +143,24 @@ const next = () => {
 
   const emitter = getComponent(emitted.from);
   emitter.setOutputValues(emitted.value);
-  diff.components[emitter.id] = emitted.value;
 
-  const affectedMeshes = getAffectedMeshes(emitted);
-  affectedMeshes.forEach(mesh => {
-    const meshValue = getMeshInputValue(mesh);
-    mesh.links.forEach(link => {
-      diff.links[link] = meshValue;
-    });
+  appendComponentDiff(emitted.from, emitted.value);
 
-    const connectedComponents = getMeshOutputComponents(mesh);
-    connectedComponents.forEach(component => {
-      const portsConnectedToMesh = mesh.outputs
-        .filter(meshOutput => meshOutput.componentId === component.id)
-        .map(meshOutput => meshOutput.name);
+  propagate(emitted);
 
-      const portsWithNewValue = portsConnectedToMesh.reduce(
-        (obj, portName) => ({ [portName]: meshValue }),
-        {},
-      );
-
-      component.setInputValues(portsWithNewValue);
-      diff.components[component.id] = portsWithNewValue;
-      stepQueue.push(component);
-    });
-
-    doStep();
-  });
+  executeNextStep();
 
   postMessage({ type: 'diff', diff });
   diff = getCleanDiff();
 };
 
+// eslint-disable-next-line no-restricted-globals
 self.addEventListener(
   'message',
   ({ data: { command, diagram, emitted } }) => {
     switch (command) {
       case 'start':
+        // TODO: start with all zeroes
         if (diagram !== undefined) {
           circuit = deserialize(diagram);
           diff = getCleanDiff();
@@ -157,8 +170,8 @@ self.addEventListener(
           component.onSimulationStart(),
         );
 
-        next();
-        workInterval = setInterval(next);
+        executeNextEmitted();
+        workInterval = setInterval(executeNextEmitted);
         break;
       case 'pause':
         getAllComponents(circuit).forEach(component =>

@@ -71,7 +71,17 @@ export class GenericComponent {
     );
   }
 
-  emit() {}
+  emit(value) {
+    const event = new MessageEvent('message', {
+      data: {
+        command: 'emit',
+        emitted: { from: this.id, value },
+      },
+    });
+
+    // eslint-disable-next-line no-restricted-globals
+    self.dispatchEvent(event);
+  }
 
   // Diagram stubs
   addInputPort() {}

@@ -18,7 +18,7 @@ import {
 import './App.css';
 
 // TODO: remove
-import { complex as test } from './circuit';
+import { propagation as test } from './circuit';
 
 // TODO: remove
 const circuit = JSON.stringify(test);
