@@ -29,7 +29,10 @@ export default class SimulationEngine {
   start(diagram) {
     this.worker.postMessage({
       command: 'start',
-      diagram: serialize(diagram, this.components),
+      diagram:
+        this.state === 'stopped'
+          ? serialize(diagram, this.components)
+          : undefined,
     });
     this.state = 'started';
   }

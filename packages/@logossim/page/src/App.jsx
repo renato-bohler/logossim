@@ -36,10 +36,6 @@ export default class App extends Component {
     this.simulation = new SimulationEngine(components);
   }
 
-  componentDidMount() {
-    this.simulation.stop();
-  }
-
   applySimulationDiff = () => {
     const diff = this.simulation.getDiff();
 

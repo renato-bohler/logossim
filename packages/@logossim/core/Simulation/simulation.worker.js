@@ -1,109 +1,137 @@
-import deserialize from './deserialize';
-import { getCleanDiff, isInputValid } from './utils';
-
 /**
  * This code runs the simulation workload on a Web Worker thread, to
  * avoid blocking the UI (main) thread.
+ *
+ * Whenever a component executes `emit`, its changes are pushed to
+ * `emitQueue`, which will be handled by the `executeNextEmitted`
+ * function.
+ *
+ * Every component that is affected by this emitted event is pushed to
+ * the `stepQueue`, which will be handled recursively by the
+ * `executeNextStep` function.
  */
 
-let circuit = null;
-let diff = null;
-let workInterval = null;
-let emitQueue = [];
-let stepQueue = [];
+/* ---------------------------------------------------------------- */
 
-const getAllComponents = () => {
-  if (!circuit) return [];
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-use-before-define */
+import deserialize from './deserialize';
+import {
+  getCleanDiff,
+  appendComponentDiff,
+  initializeDiffAndValues,
+  isInputValid,
+  getComponent,
+  getAffectedMeshes,
+  getMeshInputValue,
+  getMeshOutputComponents,
+} from './utils';
 
-  return circuit.components;
+/**
+ * Worker states
+ */
+self.circuit = null; // circuit information
+self.diff = null; // diff to send back to the app
+self.emitQueue = []; // emitted changes that are pending
+self.stepQueue = []; // TODO: stores all propagation?
+
+/**
+ * Worker message handling
+ */
+self.addEventListener(
+  'message',
+  ({ data: { command, diagram, emitted } }) => {
+    let workInterval;
+
+    switch (command) {
+      /**
+       * START
+       */
+      case 'start':
+        if (diagram !== undefined) {
+          self.circuit = deserialize(diagram);
+          self.diff = getCleanDiff();
+          initializeDiffAndValues();
+        }
+
+        self.circuit.components.forEach(component =>
+          component.onSimulationStart(),
+        );
+
+        // Main workload
+        executeNextEmitted();
+        workInterval = setInterval(executeNextEmitted);
+        break;
+
+      /**
+       * PAUSE
+       */
+      case 'pause':
+        self.circuit.components.forEach(component =>
+          component.onSimulationPause(),
+        );
+        clearInterval(workInterval);
+        break;
+
+      /**
+       * STOP
+       */
+      case 'stop':
+        self.circuit.components.forEach(component =>
+          component.onSimulationStop(),
+        );
+        clearInterval(workInterval);
+        setTimeout(() => {
+          postMessage({ type: 'clear' });
+          self.circuit = null;
+          self.diff = null;
+          self.emitQueue = [];
+          self.stepQueue = [];
+        });
+        break;
+
+      /**
+       * EMIT
+       */
+      case 'emit':
+        if (self.circuit) self.emitQueue.push(emitted);
+        break;
+
+      default:
+        break;
+    }
+  },
+);
+
+/**
+ * Handles the next emitted event on the emit queue and propagates it.
+ */
+const executeNextEmitted = () => {
+  if (!self.circuit) return;
+
+  const emitted = self.emitQueue.shift();
+  if (!emitted) return;
+
+  const emitter = getComponent(emitted.from);
+  emitter.setOutputValues(emitted.value);
+
+  appendComponentDiff(emitted.from, emitted.value);
+
+  propagate(emitted);
+
+  executeNextStep();
+
+  postMessage({ type: 'diff', diff: self.diff });
+  self.diff = getCleanDiff();
 };
 
-const getComponent = id => {
-  if (!circuit) return null;
-
-  return (
-    circuit.components.find(component => component.id === id) || null
-  );
-};
-
-const getAffectedMeshes = emitted =>
-  circuit.meshes.filter(mesh =>
-    mesh.inputs.some(
-      meshInput =>
-        emitted.from === meshInput.componentId &&
-        Object.keys(emitted.value).includes(meshInput.name),
-    ),
-  );
-
-const getMeshOutputComponents = mesh =>
-  [
-    ...new Set(
-      mesh.outputs.map(meshOutput => meshOutput.componentId),
-    ),
-  ].map(componentId => getComponent(componentId));
-
-const getMeshInputValue = mesh => {
-  const allInputValues = mesh.inputs
-    .map(portInfo => {
-      const component = circuit.components.find(
-        c => c.id === portInfo.componentId,
-      );
-
-      // Port's output is the mesh's input
-      const port = component.getOutputPort(portInfo.name);
-
-      return port ? port.value : null;
-    })
-    .filter(value => value !== null);
-
-  // A mesh input is coherent if all of its inputs has the same value
-  const isCoherent = allInputValues.every(
-    (value, i, values) => value === values[0],
-  );
-
-  return isCoherent ? allInputValues[0] : 'error';
-};
-
-const appendComponentDiff = (componentId, value) => {
-  if (!diff.components[componentId]) {
-    diff.components[componentId] = {};
-  }
-  diff.components[componentId] = {
-    ...diff.components[componentId],
-    ...value,
-  };
-};
-
-const propagate = emitted => {
-  const affectedMeshes = getAffectedMeshes(emitted);
-  affectedMeshes.forEach(mesh => {
-    const meshValue = getMeshInputValue(mesh);
-    mesh.links.forEach(link => {
-      diff.links[link] = meshValue;
-    });
-
-    const connectedComponents = getMeshOutputComponents(mesh);
-    connectedComponents.forEach(component => {
-      const portsConnectedToMesh = mesh.outputs
-        .filter(meshOutput => meshOutput.componentId === component.id)
-        .map(meshOutput => meshOutput.name);
-
-      const portsWithNewValue = portsConnectedToMesh.reduce(
-        (obj, portName) => ({ ...obj, [portName]: meshValue }),
-        {},
-      );
-
-      component.setInputValues(portsWithNewValue);
-
-      appendComponentDiff(component.id, portsWithNewValue);
-
-      stepQueue.push(component);
-    });
-  });
-};
-
+/**
+ * Executes a step on the next component affected by the emitted
+ * change that is being currently handled. Propagates this component's
+ * change forward.
+ */
 const executeNextStep = () => {
-  const component = stepQueue.shift();
+  const component = self.stepQueue.shift();
   if (!component) return;
 
   const input = component.ports.input.reduce(
@@ -135,68 +163,34 @@ const executeNextStep = () => {
   executeNextStep();
 };
 
-const executeNextEmitted = () => {
-  if (!circuit) return;
+/**
+ * Propagates a change on a component to all components connected to
+ * its output.
+ */
+const propagate = emitted => {
+  const affectedMeshes = getAffectedMeshes(emitted);
+  affectedMeshes.forEach(mesh => {
+    const meshValue = getMeshInputValue(mesh);
+    mesh.links.forEach(link => {
+      self.diff.links[link] = meshValue;
+    });
 
-  const emitted = emitQueue.shift();
-  if (!emitted) return;
+    const connectedComponents = getMeshOutputComponents(mesh);
+    connectedComponents.forEach(component => {
+      const portsConnectedToMesh = mesh.outputs
+        .filter(meshOutput => meshOutput.componentId === component.id)
+        .map(meshOutput => meshOutput.name);
 
-  const emitter = getComponent(emitted.from);
-  emitter.setOutputValues(emitted.value);
+      const portsWithNewValue = portsConnectedToMesh.reduce(
+        (obj, portName) => ({ ...obj, [portName]: meshValue }),
+        {},
+      );
 
-  appendComponentDiff(emitted.from, emitted.value);
+      component.setInputValues(portsWithNewValue);
 
-  propagate(emitted);
+      appendComponentDiff(component.id, portsWithNewValue);
 
-  executeNextStep();
-
-  postMessage({ type: 'diff', diff });
-  diff = getCleanDiff();
+      self.stepQueue.push(component);
+    });
+  });
 };
-
-// eslint-disable-next-line no-restricted-globals
-self.addEventListener(
-  'message',
-  ({ data: { command, diagram, emitted } }) => {
-    switch (command) {
-      case 'start':
-        // TODO: start with all zeroes
-        if (diagram !== undefined) {
-          circuit = deserialize(diagram);
-          diff = getCleanDiff();
-        }
-
-        getAllComponents(circuit).forEach(component =>
-          component.onSimulationStart(),
-        );
-
-        executeNextEmitted();
-        workInterval = setInterval(executeNextEmitted);
-        break;
-      case 'pause':
-        getAllComponents(circuit).forEach(component =>
-          component.onSimulationPause(),
-        );
-        clearInterval(workInterval);
-        break;
-      case 'stop':
-        getAllComponents(circuit).forEach(component =>
-          component.onSimulationStop(),
-        );
-        clearInterval(workInterval);
-        setTimeout(() => {
-          postMessage({ type: 'clear' });
-          circuit = null;
-          diff = null;
-          emitQueue = [];
-          stepQueue = [];
-        });
-        break;
-      case 'emit':
-        if (circuit) emitQueue.push(emitted);
-        break;
-      default:
-        break;
-    }
-  },
-);
