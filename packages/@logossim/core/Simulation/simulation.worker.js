@@ -135,11 +135,16 @@ const executeNextStep = () => {
     {},
   );
 
+  const meta = component.ports.input.reduce(
+    (obj, port) => ({ ...obj, [port.name]: port.meta }),
+    {},
+  );
+
   let result = {};
   if (isInputValid(input)) {
-    result = component.step(input);
+    result = component.step(input, meta);
   } else {
-    result = component.stepError(input);
+    result = component.stepError(input, meta);
   }
 
   if (!result) return;

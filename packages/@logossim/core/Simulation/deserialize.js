@@ -33,24 +33,36 @@ export class GenericComponent {
     return this.ports.output.find(port => port.name === name);
   }
 
-  setInputValues(values) {
-    this.ports.input = this.ports.input.map(port => ({
-      ...port,
-      value:
+  setValues(values, type) {
+    this.ports[type] = this.ports[type].map(port => {
+      const previous = port.value;
+
+      const current =
         values[port.name] !== undefined
           ? values[port.name]
-          : port.value,
-    }));
+          : previous;
+
+      const risingEdge = previous === 0 && current === 1;
+      const fallingEdge = previous === 1 && current === 0;
+
+      return {
+        ...port,
+        value: current,
+        meta: {
+          previous,
+          risingEdge,
+          fallingEdge,
+        },
+      };
+    });
+  }
+
+  setInputValues(values) {
+    this.setValues(values, 'input');
   }
 
   setOutputValues(values) {
-    this.ports.output = this.ports.output.map(port => ({
-      ...port,
-      value:
-        values[port.name] !== undefined
-          ? values[port.name]
-          : port.value,
-    }));
+    this.setValues(values, 'output');
   }
 
   hasOutputChanged(values) {
