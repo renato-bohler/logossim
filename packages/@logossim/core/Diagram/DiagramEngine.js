@@ -18,6 +18,10 @@ export default class DiagramEngine {
   }
 
   initializeEngine = () => {
+    /**
+     * TODO: zoom is still disabled because when zoomed in or out,
+     * links created from ports have slope
+     */
     this.engine = createEngine({
       registerDefaultZoomCanvasAction: false,
     });
@@ -36,8 +40,13 @@ export default class DiagramEngine {
     this.model.setGridSize(15);
     this.model.setLocked(false);
     this.model.registerListener({
-      eventDidFire: this.realignGrid,
+      eventDidFire: event => {
+        const type = event.function;
+        if (type === 'offsetUpdated') this.adjustGridOffset(event);
+        if (type === 'zoomUpdated') this.adjustGridZoom(event);
+      },
     });
+    this.realignGrid();
 
     this.engine.setModel(this.model);
   };
@@ -54,11 +63,8 @@ export default class DiagramEngine {
 
   load = circuit => {
     this.model.deserializeModel(circuit, this.engine);
-    this.realignGrid({
-      offsetX: this.model.getOffsetX(),
-      offsetY: this.model.getOffsetY(),
-    });
-    requestAnimationFrame(() => this.engine.repaintCanvas());
+    this.realignGrid();
+    this.engine.repaintCanvas();
   };
 
   setLocked = locked => {
@@ -70,10 +76,29 @@ export default class DiagramEngine {
 
   repaint = () => this.engine.repaintCanvas();
 
-  realignGrid = ({ offsetX, offsetY }) =>
-    requestAnimationFrame(() => {
-      document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+  realignGrid = () => {
+    this.adjustGridOffset({
+      offsetX: this.model.getOffsetX(),
+      offsetY: this.model.getOffsetY(),
     });
+
+    this.adjustGridZoom({
+      zoom: this.model.getZoomLevel(),
+    });
+  };
+
+  adjustGridOffset = ({ offsetX, offsetY }) => {
+    document.body.style.setProperty('--offset-x', `${offsetX}px`);
+    document.body.style.setProperty('--offset-y', `${offsetY}px`);
+  };
+
+  adjustGridZoom = ({ zoom }) => {
+    const { gridSize } = this.model.getOptions();
+    document.body.style.setProperty(
+      '--grid-size',
+      `${(gridSize * zoom) / 100}px`,
+    );
+  };
 
   getSnappedRelativeMousePoint = event => {
     const { x, y } = this.engine.getRelativeMousePoint(event);

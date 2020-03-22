@@ -1,26 +1,13 @@
 body {
   background-color: var(--background);
-  background-size: 45px 45px;
-  background-image: linear-gradient(to right,
-                    rgba(0, 0, 0, 0.15) 1px,
-                      transparent 1px,
-                      transparent 15px,
-                    rgba(0, 0, 0, 0.1) 15px,
-                      transparent 16px,
-                      transparent 30px,
-                    rgba(0, 0, 0, 0.1) 30px,
-                      transparent 31px
-                    ),
-                    linear-gradient(to bottom,
-                    rgba(0, 0, 0, 0.15) 1px,
-                      transparent 1px,
-                      transparent 15px,
-                    rgba(0, 0, 0, 0.1) 15px,
-                      transparent 16px,
-                      transparent 30px,
-                    rgba(0, 0, 0, 0.1) 30px,
-                      transparent 31px
-                    );
+  
+  background-position-x: var(--offset-x);
+  background-position-y: var(--offset-y);
+
+  background-size: calc(var(--grid-size) * 3)
+                   calc(var(--grid-size) * 3);
+
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADpwBB5RT3QAAABZ0RVh0Q3JlYXRpb24gVGltZQAwMy8yMi8yMM3KBJQAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAB7ElEQVR4nO3dUW1CQRRF0TsNMjDQb3Ripg4QUBf4eBUBO49O1lJwbrKT+Zw1Mz8z85j/7zozz7NHvMEWd1xm5nEcx/3sIa9aa92O4/g9e8erdrnj6+wB7ElYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCQuM3Nda93OHvIG32utsze8wxZ3XGbmucOPnmutccfn8BSSEBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCT+sfp4t7vDD6ofZ5Q5PIQlhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZH4A5/pKth/6zgKAAAAAElFTkSuQmCC');
 
   margin: 0;
 
