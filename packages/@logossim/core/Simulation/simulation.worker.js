@@ -19,7 +19,6 @@ import deserialize from './deserialize';
 import {
   getCleanDiff,
   appendComponentDiff,
-  initializeDiffAndValues,
   isInputValid,
   getComponent,
   getAffectedMeshes,
@@ -33,7 +32,7 @@ import {
 self.circuit = null; // circuit information
 self.diff = null; // diff to send back to the app
 self.emitQueue = []; // emitted changes that are pending
-self.stepQueue = []; // TODO: stores all propagation?
+self.stepQueue = []; // stores components that are pending propagation
 
 /**
  * Worker message handling
@@ -51,7 +50,6 @@ self.addEventListener(
         if (diagram !== undefined) {
           self.circuit = deserialize(diagram);
           self.diff = getCleanDiff();
-          initializeDiffAndValues();
         }
 
         self.circuit.components.forEach(component =>
@@ -116,9 +114,7 @@ const executeNextEmitted = () => {
   emitter.setOutputValues(emitted.value);
 
   appendComponentDiff(emitted.from, emitted.value);
-
   propagate(emitted);
-
   executeNextStep();
 
   postMessage({ type: 'diff', diff: self.diff });
@@ -154,11 +150,11 @@ const executeNextStep = () => {
     ),
   );
 
-  component.setOutputValues(output);
-
-  appendComponentDiff(component.id, output);
-
-  propagate({ from: component.id, value: output });
+  if (component.hasOutputChanged(output)) {
+    component.setOutputValues(output);
+    appendComponentDiff(component.id, output);
+    propagate({ from: component.id, value: output });
+  }
 
   executeNextStep();
 };

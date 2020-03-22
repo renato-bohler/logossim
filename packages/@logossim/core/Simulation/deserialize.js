@@ -53,6 +53,15 @@ export class GenericComponent {
     }));
   }
 
+  hasOutputChanged(values) {
+    return !Object.keys(values).every(
+      portName =>
+        values[portName] ===
+        this.ports.output.find(output => output.name === portName)
+          .value,
+    );
+  }
+
   // Defaults
   onSimulationStart() {}
 
