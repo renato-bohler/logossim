@@ -5,6 +5,10 @@ export default class ButtonModel extends BaseModel {
     this.addOutputPort('out');
   }
 
+  onSimulationStart() {
+    this.emit({ out: 0 });
+  }
+
   onClick() {
     this.emit({ out: 1 });
   }
