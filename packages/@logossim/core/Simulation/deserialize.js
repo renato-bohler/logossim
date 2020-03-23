@@ -74,6 +74,22 @@ export class GenericComponent {
     );
   }
 
+  getProperties() {
+    const customPropertyNames = Object.keys(this).filter(
+      key =>
+        !['id', 'initialize', 'configurations', 'ports'].includes(
+          key,
+        ),
+    );
+
+    return customPropertyNames
+      .filter(property => typeof this[property] !== 'function')
+      .reduce(
+        (obj, property) => ({ ...obj, [property]: this[property] }),
+        {},
+      );
+  }
+
   // Defaults
   onSimulationStart() {}
 

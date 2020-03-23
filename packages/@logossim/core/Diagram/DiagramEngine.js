@@ -123,18 +123,27 @@ export default class DiagramEngine {
       .getModel()
       .clearSelection();
 
-  setLinkValue = (id, value) =>
+  synchronizeLink = (id, value) =>
     this.getEngine()
       .getModel()
       .getLink(id)
       .setValue(value);
 
-  setPortValue = (componentId, name, value) =>
-    this.getEngine()
+  synchronizeComponent = (id, diff) => {
+    const component = this.getEngine()
       .getModel()
-      .getNode(componentId)
-      .getPort(name)
-      .setValue(value);
+      .getNode(id);
+
+    // Sets output port values
+    Object.entries(diff.output).forEach(([name, value]) =>
+      component.getPort(name).setValue(value),
+    );
+
+    // Sets custom properties
+    Object.entries(diff.properties).forEach(([name, value]) => {
+      component[name] = value;
+    });
+  };
 
   clearAllValues = () => {
     this.clearLinkValues();

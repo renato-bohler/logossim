@@ -115,7 +115,7 @@ const executeNextEmitted = (first = true) => {
   const emitter = getComponent(emitted.from);
   emitter.setOutputValues(emitted.value);
 
-  appendComponentDiff(emitted.from, emitted.value);
+  appendComponentDiff(emitter, emitted.value);
   propagate(emitted);
   executeNextStep();
 
@@ -163,7 +163,7 @@ const executeNextStep = () => {
 
   if (component.hasOutputChanged(output)) {
     component.setOutputValues(output);
-    appendComponentDiff(component.id, output);
+    appendComponentDiff(component, output);
     propagate({ from: component.id, value: output });
   }
 
@@ -195,7 +195,7 @@ const propagate = emitted => {
 
       component.setInputValues(portsWithNewValue);
 
-      appendComponentDiff(component.id, portsWithNewValue);
+      appendComponentDiff(component, portsWithNewValue);
 
       self.stepQueue.push(component);
     });
