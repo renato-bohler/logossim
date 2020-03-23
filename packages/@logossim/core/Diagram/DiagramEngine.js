@@ -18,13 +18,7 @@ export default class DiagramEngine {
   }
 
   initializeEngine = () => {
-    /**
-     * TODO: zoom is still disabled because when zoomed in or out,
-     * links created from ports have slope
-     */
-    this.engine = createEngine({
-      registerDefaultZoomCanvasAction: false,
-    });
+    this.engine = createEngine();
 
     this.engine.getStateMachine().pushState(new States());
 
