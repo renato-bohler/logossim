@@ -17,12 +17,6 @@ import {
 
 import './App.css';
 
-// TODO: remove
-import { propagation as test } from './circuit';
-
-// TODO: remove
-const circuit = JSON.stringify(test);
-
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -56,7 +50,7 @@ export default class App extends Component {
   };
 
   renderSimulation = () => {
-    if (this.simulation.getState() !== 'started') return;
+    if (!this.simulation.isRunning()) return;
 
     this.applySimulationDiff();
 
@@ -70,8 +64,7 @@ export default class App extends Component {
   };
 
   handleClickLoad = () => {
-    // TODO: revert
-    // const { circuit } = this.state;
+    const { circuit } = this.state;
     if (!circuit) {
       window.alert('No circuit has been saved yet');
       return;
@@ -120,6 +113,7 @@ export default class App extends Component {
         <DiagramStateButtons
           handleClickSave={this.handleClickSave}
           handleClickLoad={this.handleClickLoad}
+          disabled={!this.simulation.isStopped()}
         />
         <SimulationControlButtons
           state={this.simulation.getState()}
@@ -129,7 +123,7 @@ export default class App extends Component {
         />
         <ComponentSelectButton
           handleClick={this.showAddComponent}
-          disabled={this.simulation.getState() !== 'stopped'}
+          disabled={!this.simulation.isStopped()}
         />
         <ComponentSelect
           isOpen={isComponentSelectOpen}

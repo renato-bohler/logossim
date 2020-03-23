@@ -21,5 +21,11 @@ jest.mock('@logossim/core', () => ({
     stop() {}
 
     getState() {}
+
+    isRunning() {}
+
+    isPaused() {}
+
+    isStopped() {}
   },
 }));

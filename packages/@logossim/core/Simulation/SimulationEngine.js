@@ -61,6 +61,18 @@ export default class SimulationEngine {
     return this.state;
   }
 
+  isRunning() {
+    return this.state === 'started';
+  }
+
+  isPaused() {
+    return this.state === 'paused';
+  }
+
+  isStopped() {
+    return this.state === 'stopped';
+  }
+
   getDiff() {
     return this.diff;
   }

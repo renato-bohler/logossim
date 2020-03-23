@@ -32,17 +32,31 @@ const Button = styled.button.attrs(({ ...props }) => ({
   min-width: 110px;
   padding: 5px 20px;
   margin: 5px;
+
+  &:disabled {
+    cursor: not-allowed;
+    background: gray;
+  }
 `;
 
 const DiagramStateButtons = ({
   handleClickSave,
   handleClickLoad,
+  disabled,
 }) => (
   <Container>
-    <Button color="green" onClick={handleClickSave}>
+    <Button
+      color="green"
+      onClick={handleClickSave}
+      disabled={disabled}
+    >
       Save
     </Button>
-    <Button color="orange" onClick={handleClickLoad}>
+    <Button
+      color="orange"
+      onClick={handleClickLoad}
+      disabled={disabled}
+    >
       Load
     </Button>
   </Container>
