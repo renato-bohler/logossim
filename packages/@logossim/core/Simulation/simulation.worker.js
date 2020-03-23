@@ -106,7 +106,7 @@ self.addEventListener(
 /**
  * Handles the next emitted event on the emit queue and propagates it.
  */
-const executeNextEmitted = () => {
+const executeNextEmitted = (first = true) => {
   if (!self.circuit) return;
 
   const emitted = self.emitQueue.shift();
@@ -119,8 +119,12 @@ const executeNextEmitted = () => {
   propagate(emitted);
   executeNextStep();
 
-  postMessage({ type: 'diff', diff: self.diff });
-  self.diff = getCleanDiff();
+  executeNextEmitted(false);
+
+  if (first) {
+    postMessage({ type: 'diff', diff: self.diff });
+    self.diff = getCleanDiff();
+  }
 };
 
 /**
