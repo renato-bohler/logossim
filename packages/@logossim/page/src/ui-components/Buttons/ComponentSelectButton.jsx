@@ -27,7 +27,10 @@ const Button = styled.button.attrs(({ ...props }) => ({
   line-height: 1em;
   color: white;
 
+  transition: 0.5s ease-in-out;
+
   &:disabled {
+    opacity: 10%;
     cursor: not-allowed;
     background: gray;
     box-shadow: inset 0 0 10px black;
