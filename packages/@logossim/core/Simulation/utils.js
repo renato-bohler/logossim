@@ -69,6 +69,46 @@ export const getMeshInputValue = mesh => {
   return isCoherent ? allInputValues[0] : 'error';
 };
 
+/**
+ * Initialize all links and ports with the value 0.
+ */
+export const initializeDiffAndValues = () => {
+  self.circuit.components.forEach(component => {
+    component.setInputValues(
+      Object.fromEntries(
+        component.ports.input.map(port => [port.id, 0]),
+      ),
+    );
+    component.setOutputValues(
+      Object.fromEntries(
+        component.ports.output.map(port => [port.id, 0]),
+      ),
+    );
+  });
+
+  const diffLinks = self.circuit.meshes
+    .map(mesh => mesh.links)
+    .flat()
+    .reduce((obj, link) => ({ ...obj, [link]: 0 }), {});
+
+  const diffComponents = Object.fromEntries(
+    self.circuit.components.map(component => [
+      component.id,
+      Object.fromEntries(
+        [
+          ...component.ports.input,
+          ...component.ports.output,
+        ].map(port => [port.name, 0]),
+      ),
+    ]),
+  );
+
+  postMessage({
+    type: 'diff',
+    diff: { links: diffLinks, components: diffComponents },
+  });
+};
+
 export const appendComponentDiff = (componentId, value) => {
   if (!self.diff.components[componentId]) {
     self.diff.components[componentId] = {};

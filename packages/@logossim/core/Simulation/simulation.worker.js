@@ -19,6 +19,7 @@ import deserialize from './deserialize';
 import {
   getCleanDiff,
   appendComponentDiff,
+  initializeDiffAndValues,
   isInputValid,
   getComponent,
   getAffectedMeshes,
@@ -50,6 +51,7 @@ self.addEventListener(
         if (diagram !== undefined) {
           self.circuit = deserialize(diagram);
           self.diff = getCleanDiff();
+          initializeDiffAndValues();
         }
 
         self.circuit.components.forEach(component =>
