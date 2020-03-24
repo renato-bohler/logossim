@@ -62,10 +62,10 @@ export default class App extends Component {
   };
 
   handleClickLoad = () => {
-    const { circuit } = this.state;
+    let { circuit } = this.state;
     if (!circuit) {
-      window.alert('No circuit has been saved yet');
-      return;
+      circuit = window.prompt('Enter the circuit to load (JSON)');
+      if (!circuit) return;
     }
 
     this.diagram.load(JSON.parse(circuit));
