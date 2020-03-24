@@ -106,9 +106,6 @@ self.addEventListener(
  * Handles the next emitted event on the emit queue and propagates it.
  */
 const executeNextEmitted = (first = true) => {
-  console.trace();
-  console.timeEnd();
-  console.time();
   if (!self.circuit) return;
 
   const emitted = self.emitQueue.shift();
