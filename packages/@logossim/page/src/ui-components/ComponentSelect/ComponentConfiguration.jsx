@@ -130,7 +130,6 @@ const ComponentConfiguration = ({
         <Formik
           initialValues={getInitialValues(component)}
           onSubmit={values => {
-            console.log('values:', values);
             handleComponentDrop(null, {
               type: component.type,
               configurations: values,
