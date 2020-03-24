@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import Tooltip from 'react-tooltip';
 import styled from 'styled-components';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 
 import { Header, Content, IconButton } from './ComponentLayout';
 import { Back, Close } from '../Icons';
 import DraggableComponent from './DraggableComponent';
+import ComponentConfigurationInput from './ComponentConfigurationInput';
 
 const DragArea = styled.div`
   display: flex;
@@ -52,105 +53,10 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const ComponentConfigurationInputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-
-  label {
-    font-size: 0.8em;
-    font-weight: bold;
-    text-transform: uppercase;
-
-    background: #eee;
-    border: 1px solid gray;
-    border-radius: 8px;
-
-    position: relative;
-    top: 0.8em;
-
-    width: max-content;
-    margin-left: 15px;
-    padding: 0 8px;
-  }
-
-  select,
-  input {
-    background: white;
-    border: 1px solid gray;
-    border-radius: 25px;
-
-    font-size: 1.2em;
-
-    padding: 10px 0 5px 16px;
-  }
-`;
-
 const FormScroll = styled.form`
   height: 375px;
   overflow-y: auto;
 `;
-
-const ComponentConfigurationInput = ({
-  handleChange,
-  value,
-  componentType,
-  name,
-  type,
-  label,
-  options = [],
-}) => {
-  switch (type) {
-    case 'select':
-      return (
-        <>
-          <label htmlFor={name}>{label}</label>
-          <select
-            id={name}
-            name={name}
-            value={value}
-            onChange={handleChange}
-          >
-            {options.map(option => (
-              <option value={option.value} key={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </>
-      );
-    case 'number':
-      return (
-        <>
-          <label htmlFor={name}>{label}</label>
-          <input
-            id={name}
-            name={name}
-            value={value}
-            onChange={handleChange}
-            type="number"
-          />
-        </>
-      );
-    case 'text':
-      return (
-        <>
-          <label htmlFor={name}>{label}</label>
-          <input
-            id={name}
-            name={name}
-            value={value}
-            onChange={handleChange}
-            type="text"
-          />
-        </>
-      );
-    default:
-      throw new Error(
-        `[Logossim] Invalid configuration type for ${componentType}: ${type}`,
-      );
-  }
-};
 
 const Footer = styled.div`
   display: flex;
@@ -222,7 +128,7 @@ const ComponentConfiguration = ({
 
       <Content>
         <Formik initialValues={getInitialValues(component)}>
-          {({ values, handleChange }) => (
+          {({ values }) => (
             <>
               <DragArea>
                 <DraggableComponent
@@ -234,16 +140,17 @@ const ComponentConfiguration = ({
 
               <FormScroll autoComplete="off">
                 {component.configurations.map(configuration => (
-                  <ComponentConfigurationInputContainer
+                  <Field
                     key={configuration.name}
-                  >
-                    <ComponentConfigurationInput
-                      handleChange={handleChange}
-                      value={values[configuration.name]}
-                      componentType={component.type}
-                      {...configuration}
-                    />
-                  </ComponentConfigurationInputContainer>
+                    component={ComponentConfigurationInput}
+                    {...configuration}
+                    validate={
+                      configuration.validate
+                        ? value =>
+                            configuration.validate(value, values)
+                        : null
+                    }
+                  />
                 ))}
               </FormScroll>
 
