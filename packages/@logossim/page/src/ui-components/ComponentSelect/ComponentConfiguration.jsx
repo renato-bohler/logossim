@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Tooltip from 'react-tooltip';
 import styled from 'styled-components';
-import { Formik, Field } from 'formik';
+import { Formik, Form, Field } from 'formik';
 
 import { Header, Content, IconButton } from './ComponentLayout';
 import { Back, Close } from '../Icons';
@@ -72,7 +72,7 @@ const Hint = styled.span`
 
 const SubmitButton = styled.button.attrs(({ ...props }) => ({
   ...props,
-  type: 'button',
+  type: 'submit',
 }))`
   border: none;
   border-radius: 5px;
@@ -127,9 +127,19 @@ const ComponentConfiguration = ({
       </Header>
 
       <Content>
-        <Formik initialValues={getInitialValues(component)}>
+        <Formik
+          initialValues={getInitialValues(component)}
+          onSubmit={values => {
+            console.log('values:', values);
+            handleComponentDrop(null, {
+              type: component.type,
+              configurations: values,
+            });
+            handleClose();
+          }}
+        >
           {({ values }) => (
-            <>
+            <Form>
               <DragArea>
                 <DraggableComponent
                   component={component}
@@ -156,20 +166,9 @@ const ComponentConfiguration = ({
 
               <Footer>
                 <Hint>(hint: you can also drag the component)</Hint>
-                <SubmitButton
-                  type="button"
-                  onClick={() => {
-                    handleComponentDrop(null, {
-                      type: component.type,
-                      configurations: values,
-                    });
-                    handleClose();
-                  }}
-                >
-                  Add to circuit
-                </SubmitButton>
+                <SubmitButton>Add to circuit</SubmitButton>
               </Footer>
-            </>
+            </Form>
           )}
         </Formik>
       </Content>
