@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const OutputIndicator = ({ out }) => (
+const OutputIndicator = ({ out, periodMs, animateTransition }) => (
   <svg
     viewBox="0 0 13.229167 13.229167"
     height="20"
@@ -35,6 +35,9 @@ const OutputIndicator = ({ out }) => (
     style={{
       position: 'absolute',
       transform: out.getValue() === 0 ? 'rotateX(180deg)' : 'none',
+      transition: animateTransition
+        ? `calc(${periodMs}ms / 2 * 0.5) ease-in-out`
+        : 'none',
     }}
   >
     <g>
@@ -73,6 +76,7 @@ const ClockWidget = props => {
   const { model, engine } = props;
   const {
     options: { selected },
+    periodMs,
   } = model;
 
   const out = model.getPort('out');
@@ -86,7 +90,11 @@ const ClockWidget = props => {
         engine={engine}
       />
       <Shape />
-      <OutputIndicator out={out} />
+      <OutputIndicator
+        out={out}
+        periodMs={periodMs}
+        animateTransition={periodMs >= 500}
+      />
     </Wrapper>
   );
 };
