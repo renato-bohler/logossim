@@ -14,13 +14,16 @@ export default new Component({
       type: 'number',
       default: 1,
       label: 'Frequency (in Hz)',
-      min: 1,
+      step: 0.25,
+      min: 0.25,
       max: 1000,
       validate(value) {
         if (value < this.min)
           return `Frequency should be greater than ${this.min} Hz`;
         if (value > this.max)
           return `Frequency should be lesser than ${this.max} Hz`;
+        if (value % this.step !== 0)
+          return `Frequency should be divisible by ${this.step} Hz`;
         return null;
       },
     },
