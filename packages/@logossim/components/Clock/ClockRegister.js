@@ -16,11 +16,35 @@ export default new Component({
       label: 'Frequency (in Hz)',
       min: 1,
       max: 1000,
-      validate(frequency) {
-        if (frequency < this.min)
+      validate(value) {
+        if (value < this.min)
           return `Frequency should be greater than ${this.min} Hz`;
-        if (frequency > this.max)
+        if (value > this.max)
           return `Frequency should be lesser than ${this.max} Hz`;
+        return null;
+      },
+    },
+    {
+      name: 'HIGH_DURATION',
+      type: 'number',
+      default: 1,
+      label: 'High duration (in cycles)',
+      min: 1,
+      validate(value) {
+        if (value < this.min)
+          return `High duration should be greater than ${this.min}`;
+        return null;
+      },
+    },
+    {
+      name: 'LOW_DURATION',
+      type: 'number',
+      default: 1,
+      label: 'Low duration (in cycles)',
+      min: 1,
+      validate(value) {
+        if (value < this.min)
+          return `Low duration should be greater than ${this.min}`;
         return null;
       },
     },
