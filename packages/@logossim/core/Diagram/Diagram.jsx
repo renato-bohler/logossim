@@ -14,6 +14,7 @@ const Diagram = ({ engine }) => (
     handleComponentDrop={(...args) =>
       engine.handleComponentDrop(...args)
     }
+    disabled={engine.isLocked()}
   >
     <FullscreenCanvas engine={engine.getEngine()} />
   </DroppableLayer>

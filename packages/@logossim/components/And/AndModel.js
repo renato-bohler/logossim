@@ -8,20 +8,14 @@ export default class AndModel extends BaseModel {
     );
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
-      this.addPort(`in${i}`);
+      this.addInputPort(`in${i}`);
     }
-    this.addPort('out');
+    this.addOutputPort('out');
   }
 
-  onSimulationStart() {
-    console.log('AndModel onSimulationStart');
-  }
-
-  onSimulationEnd() {
-    console.log('AndModel onSimulationEnd');
-  }
-
-  step(inputs) {
-    console.log('AndModel step', inputs);
+  step(input) {
+    return {
+      out: Object.values(input).every(value => !!value) ? 1 : 0,
+    };
   }
 }

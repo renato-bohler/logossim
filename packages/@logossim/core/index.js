@@ -8,6 +8,8 @@ import Port from './Port/Port';
 import PortModel from './Port/PortModel';
 import PortFactory from './Port/PortFactory';
 
+import SimulationEngine from './Simulation/SimulationEngine';
+
 export {
   Diagram,
   DiagramEngine,
@@ -16,4 +18,5 @@ export {
   Port,
   PortModel,
   PortFactory,
+  SimulationEngine,
 };

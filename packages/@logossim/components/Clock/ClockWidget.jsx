@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   height: 30px;
 
   transition: 100ms linear;
-  svg {
+  .shape {
     fill: ${props =>
       props.selected
         ? 'var(--body-selected)'
@@ -24,39 +24,22 @@ const Wrapper = styled.div`
   }
 `;
 
-const Button = styled.button`
-  position: absolute;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  outline: none;
-
-  border: 2px solid rgba(0, 0, 0, 0.3);
-  background: linear-gradient(
-    225deg,
-    rgba(238, 0, 0, 1) 0%,
-    rgba(125, 20, 20, 1) 100%
-  );
-
-  :active {
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    background: linear-gradient(
-      225deg,
-      rgba(125, 20, 20, 1) 0%,
-      rgba(238, 0, 0, 1) 100%
-    );
-  }
-`;
-
 const PositionedPort = styled(Port)`
   position: absolute;
   right: -5px;
 `;
 
-export const Shape = ({ size = 30 }) => (
+export const Shape = ({
+  size = 30,
+  output,
+  color,
+  periodMs,
+  animateTransition,
+}) => (
   <svg
-    width={size}
+    className="shape"
     height={size}
+    width={size}
     viewBox="0 0 7.9374997 7.9375003"
     fill="var(--body-unselected)"
     stroke="var(--border-unselected)"
@@ -70,30 +53,47 @@ export const Shape = ({ size = 30 }) => (
         width="7.4083333"
       />
     </g>
+    <path
+      stroke={color}
+      strokeWidth={0.75}
+      fill="none"
+      style={{
+        transform: output === 0 ? 'rotateX(180deg)' : 'none',
+        transformOrigin: 'center',
+        transition: animateTransition
+          ? `calc(${periodMs}ms / 2 * 0.4) ease-in-out`
+          : 'none',
+      }}
+      d="M 1.8683545,4.4337648 V 6.14192 H 4.0062447 V 1.79558 h 2.0629007 v 1.7578226"
+    />
   </svg>
 );
 
-const ButtonWidget = props => {
+const ClockWidget = props => {
   const { model, engine } = props;
   const {
     options: { selected },
+    periodMs,
   } = model;
+
+  const out = model.getPort('out');
 
   return (
     <Wrapper selected={selected}>
       <PositionedPort
         name="out"
         model={model}
-        port={model.getPort('out')}
+        port={out}
         engine={engine}
       />
-      <Shape />
-      <Button
-        onMouseDown={() => model.onClick()}
-        onMouseUp={() => model.onRelease()}
+      <Shape
+        output={out.getValue()}
+        color={out.getColor()}
+        periodMs={periodMs}
+        animateTransition={periodMs >= 500}
       />
     </Wrapper>
   );
 };
 
-export default ButtonWidget;
+export default ClockWidget;

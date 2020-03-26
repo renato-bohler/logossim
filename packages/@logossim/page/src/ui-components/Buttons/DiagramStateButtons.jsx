@@ -32,23 +32,35 @@ const Button = styled.button.attrs(({ ...props }) => ({
   min-width: 110px;
   padding: 5px 20px;
   margin: 5px;
+
+  transition: 0.5s ease-in-out;
+
+  &:disabled {
+    opacity: 10%;
+    cursor: not-allowed;
+    background: gray;
+  }
 `;
 
 const DiagramStateButtons = ({
   handleClickSave,
   handleClickLoad,
-  handleClickLock,
-  isLocked,
+  disabled,
 }) => (
   <Container>
-    <Button color="green" onClick={handleClickSave}>
+    <Button
+      color="green"
+      onClick={handleClickSave}
+      disabled={disabled}
+    >
       Save
     </Button>
-    <Button color="orange" onClick={handleClickLoad}>
+    <Button
+      color="orange"
+      onClick={handleClickLoad}
+      disabled={disabled}
+    >
       Load
-    </Button>
-    <Button onClick={handleClickLock}>
-      {isLocked ? 'Unlock' : 'Lock'}
     </Button>
   </Container>
 );

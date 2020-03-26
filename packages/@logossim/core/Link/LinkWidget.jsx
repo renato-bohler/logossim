@@ -76,10 +76,7 @@ export default class LinkWidget extends Component {
 
   renderPoint(position, loose = false) {
     const { link } = this.props;
-
-    const color = link.isSelected()
-      ? 'var(--link-selected)'
-      : 'var(--link-unselected)';
+    const color = link.getColor();
 
     return (
       <circle

@@ -2,20 +2,12 @@ import { BaseModel } from '@logossim/core';
 
 export default class OrModel extends BaseModel {
   initialize() {
-    this.addPort('in0');
-    this.addPort('in1');
-    this.addPort('out');
+    this.addInputPort('in0');
+    this.addInputPort('in1');
+    this.addOutputPort('out');
   }
 
-  onSimulationStart() {
-    console.log('OrModel onSimulationStart');
-  }
-
-  onSimulationEnd() {
-    console.log('OrModel onSimulationEnd');
-  }
-
-  step(inputs) {
-    console.log('OrModel step', inputs);
+  step(input) {
+    return { out: input.in0 || input.in1 };
   }
 }

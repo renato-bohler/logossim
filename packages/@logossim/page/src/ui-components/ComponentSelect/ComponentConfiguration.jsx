@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import Tooltip from 'react-tooltip';
 import styled from 'styled-components';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
 
 import { Header, Content, IconButton } from './ComponentLayout';
-import Back from '../Icons/Back';
-import Close from '../Icons/Close';
+import { Back, Close } from '../Icons';
 import DraggableComponent from './DraggableComponent';
+import ComponentConfigurationInput from './ComponentConfigurationInput';
 
 const DragArea = styled.div`
   display: flex;
@@ -15,29 +16,31 @@ const DragArea = styled.div`
   height: 200px;
   margin-bottom: 32px;
 
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
-  background-image: linear-gradient(
+  box-shadow: ${props =>
+    `inset 0 0 20px rgba(${props.error ? 255 : 0}, 0, 0, 0.3)`};
+
+  background-image: ${props => `linear-gradient(
       to right,
-      rgba(0, 0, 0, 0.1) 1px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.1) 1px,
       transparent 1px,
       transparent 15px,
-      rgba(0, 0, 0, 0.05) 15px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 15px,
       transparent 16px,
       transparent 30px,
-      rgba(0, 0, 0, 0.05) 30px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 30px,
       transparent 31px
     ),
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.1) 1px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.1) 1px,
       transparent 1px,
       transparent 15px,
-      rgba(0, 0, 0, 0.05) 15px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 15px,
       transparent 16px,
       transparent 30px,
-      rgba(0, 0, 0, 0.05) 30px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 30px,
       transparent 31px
-    );
+    )`};
   background-size: 45px 45px;
   border-radius: 25px;
 `;
@@ -52,105 +55,10 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const ComponentConfigurationInputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 16px;
-
-  label {
-    font-size: 0.8em;
-    font-weight: bold;
-    text-transform: uppercase;
-
-    background: #eee;
-    border: 1px solid gray;
-    border-radius: 8px;
-
-    position: relative;
-    top: 0.8em;
-
-    width: max-content;
-    margin-left: 15px;
-    padding: 0 8px;
-  }
-
-  select,
-  input {
-    background: white;
-    border: 1px solid gray;
-    border-radius: 25px;
-
-    font-size: 1.2em;
-
-    padding: 10px 0 5px 16px;
-  }
-`;
-
-const FormScroll = styled.form`
+const FormScroll = styled.div`
   height: 375px;
   overflow-y: auto;
 `;
-
-const ComponentConfigurationInput = ({
-  handleChange,
-  value,
-  componentType,
-  name,
-  type,
-  label,
-  options = [],
-}) => {
-  switch (type) {
-    case 'select':
-      return (
-        <>
-          <label htmlFor={name}>{label}</label>
-          <select
-            id={name}
-            name={name}
-            value={value}
-            onChange={handleChange}
-          >
-            {options.map(option => (
-              <option value={option.value} key={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </>
-      );
-    case 'number':
-      return (
-        <>
-          <label htmlFor={name}>{label}</label>
-          <input
-            id={name}
-            name={name}
-            value={value}
-            onChange={handleChange}
-            type="number"
-          />
-        </>
-      );
-    case 'text':
-      return (
-        <>
-          <label htmlFor={name}>{label}</label>
-          <input
-            id={name}
-            name={name}
-            value={value}
-            onChange={handleChange}
-            type="text"
-          />
-        </>
-      );
-    default:
-      throw new Error(
-        `[Logossim] Invalid configuration type for ${componentType}: ${type}`,
-      );
-  }
-};
 
 const Footer = styled.div`
   display: flex;
@@ -166,7 +74,7 @@ const Hint = styled.span`
 
 const SubmitButton = styled.button.attrs(({ ...props }) => ({
   ...props,
-  type: 'button',
+  type: 'submit',
 }))`
   border: none;
   border-radius: 5px;
@@ -178,6 +86,11 @@ const SubmitButton = styled.button.attrs(({ ...props }) => ({
   width: 100%;
   padding: 5px 20px;
   margin: 5px;
+
+  :disabled {
+    background: #d22307;
+    cursor: not-allowed;
+  }
 `;
 
 const getInitialValues = component =>
@@ -193,65 +106,83 @@ const ComponentConfiguration = ({
   handleClose,
   handleBack,
   handleComponentDrop,
-}) => (
-  <>
-    <Header>
-      <IconButton first onClick={handleBack}>
-        <Back />
-      </IconButton>
-      <Title>Configure component</Title>
-      <IconButton last onClick={handleClose}>
-        <Close />
-      </IconButton>
-    </Header>
+}) => {
+  useEffect(Tooltip.rebuild);
 
-    <Content>
-      <Formik initialValues={getInitialValues(component)}>
-        {({ values, handleChange }) => (
-          <>
-            <DragArea>
-              <DraggableComponent
-                component={component}
-                configurations={values}
-                handleClose={handleClose}
-              />
-            </DragArea>
+  return (
+    <>
+      <Header>
+        <IconButton
+          first
+          onClick={handleBack}
+          data-for="tooltip"
+          data-tip="Go back..."
+          data-place="right"
+        >
+          <Back />
+        </IconButton>
+        <Title>Configure component</Title>
+        <IconButton
+          last
+          onClick={handleClose}
+          data-for="tooltip"
+          data-tip="Close"
+          data-place="left"
+        >
+          <Close />
+        </IconButton>
+      </Header>
 
-            <FormScroll autoComplete="off">
-              {component.configurations.map(configuration => (
-                <ComponentConfigurationInputContainer
-                  key={configuration.name}
-                >
-                  <ComponentConfigurationInput
-                    handleChange={handleChange}
-                    value={values[configuration.name]}
-                    componentType={component.type}
+      <Content>
+        <Formik
+          initialValues={getInitialValues(component)}
+          onSubmit={values => {
+            handleComponentDrop(null, {
+              type: component.type,
+              configurations: values,
+            });
+            handleClose();
+          }}
+        >
+          {({ values, isValid }) => (
+            <Form>
+              <DragArea error={!isValid}>
+                <DraggableComponent
+                  component={component}
+                  configurations={values}
+                  handleClose={handleClose}
+                  error={!isValid}
+                />
+              </DragArea>
+
+              <FormScroll autoComplete="off">
+                {component.configurations.map(configuration => (
+                  <Field
+                    key={configuration.name}
+                    component={ComponentConfigurationInput}
                     {...configuration}
+                    validate={
+                      configuration.validate
+                        ? value =>
+                            configuration.validate(value, values)
+                        : null
+                    }
                   />
-                </ComponentConfigurationInputContainer>
-              ))}
-            </FormScroll>
+                ))}
+              </FormScroll>
 
-            <Footer>
-              <Hint>(hint: you can also drag the component)</Hint>
-              <SubmitButton
-                type="button"
-                onClick={() => {
-                  handleComponentDrop(null, {
-                    type: component.type,
-                    configurations: values,
-                  });
-                  handleClose();
-                }}
-              >
-                Add to circuit
-              </SubmitButton>
-            </Footer>
-          </>
-        )}
-      </Formik>
-    </Content>
-  </>
-);
+              <Footer>
+                <Hint>(hint: you can also drag the component)</Hint>
+                <SubmitButton disabled={!isValid}>
+                  {isValid ? 'Add to circuit' : 'Check form errors'}
+                </SubmitButton>
+              </Footer>
+            </Form>
+          )}
+        </Formik>
+      </Content>
+    </>
+  );
+};
 
 export default ComponentConfiguration;

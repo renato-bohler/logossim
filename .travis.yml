@@ -1,3 +1,4 @@
+os: linux
 language: node_js
 node_js:
   - node
@@ -11,8 +12,8 @@ before_deploy:
   - yarn build
 deploy:
   provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
+  cleanup: false
+  token: $GITHUB_TOKEN
   local_dir: packages/@logossim/page/build
   verbose: true
   on:

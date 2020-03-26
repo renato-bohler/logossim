@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Tooltip from 'react-tooltip';
 import styled from 'styled-components';
 
 import { Header, Content, IconButton } from './ComponentLayout';
 import ComponentGroup from './ComponentGroup';
-import Close from '../Icons/Close';
+import { Close } from '../Icons';
 
 const SearchBar = styled.input`
   flex-grow: 1;
@@ -25,6 +26,8 @@ const ComponentSearch = ({
   handleComponentSelect,
   handleClose,
 }) => {
+  useEffect(Tooltip.rebuild);
+
   const [filteredGroups, setFilteredGroups] = useState(groups);
   const [searchText, setSearchText] = useState('');
 
@@ -86,7 +89,13 @@ const ComponentSearch = ({
           }
           onKeyDown={({ key }) => handleKeyDown(key)}
         />
-        <IconButton last onClick={handleClose}>
+        <IconButton
+          last
+          onClick={handleClose}
+          data-for="tooltip"
+          data-tip="Close"
+          data-place="left"
+        >
           <Close />
         </IconButton>
       </Header>

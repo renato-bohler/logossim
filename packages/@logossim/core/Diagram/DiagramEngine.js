@@ -18,9 +18,7 @@ export default class DiagramEngine {
   }
 
   initializeEngine = () => {
-    this.engine = createEngine({
-      registerDefaultZoomCanvasAction: false,
-    });
+    this.engine = createEngine();
 
     this.engine.getStateMachine().pushState(new States());
 
@@ -36,8 +34,13 @@ export default class DiagramEngine {
     this.model.setGridSize(15);
     this.model.setLocked(false);
     this.model.registerListener({
-      eventDidFire: this.realignGrid,
+      eventDidFire: event => {
+        const type = event.function;
+        if (type === 'offsetUpdated') this.adjustGridOffset(event);
+        if (type === 'zoomUpdated') this.adjustGridZoom(event);
+      },
     });
+    this.realignGrid();
 
     this.engine.setModel(this.model);
   };
@@ -54,11 +57,8 @@ export default class DiagramEngine {
 
   load = circuit => {
     this.model.deserializeModel(circuit, this.engine);
-    this.realignGrid({
-      offsetX: this.model.getOffsetX(),
-      offsetY: this.model.getOffsetY(),
-    });
-    requestAnimationFrame(() => this.engine.repaintCanvas());
+    this.realignGrid();
+    this.engine.repaintCanvas();
   };
 
   setLocked = locked => {
@@ -68,10 +68,31 @@ export default class DiagramEngine {
 
   isLocked = () => this.locked;
 
-  realignGrid = ({ offsetX, offsetY }) =>
-    requestAnimationFrame(() => {
-      document.body.style.backgroundPosition = `${offsetX}px ${offsetY}px`;
+  repaint = () => this.engine.repaintCanvas();
+
+  realignGrid = () => {
+    this.adjustGridOffset({
+      offsetX: this.model.getOffsetX(),
+      offsetY: this.model.getOffsetY(),
     });
+
+    this.adjustGridZoom({
+      zoom: this.model.getZoomLevel(),
+    });
+  };
+
+  adjustGridOffset = ({ offsetX, offsetY }) => {
+    document.body.style.setProperty('--offset-x', `${offsetX}px`);
+    document.body.style.setProperty('--offset-y', `${offsetY}px`);
+  };
+
+  adjustGridZoom = ({ zoom }) => {
+    const { gridSize } = this.model.getOptions();
+    document.body.style.setProperty(
+      '--grid-size',
+      `${(gridSize * zoom) / 100}px`,
+    );
+  };
 
   getSnappedRelativeMousePoint = event => {
     const { x, y } = this.engine.getRelativeMousePoint(event);
@@ -96,4 +117,52 @@ export default class DiagramEngine {
 
     this.engine.repaintCanvas();
   };
+
+  clearSelection = () =>
+    this.getEngine()
+      .getModel()
+      .clearSelection();
+
+  synchronizeLink = (id, value) =>
+    this.getEngine()
+      .getModel()
+      .getLink(id)
+      .setValue(value);
+
+  synchronizeComponent = (id, diff) => {
+    const component = this.getEngine()
+      .getModel()
+      .getNode(id);
+
+    // Sets output port values
+    Object.entries(diff.output).forEach(([name, value]) =>
+      component.getPort(name).setValue(value),
+    );
+
+    // Sets custom properties
+    Object.entries(diff.properties).forEach(([name, value]) => {
+      component[name] = value;
+    });
+  };
+
+  clearAllValues = () => {
+    this.clearLinkValues();
+    this.clearPortValues();
+  };
+
+  clearLinkValues = () =>
+    this.getEngine()
+      .getModel()
+      .getLinks()
+      .forEach(link => link.setValue(null));
+
+  clearPortValues = () =>
+    this.getEngine()
+      .getModel()
+      .getNodes()
+      .forEach(node =>
+        Object.values(node.getPorts()).forEach(port =>
+          port.setValue(null),
+        ),
+      );
 }

@@ -25,18 +25,7 @@ export default class Component extends AbstractReactFactory {
   generateReactWidget(event) {
     const { Widget } = this;
 
-    return (
-      <Widget
-        engine={this.engine}
-        node={event.model}
-        model={this.generateModel({
-          initialConfig: {
-            ...event.model.options,
-            configurations: event.model.configurations,
-          },
-        })}
-      />
-    );
+    return <Widget engine={this.engine} model={event.model} />;
   }
 
   generateModel(event) {

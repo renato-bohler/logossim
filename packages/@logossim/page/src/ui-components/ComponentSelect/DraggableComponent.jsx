@@ -1,36 +1,25 @@
 import React from 'react';
+import Tooltip from 'react-tooltip';
 
 const engineStub = {
   registerListener: () => {},
   getCanvas: () => {},
-  getPortCoords: () => {},
+  getPortCoords: () => ({
+    getWidth: () => {},
+    getHeight: () => {},
+    getTopLeft: () => {},
+  }),
   getModel: () => ({ isLocked: () => false }),
 };
 
-const nodeStub = {
-  getPort: () => ({ links: {}, updateCoords: () => {} }),
-  getID: () => {},
-  options: { selected: false },
-};
-
-/**
- * Proxy is used here to return a function for whatever object key is
- * asked for.
- */
-const modelStub = new Proxy(
-  {},
-  {
-    get: () => () => {},
-  },
-);
-
 const DraggableComponent = ({
-  component: { type, Widget },
+  component: { type, Widget, Model },
   configurations,
   handleClose,
+  error,
 }) => (
   <div
-    draggable
+    draggable={!error}
     onDragStart={event => {
       event.dataTransfer.setDragImage(
         event.currentTarget.children[0],
@@ -46,13 +35,18 @@ const DraggableComponent = ({
         }),
       );
 
-      requestAnimationFrame(handleClose);
+      requestAnimationFrame(() => {
+        Tooltip.hide();
+        handleClose();
+      });
     }}
+    data-for="tooltip"
+    data-tip={error ? 'Check form errors' : 'Drag me!'}
+    data-place="bottom"
   >
     <Widget
       engine={engineStub}
-      node={{ ...nodeStub, configurations }}
-      model={modelStub}
+      model={new Model(type, configurations)}
     />
   </div>
 );

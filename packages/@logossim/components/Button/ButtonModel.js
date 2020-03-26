@@ -2,26 +2,18 @@ import { BaseModel } from '@logossim/core';
 
 export default class ButtonModel extends BaseModel {
   initialize() {
-    this.addPort('out');
+    this.addOutputPort('out');
   }
 
   onSimulationStart() {
-    console.log('ButtonModel onSimulationStart');
-  }
-
-  onSimulationEnd() {
-    console.log('ButtonModel onSimulationEnd');
-  }
-
-  step(inputs) {
-    console.log('ButtonModel step', inputs);
+    this.emit({ out: 0 });
   }
 
   onClick() {
-    console.log('ButtonModel onClick');
+    this.emit({ out: 1 });
   }
 
   onRelease() {
-    console.log('ButtonModel onRelease');
+    this.emit({ out: 0 });
   }
 }

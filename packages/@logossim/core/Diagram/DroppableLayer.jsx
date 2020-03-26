@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
-const DroppableLayer = styled.div.attrs(({ ...props }) => ({
+const DroppableLayer = styled.div.attrs(({ disabled, ...props }) => ({
   ...props,
   onDragOver: event => event.preventDefault(),
   onDrop: event => {
+    if (disabled) return;
+
     const component = JSON.parse(
       event.dataTransfer.getData('component'),
     );

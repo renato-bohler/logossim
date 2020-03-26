@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
+import Tooltip from 'react-tooltip';
 
-import { DiagramEngine, Diagram } from '@logossim/core';
-import components from '@logossim/components';
+import {
+  SimulationEngine,
+  DiagramEngine,
+  Diagram,
+} from '@logossim/core';
+import components, { groupedComponents } from '@logossim/components';
 
-import DiagramStateButtons from './ui-components/Buttons/DiagramStateButtons';
-import ComponentSelectButton from './ui-components/Buttons/ComponentSelectButton';
-import ComponentSelect from './ui-components/ComponentSelect/ComponentSelect';
+import {
+  DiagramStateButtons,
+  SimulationControlButtons,
+  ComponentSelectButton,
+  ComponentSelect,
+} from './ui-components';
 
 import './App.css';
 
@@ -13,35 +21,47 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    this.diagram = new DiagramEngine(components);
     this.state = {
-      circuit: undefined,
       isComponentSelectOpen: false,
     };
 
-    this.groups = this.groupComponents();
+    this.diagram = new DiagramEngine(components);
+    this.simulation = new SimulationEngine(components);
   }
 
-  groupComponents = () =>
-    components.reduce((acc, component) => {
-      const group = acc.find(g => g.name === component.group);
+  synchronizeSimulation = () => {
+    const diff = this.simulation.getDiff();
 
-      if (group) group.components.push(component);
-      else
-        acc.push({ name: component.group, components: [component] });
+    // Handles components diff
+    Object.entries(diff.components).forEach(([id, componentDiff]) =>
+      this.diagram.synchronizeComponent(id, componentDiff),
+    );
 
-      return acc;
-    }, []);
+    // Handles link value diff
+    Object.entries(diff.links).forEach(([id, value]) =>
+      this.diagram.synchronizeLink(id, value),
+    );
+
+    this.simulation.clearDiff();
+    this.diagram.repaint();
+  };
+
+  renderSimulation = () => {
+    if (!this.simulation.isRunning()) return;
+
+    this.synchronizeSimulation();
+
+    requestAnimationFrame(this.renderSimulation);
+  };
 
   handleClickSave = () => {
     const serialized = JSON.stringify(this.diagram.serialize());
-    this.setState({ circuit: serialized });
+    localStorage.setItem('circuit', serialized);
     console.log(JSON.parse(serialized));
   };
 
   handleClickLoad = () => {
-    const { circuit } = this.state;
-
+    const circuit = localStorage.getItem('circuit');
     if (!circuit) {
       window.alert('No circuit has been saved yet');
       return;
@@ -50,9 +70,26 @@ export default class App extends Component {
     this.diagram.load(JSON.parse(circuit));
   };
 
-  handleClickLock = () => {
-    this.diagram.setLocked(!this.diagram.isLocked());
+  handleClickStart = () => {
+    this.diagram.clearSelection();
+    this.diagram.setLocked(true);
     this.forceUpdate();
+
+    this.simulation.start(this.diagram.getEngine().getModel());
+    this.renderSimulation();
+  };
+
+  handleClickPause = () => {
+    this.simulation.pause();
+    this.forceUpdate();
+  };
+
+  handleClickStop = async () => {
+    await this.simulation.stop();
+    this.diagram.clearAllValues();
+    this.diagram.setLocked(false);
+    this.forceUpdate();
+    this.simulation.clearDiff();
   };
 
   showAddComponent = () =>
@@ -73,17 +110,26 @@ export default class App extends Component {
         <DiagramStateButtons
           handleClickSave={this.handleClickSave}
           handleClickLoad={this.handleClickLoad}
-          handleClickLock={this.handleClickLock}
-          isLocked={this.diagram.isLocked()}
+          disabled={!this.simulation.isStopped()}
         />
-        <ComponentSelectButton handleClick={this.showAddComponent} />
+        <SimulationControlButtons
+          state={this.simulation.getState()}
+          handleClickStart={this.handleClickStart}
+          handleClickPause={this.handleClickPause}
+          handleClickStop={this.handleClickStop}
+        />
+        <ComponentSelectButton
+          handleClick={this.showAddComponent}
+          disabled={!this.simulation.isStopped()}
+        />
         <ComponentSelect
           isOpen={isComponentSelectOpen}
-          groups={this.groups}
+          groups={groupedComponents}
           handleClose={this.hideAddComponent}
           handleComponentDrop={this.diagram.handleComponentDrop}
         />
         <Diagram engine={this.diagram} />
+        <Tooltip id="tooltip" globalEventOff="click" />
       </>
     );
   }
