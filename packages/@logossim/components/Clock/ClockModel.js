@@ -14,7 +14,7 @@ export default class ClockModel extends BaseModel {
   }
 
   onSimulationStart() {
-    this.emit({ out: 0 });
+    this.emit({ out: this.output });
 
     this.emitInterval = setInterval(() => {
       this.output = this.getNextOutput();
