@@ -16,29 +16,31 @@ const DragArea = styled.div`
   height: 200px;
   margin-bottom: 32px;
 
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
-  background-image: linear-gradient(
+  box-shadow: ${props =>
+    `inset 0 0 20px rgba(${props.error ? 255 : 0}, 0, 0, 0.3)`};
+
+  background-image: ${props => `linear-gradient(
       to right,
-      rgba(0, 0, 0, 0.1) 1px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.1) 1px,
       transparent 1px,
       transparent 15px,
-      rgba(0, 0, 0, 0.05) 15px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 15px,
       transparent 16px,
       transparent 30px,
-      rgba(0, 0, 0, 0.05) 30px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 30px,
       transparent 31px
     ),
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.1) 1px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.1) 1px,
       transparent 1px,
       transparent 15px,
-      rgba(0, 0, 0, 0.05) 15px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 15px,
       transparent 16px,
       transparent 30px,
-      rgba(0, 0, 0, 0.05) 30px,
+      rgba(${props.error ? 255 : 0}, 0, 0, 0.05) 30px,
       transparent 31px
-    );
+    )`};
   background-size: 45px 45px;
   border-radius: 25px;
 `;
@@ -84,6 +86,11 @@ const SubmitButton = styled.button.attrs(({ ...props }) => ({
   width: 100%;
   padding: 5px 20px;
   margin: 5px;
+
+  :disabled {
+    background: #d22307;
+    cursor: not-allowed;
+  }
 `;
 
 const getInitialValues = component =>
@@ -137,13 +144,14 @@ const ComponentConfiguration = ({
             handleClose();
           }}
         >
-          {({ values }) => (
+          {({ values, isValid }) => (
             <Form>
-              <DragArea>
+              <DragArea error={!isValid}>
                 <DraggableComponent
                   component={component}
                   configurations={values}
                   handleClose={handleClose}
+                  error={!isValid}
                 />
               </DragArea>
 
@@ -165,7 +173,9 @@ const ComponentConfiguration = ({
 
               <Footer>
                 <Hint>(hint: you can also drag the component)</Hint>
-                <SubmitButton>Add to circuit</SubmitButton>
+                <SubmitButton disabled={!isValid}>
+                  {isValid ? 'Add to circuit' : 'Check form errors'}
+                </SubmitButton>
               </Footer>
             </Form>
           )}
