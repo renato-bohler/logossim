@@ -55,7 +55,7 @@ const Title = styled.h1`
   text-align: center;
 `;
 
-const FormScroll = styled.form`
+const FormScroll = styled.div`
   height: 375px;
   overflow-y: auto;
 `;
