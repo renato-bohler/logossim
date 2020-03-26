@@ -42,7 +42,6 @@
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/helper-call-delegate": "^7.8.7",
     "eslint": "^6.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.1.0",
