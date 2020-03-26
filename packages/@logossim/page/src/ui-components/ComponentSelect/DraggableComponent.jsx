@@ -16,9 +16,10 @@ const DraggableComponent = ({
   component: { type, Widget, Model },
   configurations,
   handleClose,
+  error,
 }) => (
   <div
-    draggable
+    draggable={!error}
     onDragStart={event => {
       event.dataTransfer.setDragImage(
         event.currentTarget.children[0],
@@ -40,7 +41,7 @@ const DraggableComponent = ({
       });
     }}
     data-for="tooltip"
-    data-tip="Drag me!"
+    data-tip={error ? 'Check form errors' : 'Drag me!'}
     data-place="bottom"
   >
     <Widget

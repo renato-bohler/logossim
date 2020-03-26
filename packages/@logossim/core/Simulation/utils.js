@@ -94,12 +94,15 @@ export const initializeDiffAndValues = () => {
   const diffComponents = Object.fromEntries(
     self.circuit.components.map(component => [
       component.id,
-      Object.fromEntries(
-        [
-          ...component.ports.input,
-          ...component.ports.output,
-        ].map(port => [port.name, 0]),
-      ),
+      {
+        output: Object.fromEntries(
+          [
+            ...component.ports.input,
+            ...component.ports.output,
+          ].map(port => [port.name, 0]),
+        ),
+        properties: component.getProperties(),
+      },
     ]),
   );
 
@@ -109,12 +112,16 @@ export const initializeDiffAndValues = () => {
   });
 };
 
-export const appendComponentDiff = (componentId, value) => {
-  if (!self.diff.components[componentId]) {
-    self.diff.components[componentId] = {};
+export const appendComponentDiff = (component, output) => {
+  if (!self.diff.components[component.id]) {
+    self.diff.components[component.id] = {
+      output: {},
+      properties: {},
+    };
   }
-  self.diff.components[componentId] = {
-    ...self.diff.components[componentId],
-    ...value,
+  self.diff.components[component.id] = {
+    ...self.diff.components[component.id],
+    output,
+    properties: component.getProperties(),
   };
 };

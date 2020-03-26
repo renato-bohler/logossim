@@ -33,7 +33,8 @@ import {
 self.circuit = null; // circuit information
 self.diff = null; // diff to send back to the app
 self.emitQueue = []; // emitted changes that are pending
-self.stepQueue = []; // stores components that are pending propagation
+self.stepQueue = []; // components that are pending propagation
+self.workInterval = null; // main execution interval
 
 /**
  * Worker message handling
@@ -41,8 +42,6 @@ self.stepQueue = []; // stores components that are pending propagation
 self.addEventListener(
   'message',
   ({ data: { command, diagram, emitted } }) => {
-    let workInterval;
-
     switch (command) {
       /**
        * START
@@ -60,7 +59,7 @@ self.addEventListener(
 
         // Main workload
         executeNextEmitted();
-        workInterval = setInterval(executeNextEmitted);
+        self.workInterval = setInterval(executeNextEmitted);
         break;
 
       /**
@@ -70,7 +69,7 @@ self.addEventListener(
         self.circuit.components.forEach(component =>
           component.onSimulationPause(),
         );
-        clearInterval(workInterval);
+        clearInterval(self.workInterval);
         break;
 
       /**
@@ -80,7 +79,7 @@ self.addEventListener(
         self.circuit.components.forEach(component =>
           component.onSimulationStop(),
         );
-        clearInterval(workInterval);
+        clearInterval(self.workInterval);
         setTimeout(() => {
           postMessage({ type: 'clear' });
           self.circuit = null;
@@ -106,7 +105,7 @@ self.addEventListener(
 /**
  * Handles the next emitted event on the emit queue and propagates it.
  */
-const executeNextEmitted = () => {
+const executeNextEmitted = (first = true) => {
   if (!self.circuit) return;
 
   const emitted = self.emitQueue.shift();
@@ -115,12 +114,16 @@ const executeNextEmitted = () => {
   const emitter = getComponent(emitted.from);
   emitter.setOutputValues(emitted.value);
 
-  appendComponentDiff(emitted.from, emitted.value);
+  appendComponentDiff(emitter, emitted.value);
   propagate(emitted);
   executeNextStep();
 
-  postMessage({ type: 'diff', diff: self.diff });
-  self.diff = getCleanDiff();
+  executeNextEmitted(false);
+
+  if (first) {
+    postMessage({ type: 'diff', diff: self.diff });
+    self.diff = getCleanDiff();
+  }
 };
 
 /**
@@ -159,7 +162,7 @@ const executeNextStep = () => {
 
   if (component.hasOutputChanged(output)) {
     component.setOutputValues(output);
-    appendComponentDiff(component.id, output);
+    appendComponentDiff(component, output);
     propagate({ from: component.id, value: output });
   }
 
@@ -191,7 +194,7 @@ const propagate = emitted => {
 
       component.setInputValues(portsWithNewValue);
 
-      appendComponentDiff(component.id, portsWithNewValue);
+      appendComponentDiff(component, portsWithNewValue);
 
       self.stepQueue.push(component);
     });

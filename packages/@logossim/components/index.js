@@ -1,8 +1,9 @@
 import And from './And/AndRegister';
 import Or from './Or/OrRegister';
 import Button from './Button/ButtonRegister';
+import Clock from './Clock/ClockRegister';
 
-const components = [And, Or, Button];
+const components = [And, Or, Button, Clock];
 
 export default components;
 

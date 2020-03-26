@@ -1,8 +1,6 @@
 import { BaseModel } from '@logossim/core';
 
 export default class AndModel extends BaseModel {
-  mod = 0;
-
   initialize(configurations) {
     const INPUT_PORTS_NUMBER = parseInt(
       configurations.INPUT_PORTS_NUMBER,

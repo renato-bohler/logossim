@@ -30,19 +30,17 @@ export default class App extends Component {
     this.simulation = new SimulationEngine(components);
   }
 
-  applySimulationDiff = () => {
+  synchronizeSimulation = () => {
     const diff = this.simulation.getDiff();
 
-    // Handles port value diff
-    Object.entries(diff.components).forEach(([id, value]) =>
-      Object.entries(value).forEach(([portName, portValue]) =>
-        this.diagram.setPortValue(id, portName, portValue),
-      ),
+    // Handles components diff
+    Object.entries(diff.components).forEach(([id, componentDiff]) =>
+      this.diagram.synchronizeComponent(id, componentDiff),
     );
 
     // Handles link value diff
     Object.entries(diff.links).forEach(([id, value]) =>
-      this.diagram.setLinkValue(id, value),
+      this.diagram.synchronizeLink(id, value),
     );
 
     this.simulation.clearDiff();
@@ -52,7 +50,7 @@ export default class App extends Component {
   renderSimulation = () => {
     if (!this.simulation.isRunning()) return;
 
-    this.applySimulationDiff();
+    this.synchronizeSimulation();
 
     requestAnimationFrame(this.renderSimulation);
   };
@@ -64,10 +62,10 @@ export default class App extends Component {
   };
 
   handleClickLoad = () => {
-    const { circuit } = this.state;
+    let { circuit } = this.state;
     if (!circuit) {
-      window.alert('No circuit has been saved yet');
-      return;
+      circuit = window.prompt('Enter the circuit to load (JSON)');
+      if (!circuit) return;
     }
 
     this.diagram.load(JSON.parse(circuit));

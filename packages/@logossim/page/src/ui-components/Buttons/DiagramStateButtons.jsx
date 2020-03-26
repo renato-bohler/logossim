@@ -33,7 +33,10 @@ const Button = styled.button.attrs(({ ...props }) => ({
   padding: 5px 20px;
   margin: 5px;
 
+  transition: 0.5s ease-in-out;
+
   &:disabled {
+    opacity: 10%;
     cursor: not-allowed;
     background: gray;
   }
