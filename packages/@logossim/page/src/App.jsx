@@ -22,7 +22,6 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      circuit: undefined,
       isComponentSelectOpen: false,
     };
 
@@ -57,15 +56,15 @@ export default class App extends Component {
 
   handleClickSave = () => {
     const serialized = JSON.stringify(this.diagram.serialize());
-    this.setState({ circuit: serialized });
+    localStorage.setItem('circuit', serialized);
     console.log(JSON.parse(serialized));
   };
 
   handleClickLoad = () => {
-    let { circuit } = this.state;
+    const circuit = localStorage.getItem('circuit');
     if (!circuit) {
-      circuit = window.prompt('Enter the circuit to load (JSON)');
-      if (!circuit) return;
+      window.alert('No circuit has been saved yet');
+      return;
     }
 
     this.diagram.load(JSON.parse(circuit));
