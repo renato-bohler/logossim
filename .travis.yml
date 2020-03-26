@@ -14,7 +14,7 @@ before_deploy:
 deploy:
   strategy: git
   provider: pages
-  cleanup: false
+  skip_cleanup: true
   token: $GITHUB_TOKEN
   local_dir: packages/@logossim/page/build
   verbose: true
