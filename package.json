@@ -36,13 +36,12 @@
     "react-app-rewire-babel-loader": "^0.1.1",
     "react-app-rewired": "^2.1.5",
     "react-dom": "^16.13.0",
-    "react-scripts": "3.4.0",
+    "react-scripts": "3.4.1",
     "react-tooltip": "^4.1.0",
     "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/helper-call-delegate": "^7.8.7",
     "eslint": "^6.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.1.0",
