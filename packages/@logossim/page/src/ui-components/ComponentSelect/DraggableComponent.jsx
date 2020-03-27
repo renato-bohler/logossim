@@ -1,5 +1,6 @@
 import React from 'react';
 import Tooltip from 'react-tooltip';
+import styled from 'styled-components';
 
 const engineStub = {
   registerListener: () => {},
@@ -11,6 +12,13 @@ const engineStub = {
   }),
   getModel: () => ({ isLocked: () => false }),
 };
+
+const ErrorWidget = styled.div`
+  border: 1px dashed var(--value-error);
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+`;
 
 const DraggableComponent = ({
   component: { type, Widget, Model },
@@ -44,10 +52,14 @@ const DraggableComponent = ({
     data-tip={error ? 'Check form errors' : 'Drag me!'}
     data-place="bottom"
   >
-    <Widget
-      engine={engineStub}
-      model={new Model(type, configurations)}
-    />
+    {error ? (
+      <ErrorWidget />
+    ) : (
+      <Widget
+        engine={engineStub}
+        model={new Model(type, configurations)}
+      />
+    )}
   </div>
 );
 
