@@ -11,23 +11,18 @@ export default new Component({
   configurations: [
     {
       name: 'INPUT_PORTS_NUMBER',
-      type: 'select',
-      default: '2',
+      type: 'number',
+      default: 2,
       label: 'Number of input ports',
-      options: [
-        {
-          label: 'Two',
-          value: '2',
-        },
-        {
-          label: 'Three',
-          value: '3',
-        },
-        {
-          label: 'Five',
-          value: '5',
-        },
-      ],
+      min: 2,
+      max: 32,
+      validate(value) {
+        if (value < this.min)
+          return `Minimum input ports is ${this.min}`;
+        if (value > this.max)
+          return `Maximum input ports is ${this.max}`;
+        return null;
+      },
     },
   ],
   model,

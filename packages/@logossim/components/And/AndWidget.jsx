@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Port } from '@logossim/core';
 
+import { PortExtension, distributePorts } from '../portExtendUtils';
+
 const Wrapper = styled.div`
   position: relative;
   display: flex;
@@ -29,24 +31,11 @@ const PositionedPort = styled(Port)`
 
   ${props => {
     if (props.name === 'out') return '';
-
-    const spaceBetweenPorts =
-      (5 - props.numberOfPorts) / (props.numberOfPorts - 1);
-
-    const portPosition =
-      props.portNumber === 0
-        ? 1
-        : props.portNumber * (spaceBetweenPorts + 1) + 1;
-
-    const topPosition = portPosition * 15 - 5;
-
-    return `top: ${topPosition}px;`;
+    return `top: ${props.position * 15 - 5}px;`;
   }}
 
   ${props => {
-    if (props.name === 'out') {
-      return 'right: -5px';
-    }
+    if (props.name === 'out') return 'right: -5px';
     return 'left: -5px';
   }};
 `;
@@ -73,9 +62,14 @@ const AndWidget = props => {
   const { model, engine } = props;
 
   const inputPorts = Object.values(model.getInputPorts());
+  const portPositions = distributePorts(inputPorts.length);
 
   return (
     <Wrapper selected={model.isSelected()}>
+      <PortExtension
+        selected={model.isSelected()}
+        portPositions={portPositions}
+      />
       {inputPorts.map((port, i) => (
         <PositionedPort
           key={port.getName()}
@@ -83,8 +77,7 @@ const AndWidget = props => {
           model={model}
           port={port}
           engine={engine}
-          numberOfPorts={inputPorts.length}
-          portNumber={i}
+          position={portPositions[i]}
         />
       ))}
       <PositionedPort
