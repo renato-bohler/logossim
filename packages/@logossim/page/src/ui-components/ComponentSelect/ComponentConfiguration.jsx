@@ -43,6 +43,8 @@ const DragArea = styled.div`
     )`};
   background-size: 45px 45px;
   border-radius: 25px;
+
+  overflow: hidden;
 `;
 
 const Title = styled.h1`
