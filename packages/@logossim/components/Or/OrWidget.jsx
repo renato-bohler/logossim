@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import styled from 'styled-components';
 import { Port } from '@logossim/core';
 
@@ -105,9 +105,8 @@ const OrWidget = props => {
         offsetX={12}
       />
       {inputPorts.map((port, i) => (
-        <>
+        <Fragment key={port.getName()}>
           <PositionedPort
-            key={port.getName()}
             name={port.getName()}
             model={model}
             port={port}
@@ -120,7 +119,7 @@ const OrWidget = props => {
               position={portPositions[i]}
             />
           )}
-        </>
+        </Fragment>
       ))}
       <PositionedPort
         name="out"
