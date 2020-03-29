@@ -31,7 +31,7 @@ export const distributePorts = numPorts => {
 
 const PortExtensionBar = styled.div`
   position: absolute;
-  left: 1px;
+  left: ${props => props.offsetX}px;
   height: ${props => props.size}px;
   width: 2px;
   background: ${props =>
@@ -42,7 +42,11 @@ const PortExtensionBar = styled.div`
   ${props => `${props.place}: 88px;`}
 `;
 
-export const PortExtension = ({ selected, portPositions }) => {
+export const PortExtension = ({
+  selected,
+  portPositions,
+  offsetX = 1,
+}) => {
   const lastPortPosition = portPositions[portPositions.length - 1];
   if (lastPortPosition <= MAX_PORTS) return null;
 
@@ -50,11 +54,17 @@ export const PortExtension = ({ selected, portPositions }) => {
 
   return (
     <>
-      <PortExtensionBar selected={selected} size={size} place="top" />
+      <PortExtensionBar
+        selected={selected}
+        size={size}
+        place="top"
+        offsetX={offsetX}
+      />
       <PortExtensionBar
         selected={selected}
         size={size}
         place="bottom"
+        offsetX={offsetX}
       />
     </>
   );

@@ -1,13 +1,21 @@
 import { BaseModel } from '@logossim/core';
 
 export default class OrModel extends BaseModel {
-  initialize() {
-    this.addInputPort('in0');
-    this.addInputPort('in1');
+  initialize(configurations) {
+    const INPUT_PORTS_NUMBER = parseInt(
+      configurations.INPUT_PORTS_NUMBER,
+      10,
+    );
+
+    for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
+      this.addInputPort(`in${i}`);
+    }
     this.addOutputPort('out');
   }
 
   step(input) {
-    return { out: input.in0 || input.in1 };
+    return {
+      out: Object.values(input).some(value => !!value) ? 1 : 0,
+    };
   }
 }
