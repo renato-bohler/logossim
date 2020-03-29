@@ -21,6 +21,10 @@ body {
   user-select: none;
 
   /* Variables */
+  --offset-x: 0px;
+  --offset-y: 0px;
+  --grid-size: 15px;
+
   --background: #eee;
 
   --link-unselected: gray;
