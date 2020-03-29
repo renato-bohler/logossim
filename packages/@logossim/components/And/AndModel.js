@@ -15,7 +15,7 @@ export default class AndModel extends BaseModel {
 
   step(input) {
     return {
-      out: Object.values(input).every(value => !!value) ? 1 : 0,
+      out: Object.values(input).every(value => value === 1) ? 1 : 0,
     };
   }
 }
