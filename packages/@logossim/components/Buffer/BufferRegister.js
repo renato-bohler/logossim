@@ -7,7 +7,7 @@ export default new Component({
   type: 'Buffer',
   name: 'Buffer',
   description: 'Simple buffer',
-  group: 'Input & output',
+  group: 'Logic gates',
   configurations: [],
   model,
   widget,
