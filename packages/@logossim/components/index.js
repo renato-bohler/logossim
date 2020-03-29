@@ -6,6 +6,7 @@ import Xor from './Xor/XorRegister';
 import Xnor from './Xnor/XnorRegister';
 import Button from './Button/ButtonRegister';
 import Buffer from './Buffer/BufferRegister';
+import Not from './Not/NotRegister';
 import Clock from './Clock/ClockRegister';
 
 const components = [
@@ -16,6 +17,7 @@ const components = [
   Xor,
   Xnor,
   Buffer,
+  Not,
   Button,
   Clock,
 ];
