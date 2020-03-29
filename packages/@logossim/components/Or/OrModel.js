@@ -15,7 +15,7 @@ export default class OrModel extends BaseModel {
 
   step(input) {
     return {
-      out: Object.values(input).some(value => !!value) ? 1 : 0,
+      out: Object.values(input).some(value => value === 1) ? 1 : 0,
     };
   }
 }

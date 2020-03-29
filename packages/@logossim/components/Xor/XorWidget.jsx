@@ -67,9 +67,19 @@ export const Shape = ({ size = 90, portPositions = [] }) => (
   >
     <g>
       <path
-        d="m 12.810547,2 c 5.50133,9.517685 8.779279,25.095781 8.779297,41.722656 C 21.590006,62.052878 17.611871,78.966668 11.175781,88 H 45 C 68.748245,88.000001 88.005576,45.650843 88,45 87.994195,44.322314 68.748245,1.9999989 45,2 h -0.271484 z"
-        transform="scale(0.26458333)"
+        fill="none"
+        style={{
+          transform:
+            'scale(0.284583, 0.284583) translate(-1px, -3px)',
+        }}
+        d="m 11.926664,1.1161165 c 5.50133,9.5176855 9.663162,25.9796645 9.66318,42.6065395 m 0,0 c 1.62e-4,18.330222 -4.950245,36.216284 -11.386335,45.249616"
       />
+      <g transform="translate(1.8657598)">
+        <path
+          d="m 12.810547,2 c 5.50133,9.517685 8.779279,25.095781 8.779297,41.722656 C 21.590006,62.052878 17.611871,78.966668 11.175781,88 H 37.875 c 23.748245,0 43.005576,-42.349157 43,-43 -0.0058,-0.677686 -19.251755,-43 -43,-43 h -0.271484 z"
+          transform="scale(0.26458333)"
+        />
+      </g>
     </g>
     <g strokeWidth={0.5}>
       {portPositions.includes(1) && (
@@ -91,7 +101,7 @@ export const Shape = ({ size = 90, portPositions = [] }) => (
   </svg>
 );
 
-const OrWidget = props => {
+const XorWidget = props => {
   const { model, engine } = props;
 
   const inputPorts = Object.values(model.getInputPorts());
@@ -132,4 +142,4 @@ const OrWidget = props => {
   );
 };
 
-export default OrWidget;
+export default XorWidget;
