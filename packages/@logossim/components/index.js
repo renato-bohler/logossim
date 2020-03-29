@@ -2,9 +2,10 @@ import And from './And/AndRegister';
 import Or from './Or/OrRegister';
 import Xor from './Xor/XorRegister';
 import Button from './Button/ButtonRegister';
+import Buffer from './Buffer/BufferRegister';
 import Clock from './Clock/ClockRegister';
 
-const components = [And, Or, Xor, Button, Clock];
+const components = [And, Or, Xor, Buffer, Button, Clock];
 
 export default components;
 
