@@ -3,11 +3,22 @@ import Nand from './Nand/NandRegister';
 import Or from './Or/OrRegister';
 import Nor from './Nor/NorRegister';
 import Xor from './Xor/XorRegister';
+import Xnor from './Xnor/XnorRegister';
 import Button from './Button/ButtonRegister';
 import Buffer from './Buffer/BufferRegister';
 import Clock from './Clock/ClockRegister';
 
-const components = [And, Nand, Or, Nor, Xor, Buffer, Button, Clock];
+const components = [
+  And,
+  Nand,
+  Or,
+  Nor,
+  Xor,
+  Xnor,
+  Buffer,
+  Button,
+  Clock,
+];
 
 export default components;
 
