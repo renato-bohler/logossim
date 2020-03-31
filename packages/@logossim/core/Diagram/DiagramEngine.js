@@ -17,6 +17,11 @@ export default class DiagramEngine {
     this.initializeModel();
   }
 
+  getEngine = () => this.engine;
+
+  /**
+   * Initialization methods
+   */
   initializeEngine = () => {
     this.engine = createEngine();
 
@@ -45,14 +50,15 @@ export default class DiagramEngine {
     this.engine.setModel(this.model);
   };
 
-  getEngine = () => this.engine;
-
   registerComponents = () => {
     this.components.forEach(component => {
       this.engine.getNodeFactories().registerFactory(component);
     });
   };
 
+  /**
+   * Serializing & deserializing methods
+   */
   serialize = () => this.model.serialize();
 
   load = circuit => {
@@ -61,6 +67,9 @@ export default class DiagramEngine {
     this.engine.repaintCanvas();
   };
 
+  /**
+   * Diagram locking methods
+   */
   setLocked = locked => {
     this.model.setLocked(locked);
     this.locked = locked;
@@ -68,6 +77,9 @@ export default class DiagramEngine {
 
   isLocked = () => this.locked;
 
+  /**
+   * Diagram painting methods
+   */
   repaint = () => this.engine.repaintCanvas();
 
   realignGrid = () => {
@@ -94,21 +106,24 @@ export default class DiagramEngine {
     );
   };
 
-  getSnappedRelativeMousePoint = event => {
-    const { x, y } = this.engine.getRelativeMousePoint(event);
-    return new Point(
-      Math.round(x / 15) * 15,
-      Math.round(y / 15) * 15,
-    );
-  };
-
+  /**
+   * Component creation and configuration methods
+   */
   handleComponentDrop = (event, component) => {
     const { Model } = this.components.find(
       c => c.type === component.type,
     );
 
+    const getSnappedRelativeMousePoint = () => {
+      const { x, y } = this.engine.getRelativeMousePoint(event);
+      return new Point(
+        Math.round(x / 15) * 15,
+        Math.round(y / 15) * 15,
+      );
+    };
+
     const point = event
-      ? this.getSnappedRelativeMousePoint(event)
+      ? getSnappedRelativeMousePoint(event)
       : new Point(0, 0);
 
     const node = new Model(component.type, component.configurations);
@@ -123,6 +138,9 @@ export default class DiagramEngine {
       .getModel()
       .clearSelection();
 
+  /**
+   * Simulation methods
+   */
   synchronizeLink = (id, value) =>
     this.getEngine()
       .getModel()
