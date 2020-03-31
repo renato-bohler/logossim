@@ -1,4 +1,5 @@
 import { NodeModel } from '@projectstorm/react-diagrams';
+import { Point } from '@projectstorm/geometry';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';
@@ -73,6 +74,12 @@ export default class BaseModel extends NodeModel {
         ([, port]) => !port.isInput(),
       ),
     );
+  }
+
+  clone(...args) {
+    const clone = super.clone(...args);
+    clone.setPosition(new Point(this.getX() + 15, this.getY() + 15));
+    return clone;
   }
 
   initialize() {}

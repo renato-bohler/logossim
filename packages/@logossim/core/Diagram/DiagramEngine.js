@@ -7,6 +7,7 @@ import States from './states/States';
 
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
+import BaseModel from '../BaseModel';
 
 export default class DiagramEngine {
   constructor(components) {
@@ -137,6 +138,23 @@ export default class DiagramEngine {
     this.getEngine()
       .getModel()
       .clearSelection();
+
+  cloneSelected = () => {
+    const selectedNodes = this.engine
+      .getModel()
+      .getSelectedEntities()
+      .filter(entity => entity instanceof BaseModel);
+
+    this.clearSelection();
+
+    const clones = selectedNodes.map(node => node.clone());
+    clones.forEach(clone => {
+      this.model.addNode(clone);
+      clone.setSelected(true);
+    });
+
+    this.engine.repaintCanvas();
+  };
 
   /**
    * Simulation methods
