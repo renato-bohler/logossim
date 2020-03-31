@@ -7,13 +7,13 @@ import ContextMenuIconContainer from './ContextMenuIconContainer';
 
 const DiagramContextMenu = () => (
   <Menu id="diagram">
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: handle undo')}>
       <ContextMenuIconContainer>
         <Undo size={16} />
       </ContextMenuIconContainer>
       Undo
     </Item>
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: handle redo')}>
       <ContextMenuIconContainer>
         <Redo size={16} />
       </ContextMenuIconContainer>

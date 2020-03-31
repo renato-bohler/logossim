@@ -17,32 +17,32 @@ import ContextMenuIconContainer from './ContextMenuIconContainer';
 
 const ComponentContextMenu = () => (
   <Menu id="component">
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: clone feature')}>
       <ContextMenuIconContainer>
         <Clone size={16} />
       </ContextMenuIconContainer>
       Clone
     </Item>
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: copy feature')}>
       <ContextMenuIconContainer>
         <Copy size={16} />
       </ContextMenuIconContainer>
       Copy
     </Item>
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: paste feature')}>
       <ContextMenuIconContainer>
         <Paste size={16} />
       </ContextMenuIconContainer>
       Paste
     </Item>
     <Separator />
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: undo feature')}>
       <ContextMenuIconContainer>
         <Undo size={16} />
       </ContextMenuIconContainer>
       Undo
     </Item>
-    <Item onClick={console.log}>
+    <Item onClick={() => window.alert('TODO: redo feature')}>
       <ContextMenuIconContainer>
         <Redo size={16} />
       </ContextMenuIconContainer>
@@ -58,20 +58,28 @@ const ComponentContextMenu = () => (
       }
       arrow={<ArrowRight size={10} />}
     >
-      <Item onClick={console.log}>
+      <Item
+        onClick={() => window.alert('TODO: rotate clockwise feature')}
+      >
         <ContextMenuIconContainer>
           <RotateClockwise size={16} />
         </ContextMenuIconContainer>
         Clockwise
       </Item>
-      <Item onClick={console.log}>
+      <Item
+        onClick={() =>
+          window.alert('TODO: rotate counterclockwise feature')
+        }
+      >
         <ContextMenuIconContainer>
           <RotateCounterclockwise size={16} />
         </ContextMenuIconContainer>
         Counterclockwise
       </Item>
     </Submenu>
-    <Item onClick={console.log}>
+    <Item
+      onClick={() => window.alert('TODO: configurations feature')}
+    >
       <ContextMenuIconContainer>
         <Settings size={16} />
       </ContextMenuIconContainer>
