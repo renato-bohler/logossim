@@ -5,10 +5,10 @@ import 'react-contexify/dist/ReactContexify.min.css';
 import DiagramContextMenu from './DiagramContextMenu';
 import ComponentContextMenu from './ComponentContextMenu';
 
-const ContextMenus = () => (
+const ContextMenus = ({ clone }) => (
   <>
     <DiagramContextMenu />
-    <ComponentContextMenu />
+    <ComponentContextMenu clone={clone} />
   </>
 );
 

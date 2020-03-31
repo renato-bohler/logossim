@@ -15,9 +15,9 @@ import {
 } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
-const ComponentContextMenu = () => (
+const ComponentContextMenu = ({ clone }) => (
   <Menu id="component">
-    <Item onClick={() => window.alert('TODO: clone feature')}>
+    <Item onClick={clone}>
       <ContextMenuIconContainer>
         <Clone size={16} />
       </ContextMenuIconContainer>
