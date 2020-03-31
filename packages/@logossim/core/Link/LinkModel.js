@@ -6,8 +6,8 @@ import {
 } from '@projectstorm/react-diagrams';
 import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 
-import { isValueValid } from '../Simulation/utils';
 import { sameAxis } from '../Diagram/states/common';
+import { isValueValid } from '../Simulation/utils';
 
 export default class LinkModel extends RDLinkModel {
   constructor(options) {

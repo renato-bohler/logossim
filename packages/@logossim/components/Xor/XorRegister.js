@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './XorWidget';
-import model from './XorModel';
+
 import icon from './XorIcon';
+import model from './XorModel';
+import widget from './XorWidget';
 
 export default new Component({
   type: 'Xor',

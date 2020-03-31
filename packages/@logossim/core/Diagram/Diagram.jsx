@@ -1,7 +1,9 @@
 import React from 'react';
 import { MenuProvider } from 'react-contexify';
-import styled from 'styled-components';
+
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
+
+import styled from 'styled-components';
 
 import DroppableLayer from './DroppableLayer';
 

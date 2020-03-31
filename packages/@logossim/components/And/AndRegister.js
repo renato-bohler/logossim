@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './AndWidget';
-import model from './AndModel';
+
 import icon from './AndIcon';
+import model from './AndModel';
+import widget from './AndWidget';
 
 export default new Component({
   type: 'And',

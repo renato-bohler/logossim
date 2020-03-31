@@ -2,8 +2,8 @@ import React from 'react';
 
 import 'react-contexify/dist/ReactContexify.min.css';
 
-import DiagramContextMenu from './DiagramContextMenu';
 import ComponentContextMenu from './ComponentContextMenu';
+import DiagramContextMenu from './DiagramContextMenu';
 
 const ContextMenus = ({ clone }) => (
   <>

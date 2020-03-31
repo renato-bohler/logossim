@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Tooltip from 'react-tooltip';
+
 import styled from 'styled-components';
 
-import { Header, Content, IconButton } from './ComponentLayout';
-import ComponentGroup from './ComponentGroup';
 import { Close } from '../Icons';
+import ComponentGroup from './ComponentGroup';
+import { Header, Content, IconButton } from './ComponentLayout';
 
 const SearchBar = styled.input`
   flex-grow: 1;

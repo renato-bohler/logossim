@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Menu, Item } from 'react-contexify';
 
 import { Redo, Undo } from '../Icons';

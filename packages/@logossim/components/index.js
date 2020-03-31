@@ -1,13 +1,13 @@
 import And from './And/AndRegister';
-import Nand from './Nand/NandRegister';
-import Or from './Or/OrRegister';
-import Nor from './Nor/NorRegister';
-import Xor from './Xor/XorRegister';
-import Xnor from './Xnor/XnorRegister';
-import Button from './Button/ButtonRegister';
 import Buffer from './Buffer/BufferRegister';
-import Not from './Not/NotRegister';
+import Button from './Button/ButtonRegister';
 import Clock from './Clock/ClockRegister';
+import Nand from './Nand/NandRegister';
+import Nor from './Nor/NorRegister';
+import Not from './Not/NotRegister';
+import Or from './Or/OrRegister';
+import Xnor from './Xnor/XnorRegister';
+import Xor from './Xor/XorRegister';
 
 const components = [
   And,

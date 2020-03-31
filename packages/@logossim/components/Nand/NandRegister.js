@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './NandWidget';
-import model from './NandModel';
+
 import icon from './NandIcon';
+import model from './NandModel';
+import widget from './NandWidget';
 
 export default new Component({
   type: 'Nand',

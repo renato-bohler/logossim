@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './NotWidget';
-import model from './NotModel';
+
 import icon from './NotIcon';
+import model from './NotModel';
+import widget from './NotWidget';
 
 export default new Component({
   type: 'Not',

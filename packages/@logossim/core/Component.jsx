@@ -1,6 +1,7 @@
 import React from 'react';
-import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 import { MenuProvider } from 'react-contexify';
+
+import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 
 export default class Component extends AbstractReactFactory {
   constructor({

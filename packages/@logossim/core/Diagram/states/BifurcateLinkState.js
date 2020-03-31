@@ -18,7 +18,6 @@ import {
   sameAxis,
   closestPointToLink,
 } from './common';
-
 import {
   handleMouseMoved,
   handleReverseBifurcation,

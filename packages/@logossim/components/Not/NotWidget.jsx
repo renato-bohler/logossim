@@ -1,6 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import { Port } from '@logossim/core';
+
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   position: relative;

@@ -1,6 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import { PortWidget } from '@projectstorm/react-diagrams';
+
+import styled from 'styled-components';
 
 const Circle = styled.div`
   width: 10px;

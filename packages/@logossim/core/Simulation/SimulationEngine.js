@@ -1,5 +1,5 @@
-import SimulationWorker from './simulation.worker';
 import serialize from './serialize';
+import SimulationWorker from './simulation.worker';
 import { getCleanDiff } from './utils';
 
 const worker = new SimulationWorker();

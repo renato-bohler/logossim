@@ -1,4 +1,5 @@
 import React from 'react';
+
 import styled from 'styled-components';
 
 import { Play, Pause, Stop } from '../Icons';

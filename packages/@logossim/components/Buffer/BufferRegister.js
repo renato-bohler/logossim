@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './BufferWidget';
-import model from './BufferModel';
+
 import icon from './BufferIcon';
+import model from './BufferModel';
+import widget from './BufferWidget';
 
 export default new Component({
   type: 'Buffer',

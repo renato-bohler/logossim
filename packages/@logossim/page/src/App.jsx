@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Tooltip from 'react-tooltip';
 
+import components, { groupedComponents } from '@logossim/components';
 import {
   SimulationEngine,
   DiagramEngine,
   Diagram,
 } from '@logossim/core';
-import components, { groupedComponents } from '@logossim/components';
 
 import {
   DiagramStateButtons,

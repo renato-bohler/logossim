@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './NorWidget';
-import model from './NorModel';
+
 import icon from './NorIcon';
+import model from './NorModel';
+import widget from './NorWidget';
 
 export default new Component({
   type: 'Nor',

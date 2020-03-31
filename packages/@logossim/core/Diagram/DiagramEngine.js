@@ -1,13 +1,12 @@
+import { Point } from '@projectstorm/geometry';
 import createEngine, {
   DiagramModel,
 } from '@projectstorm/react-diagrams';
-import { Point } from '@projectstorm/geometry';
 
-import States from './states/States';
-
+import BaseModel from '../BaseModel';
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
-import BaseModel from '../BaseModel';
+import States from './states/States';
 
 export default class DiagramEngine {
   constructor(components) {
