@@ -1,4 +1,5 @@
 import React from 'react';
+import { MenuProvider } from 'react-contexify';
 import styled from 'styled-components';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 
@@ -10,14 +11,16 @@ const FullscreenCanvas = styled(CanvasWidget)`
 `;
 
 const Diagram = ({ engine }) => (
-  <DroppableLayer
-    handleComponentDrop={(...args) =>
-      engine.handleComponentDrop(...args)
-    }
-    disabled={engine.isLocked()}
-  >
-    <FullscreenCanvas engine={engine.getEngine()} />
-  </DroppableLayer>
+  <MenuProvider id="diagram" storeRef={false} data={{ test: 1 }}>
+    <DroppableLayer
+      handleComponentDrop={(...args) =>
+        engine.handleComponentDrop(...args)
+      }
+      disabled={engine.isLocked()}
+    >
+      <FullscreenCanvas engine={engine.getEngine()} />
+    </DroppableLayer>
+  </MenuProvider>
 );
 
 export default Diagram;

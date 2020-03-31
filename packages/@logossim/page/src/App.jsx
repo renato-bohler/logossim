@@ -21,9 +21,11 @@ import {
   Clone,
   Copy,
   Paste,
+  Redo,
   RotateClockwise,
   RotateCounterclockwise,
   Settings,
+  Undo,
 } from './ui-components/Icons';
 
 import './App.css';
@@ -171,6 +173,19 @@ export default class App extends Component {
             Paste
           </Item>
           <Separator />
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Undo size={16} />
+            </MenuIconContainer>
+            Undo
+          </Item>
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Redo size={16} />
+            </MenuIconContainer>
+            Redo
+          </Item>
+          <Separator />
           <Submenu
             label={
               <div style={{ display: 'flex' }}>
@@ -198,6 +213,20 @@ export default class App extends Component {
               <Settings size={16} />
             </MenuIconContainer>
             Configurations...
+          </Item>
+        </Menu>
+        <Menu id="diagram">
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Undo size={16} />
+            </MenuIconContainer>
+            Undo
+          </Item>
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Redo size={16} />
+            </MenuIconContainer>
+            Redo
           </Item>
         </Menu>
       </>
