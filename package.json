@@ -35,6 +35,7 @@
     "react": "^16.13.0",
     "react-app-rewire-babel-loader": "^0.1.1",
     "react-app-rewired": "^2.1.5",
+    "react-contexify": "^4.1.1",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.1",
     "react-tooltip": "^4.1.0",
