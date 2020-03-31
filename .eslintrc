@@ -13,6 +13,10 @@
       1,
       { "extensions": [".js", ".jsx"] }
     ],
+    "react/jsx-wrap-multilines": [
+      "error",
+      { "declaration": false, "assignment": false }
+    ],
     "import/prefer-default-export": "warn",
     "import/no-extraneous-dependencies": "off",
     "class-methods-use-this": "off",
