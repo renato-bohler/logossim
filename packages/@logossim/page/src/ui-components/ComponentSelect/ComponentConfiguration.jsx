@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Formik, Form, Field } from 'formik';
 
 import { Header, Content, IconButton } from './ComponentLayout';
-import { Back, Close } from '../Icons';
+import { ArrowLeft, Close } from '../Icons';
 import DraggableComponent from './DraggableComponent';
 import ComponentConfigurationInput from './ComponentConfigurationInput';
 
@@ -121,7 +121,7 @@ const ComponentConfiguration = ({
           data-tip="Go back..."
           data-place="right"
         >
-          <Back />
+          <ArrowLeft />
         </IconButton>
         <Title>Configure component</Title>
         <IconButton

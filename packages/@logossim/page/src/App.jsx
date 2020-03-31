@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import Tooltip from 'react-tooltip';
+import { Menu, Item, Separator, Submenu } from 'react-contexify';
 
 import {
   SimulationEngine,
@@ -14,8 +16,27 @@ import {
   ComponentSelectButton,
   ComponentSelect,
 } from './ui-components';
+import {
+  ArrowRight,
+  Clone,
+  Copy,
+  Paste,
+  RotateClockwise,
+  RotateCounterclockwise,
+  Settings,
+} from './ui-components/Icons';
 
 import './App.css';
+import 'react-contexify/dist/ReactContexify.min.css';
+
+const MenuIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  width: 16px;
+  height: 16px;
+  margin-right: 16px;
+`;
 
 export default class App extends Component {
   constructor(props) {
@@ -130,6 +151,55 @@ export default class App extends Component {
         />
         <Diagram engine={this.diagram} />
         <Tooltip id="tooltip" globalEventOff="click" />
+        <Menu id="component">
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Clone size={16} />
+            </MenuIconContainer>
+            Clone
+          </Item>
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Copy size={16} />
+            </MenuIconContainer>
+            Copy
+          </Item>
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Paste size={16} />
+            </MenuIconContainer>
+            Paste
+          </Item>
+          <Separator />
+          <Submenu
+            label={
+              <div style={{ display: 'flex' }}>
+                <MenuIconContainer />
+                Rotate
+              </div>
+            }
+            arrow={<ArrowRight size={10} />}
+          >
+            <Item onClick={console.log}>
+              <MenuIconContainer>
+                <RotateClockwise size={16} />
+              </MenuIconContainer>
+              Clockwise
+            </Item>
+            <Item onClick={console.log}>
+              <MenuIconContainer>
+                <RotateCounterclockwise size={16} />
+              </MenuIconContainer>
+              Counterclockwise
+            </Item>
+          </Submenu>
+          <Item onClick={console.log}>
+            <MenuIconContainer>
+              <Settings size={16} />
+            </MenuIconContainer>
+            Configurations...
+          </Item>
+        </Menu>
       </>
     );
   }

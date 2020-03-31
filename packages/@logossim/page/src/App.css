@@ -53,3 +53,8 @@ body {
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
+
+.react-contexify__item__content {
+  display: flex;
+  align-items: center;
+}
