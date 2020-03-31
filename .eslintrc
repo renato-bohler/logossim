@@ -1,7 +1,7 @@
 {
   "parser": "babel-eslint",
   "extends": ["airbnb", "prettier"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "import-helpers"],
   "rules": {
     "prettier/prettier": ["error"],
     "react/prop-types": "off",
@@ -19,6 +19,21 @@
     ],
     "import/prefer-default-export": "warn",
     "import/no-extraneous-dependencies": "off",
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always",
+        "groups": [
+          "/^react/",
+          "/^@projectstorm/",
+          "/^@logossim/",
+          "module",
+          "/^./modules/",
+          ["index", "parent", "sibling"]
+        ],
+        "alphabetize": { "order": "asc", "ignoreCase": true },
+      }
+    ],
     "class-methods-use-this": "off",
     "prefer-destructuring": [
       "error",
