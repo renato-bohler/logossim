@@ -13,6 +13,7 @@ import {
   SimulationControlButtons,
   ComponentSelectButton,
   ComponentSelect,
+  ContextMenus,
 } from './ui-components';
 
 import './App.css';
@@ -130,6 +131,7 @@ export default class App extends Component {
         />
         <Diagram engine={this.diagram} />
         <Tooltip id="tooltip" globalEventOff="click" />
+        <ContextMenus />
       </>
     );
   }

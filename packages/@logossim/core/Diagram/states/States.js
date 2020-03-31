@@ -2,7 +2,6 @@ import {
   State,
   Action,
   InputType,
-  DragCanvasState,
 } from '@projectstorm/react-canvas-core';
 import {
   PortModel,
@@ -10,6 +9,7 @@ import {
 } from '@projectstorm/react-diagrams-core';
 
 import BifurcateLinkState from './BifurcateLinkState';
+import DragCanvasState from './DragCanvasState';
 import DragNewLinkState from './DragNewLinkState';
 import MoveItemsState from './MoveItemsState';
 import SelectingState from './SelectingState';

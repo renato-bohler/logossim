@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Back = ({ size = 16, color = 'gray' }) => (
+const ArrowLeft = ({ size = 16, color = 'gray' }) => (
   <svg
     width={size}
     height={size}
@@ -11,4 +11,4 @@ const Back = ({ size = 16, color = 'gray' }) => (
   </svg>
 );
 
-export default Back;
+export default ArrowLeft;

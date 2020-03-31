@@ -1,5 +1,6 @@
 import React from 'react';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
+import { MenuProvider } from 'react-contexify';
 
 export default class Component extends AbstractReactFactory {
   constructor({
@@ -24,8 +25,13 @@ export default class Component extends AbstractReactFactory {
 
   generateReactWidget(event) {
     const { Widget } = this;
+    const { model } = event;
 
-    return <Widget engine={this.engine} model={event.model} />;
+    return (
+      <MenuProvider id="component" storeRef={false} data={model}>
+        <Widget engine={this.engine} model={model} />
+      </MenuProvider>
+    );
   }
 
   generateModel(event) {
