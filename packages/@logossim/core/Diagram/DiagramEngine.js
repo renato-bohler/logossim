@@ -6,12 +6,9 @@ import createEngine, {
 import BaseModel from '../BaseModel';
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
+import ClipboardAction from './actions/ClipboardAction';
 import CloneAction from './actions/CloneAction';
-import CopyAction from './actions/CopyAction';
-import CutAction from './actions/CutAction';
 import DeleteAction from './actions/DeleteAction';
-import PasteAction from './actions/PasteAction';
-import PreventDefaultAction from './actions/PreventDefaultAction';
 import States from './states/States';
 
 export default class DiagramEngine {
@@ -37,11 +34,8 @@ export default class DiagramEngine {
 
     const actions = [
       new CloneAction(),
-      new CutAction(),
-      new CopyAction(),
-      new PasteAction(),
+      new ClipboardAction(),
       new DeleteAction(),
-      new PreventDefaultAction(),
     ];
     actions.forEach(action =>
       this.engine.getActionEventBus().registerAction(action),

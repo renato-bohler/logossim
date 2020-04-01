@@ -3,7 +3,7 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 import BaseModel from '../../BaseModel';
 
 /**
- * Clones all selected items
+ * Handle clone actions
  */
 export default class CloneAction extends Action {
   constructor() {
@@ -11,6 +11,7 @@ export default class CloneAction extends Action {
       type: InputType.KEY_DOWN,
       fire: ({ event }) => {
         if (this.matchesInput(event)) {
+          event.preventDefault();
           this.handleAction();
         }
       },
