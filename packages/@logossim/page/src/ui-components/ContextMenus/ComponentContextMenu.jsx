@@ -12,14 +12,16 @@ import {
   RotateCounterclockwise,
   Settings,
   Undo,
+  Cut,
 } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
 const ComponentContextMenu = ({
   cloneSelected,
-  deleteSelected,
+  cutSelected,
   copySelected,
   pasteSelected,
+  deleteSelected,
 }) => (
   <Menu id="component">
     <Item onClick={cloneSelected}>
@@ -27,6 +29,12 @@ const ComponentContextMenu = ({
         <Clone size={16} />
       </ContextMenuIconContainer>
       Clone
+    </Item>
+    <Item onClick={cutSelected}>
+      <ContextMenuIconContainer>
+        <Cut size={16} />
+      </ContextMenuIconContainer>
+      Cut
     </Item>
     <Item onClick={copySelected}>
       <ContextMenuIconContainer>

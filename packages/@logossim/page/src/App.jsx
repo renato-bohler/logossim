@@ -133,9 +133,10 @@ export default class App extends Component {
         <Tooltip id="tooltip" globalEventOff="click" />
         <ContextMenus
           cloneSelected={this.diagram.cloneSelected}
-          deleteSelected={this.diagram.deleteSelected}
+          cutSelected={this.diagram.cutSelected}
           copySelected={this.diagram.copySelected}
           pasteSelected={this.diagram.pasteSelected}
+          deleteSelected={this.diagram.deleteSelected}
         />
       </>
     );
