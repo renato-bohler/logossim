@@ -1,11 +1,18 @@
 import React from 'react';
-import { Menu, Item } from 'react-contexify';
+import { Menu, Item, Separator } from 'react-contexify';
 
-import { Redo, Undo } from '../Icons';
+import { Redo, Undo, Paste } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
-const DiagramContextMenu = () => (
+const DiagramContextMenu = ({ pasteSelected }) => (
   <Menu id="diagram">
+    <Item onClick={pasteSelected}>
+      <ContextMenuIconContainer>
+        <Paste size={16} />
+      </ContextMenuIconContainer>
+      Paste
+    </Item>
+    <Separator />
     <Item onClick={() => window.alert('TODO: handle undo')}>
       <ContextMenuIconContainer>
         <Undo size={16} />

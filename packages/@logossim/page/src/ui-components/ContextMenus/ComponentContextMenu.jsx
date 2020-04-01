@@ -15,7 +15,12 @@ import {
 } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
-const ComponentContextMenu = ({ cloneSelected, deleteSelected }) => (
+const ComponentContextMenu = ({
+  cloneSelected,
+  deleteSelected,
+  copySelected,
+  pasteSelected,
+}) => (
   <Menu id="component">
     <Item onClick={cloneSelected}>
       <ContextMenuIconContainer>
@@ -23,13 +28,13 @@ const ComponentContextMenu = ({ cloneSelected, deleteSelected }) => (
       </ContextMenuIconContainer>
       Clone
     </Item>
-    <Item onClick={() => window.alert('TODO: copy feature')}>
+    <Item onClick={copySelected}>
       <ContextMenuIconContainer>
         <Copy size={16} />
       </ContextMenuIconContainer>
       Copy
     </Item>
-    <Item onClick={() => window.alert('TODO: paste feature')}>
+    <Item onClick={pasteSelected}>
       <ContextMenuIconContainer>
         <Paste size={16} />
       </ContextMenuIconContainer>

@@ -39,6 +39,8 @@ export default class MoveItemsState extends AbstractDisplacementState {
             .getActionEventBus()
             .getModelForEvent(event);
 
+          if (!element) return;
+
           if (!element.isSelected()) {
             this.engine.getModel().clearSelection();
           }

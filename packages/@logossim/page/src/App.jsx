@@ -134,6 +134,8 @@ export default class App extends Component {
         <ContextMenus
           cloneSelected={this.diagram.cloneSelected}
           deleteSelected={this.diagram.deleteSelected}
+          copySelected={this.diagram.copySelected}
+          pasteSelected={this.diagram.pasteSelected}
         />
       </>
     );

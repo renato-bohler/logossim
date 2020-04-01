@@ -7,7 +7,9 @@ import BaseModel from '../BaseModel';
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
 import CloneAction from './actions/CloneAction';
+import CopyAction from './actions/CopyAction';
 import DeleteAction from './actions/DeleteAction';
+import PasteAction from './actions/PasteAction';
 import PreventDefaultAction from './actions/PreventDefaultAction';
 import States from './states/States';
 
@@ -35,6 +37,8 @@ export default class DiagramEngine {
     const actions = [
       new CloneAction(),
       new DeleteAction(),
+      new CopyAction(),
+      new PasteAction(),
       new PreventDefaultAction(),
     ];
     actions.forEach(action =>
@@ -172,6 +176,12 @@ export default class DiagramEngine {
 
   deleteSelected = () =>
     this.fireAction({ type: 'keydown', key: 'Delete' });
+
+  copySelected = () =>
+    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'c' });
+
+  pasteSelected = () =>
+    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'v' });
 
   /**
    * Simulation methods
