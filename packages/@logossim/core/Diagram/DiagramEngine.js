@@ -170,6 +170,9 @@ export default class DiagramEngine {
   cloneSelected = () =>
     this.fireAction({ type: 'keydown', ctrlKey: true, key: 'd' });
 
+  deleteSelected = () =>
+    this.fireAction({ type: 'keydown', key: 'Delete' });
+
   /**
    * Simulation methods
    */

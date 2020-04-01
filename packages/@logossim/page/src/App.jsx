@@ -131,7 +131,10 @@ export default class App extends Component {
         />
         <Diagram engine={this.diagram} />
         <Tooltip id="tooltip" globalEventOff="click" />
-        <ContextMenus clone={this.diagram.cloneSelected} />
+        <ContextMenus
+          cloneSelected={this.diagram.cloneSelected}
+          deleteSelected={this.diagram.deleteSelected}
+        />
       </>
     );
   }

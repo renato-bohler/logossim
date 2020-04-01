@@ -5,6 +5,7 @@ import {
   ArrowRight,
   Clone,
   Copy,
+  Delete,
   Paste,
   Redo,
   RotateClockwise,
@@ -14,9 +15,9 @@ import {
 } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
-const ComponentContextMenu = ({ clone }) => (
+const ComponentContextMenu = ({ cloneSelected, deleteSelected }) => (
   <Menu id="component">
-    <Item onClick={clone}>
+    <Item onClick={cloneSelected}>
       <ContextMenuIconContainer>
         <Clone size={16} />
       </ContextMenuIconContainer>
@@ -33,6 +34,12 @@ const ComponentContextMenu = ({ clone }) => (
         <Paste size={16} />
       </ContextMenuIconContainer>
       Paste
+    </Item>
+    <Item onClick={deleteSelected}>
+      <ContextMenuIconContainer>
+        <Delete size={16} />
+      </ContextMenuIconContainer>
+      Delete
     </Item>
     <Separator />
     <Item onClick={() => window.alert('TODO: undo feature')}>

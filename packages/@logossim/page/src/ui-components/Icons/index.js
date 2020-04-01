@@ -4,6 +4,7 @@ import Chevron from './Chevron';
 import Clone from './Clone';
 import Close from './Close';
 import Copy from './Copy';
+import Delete from './Delete';
 import Paste from './Paste';
 import Pause from './Pause';
 import Play from './Play';
@@ -21,6 +22,7 @@ export {
   Clone,
   Close,
   Copy,
+  Delete,
   Paste,
   Pause,
   Play,
