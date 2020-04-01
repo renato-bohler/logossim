@@ -1,15 +1,12 @@
 import React from 'react';
-import { Menu, Item, Separator, Submenu } from 'react-contexify';
+import { Menu, Item, Separator } from 'react-contexify';
 
 import {
-  ArrowRight,
   Clone,
   Copy,
   Delete,
   Paste,
   Redo,
-  RotateClockwise,
-  RotateCounterclockwise,
   Settings,
   Undo,
   Cut,
@@ -68,34 +65,6 @@ const ComponentContextMenu = ({
       Redo
     </Item>
     <Separator />
-    <Submenu
-      label={
-        <div style={{ display: 'flex' }}>
-          <ContextMenuIconContainer />
-          Rotate
-        </div>
-      }
-      arrow={<ArrowRight size={10} />}
-    >
-      <Item
-        onClick={() => window.alert('TODO: rotate clockwise feature')}
-      >
-        <ContextMenuIconContainer>
-          <RotateClockwise size={16} />
-        </ContextMenuIconContainer>
-        Clockwise
-      </Item>
-      <Item
-        onClick={() =>
-          window.alert('TODO: rotate counterclockwise feature')
-        }
-      >
-        <ContextMenuIconContainer>
-          <RotateCounterclockwise size={16} />
-        </ContextMenuIconContainer>
-        Counterclockwise
-      </Item>
-    </Submenu>
     <Item
       onClick={() => window.alert('TODO: configurations feature')}
     >
