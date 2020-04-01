@@ -6,6 +6,9 @@ import createEngine, {
 import BaseModel from '../BaseModel';
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
+import CloneAction from './actions/CloneAction';
+import DeleteAction from './actions/DeleteAction';
+import PreventDefaultAction from './actions/PreventDefaultAction';
 import States from './states/States';
 
 export default class DiagramEngine {
@@ -23,9 +26,20 @@ export default class DiagramEngine {
    * Initialization methods
    */
   initializeEngine = () => {
-    this.engine = createEngine();
+    this.engine = createEngine({
+      registerDefaultDeleteItemsAction: false,
+    });
 
     this.engine.getStateMachine().pushState(new States());
+
+    const actions = [
+      new CloneAction(),
+      new DeleteAction(),
+      new PreventDefaultAction(),
+    ];
+    actions.forEach(action =>
+      this.engine.getActionEventBus().registerAction(action),
+    );
 
     this.engine.getPortFactories().registerFactory(new PortFactory());
     this.engine.getLinkFactories().registerFactory(new LinkFactory());
@@ -138,22 +152,23 @@ export default class DiagramEngine {
       .getModel()
       .clearSelection();
 
-  cloneSelected = () => {
-    const selectedNodes = this.engine
+  getSelectedNodes = () =>
+    this.engine
       .getModel()
       .getSelectedEntities()
       .filter(entity => entity instanceof BaseModel);
 
-    this.clearSelection();
-
-    const clones = selectedNodes.map(node => node.clone());
-    clones.forEach(clone => {
-      this.model.addNode(clone);
-      clone.setSelected(true);
+  fireAction = event =>
+    this.engine.getActionEventBus().fireAction({
+      event: {
+        ...event,
+        preventDefault: () => {},
+        stopPropagation: () => {},
+      },
     });
 
-    this.engine.repaintCanvas();
-  };
+  cloneSelected = () =>
+    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'd' });
 
   /**
    * Simulation methods
