@@ -3,7 +3,7 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 import BaseModel from '../../BaseModel';
 
 /**
- * Deletes all selected items
+ * Clones all selected items
  */
 export default class CloneAction extends Action {
   constructor() {

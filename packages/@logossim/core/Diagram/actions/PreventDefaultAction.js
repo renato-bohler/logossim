@@ -1,7 +1,7 @@
 import { Action, InputType } from '@projectstorm/react-canvas-core';
 
 /**
- * Prevents default key down
+ * Prevents default every key down event
  */
 export default class PreventDefaultAction extends Action {
   constructor() {
