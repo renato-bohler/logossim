@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './ClockWidget';
-import model from './ClockModel';
+
 import icon from './ClockIcon';
+import model from './ClockModel';
+import widget from './ClockWidget';
 
 export default new Component({
   type: 'Clock',

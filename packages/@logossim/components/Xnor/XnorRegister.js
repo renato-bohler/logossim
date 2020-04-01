@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './XnorWidget';
-import model from './XnorModel';
+
 import icon from './XnorIcon';
+import model from './XnorModel';
+import widget from './XnorWidget';
 
 export default new Component({
   type: 'Xnor',

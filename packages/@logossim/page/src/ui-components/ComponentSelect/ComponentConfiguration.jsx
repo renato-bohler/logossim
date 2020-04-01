@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import Tooltip from 'react-tooltip';
-import styled from 'styled-components';
-import { Formik, Form, Field } from 'formik';
 
-import { Header, Content, IconButton } from './ComponentLayout';
+import { Formik, Form, Field } from 'formik';
+import styled from 'styled-components';
+
 import { ArrowLeft, Close } from '../Icons';
-import DraggableComponent from './DraggableComponent';
 import ComponentConfigurationInput from './ComponentConfigurationInput';
+import { Header, Content, IconButton } from './ComponentLayout';
+import DraggableComponent from './DraggableComponent';
 
 const DragArea = styled.div`
   display: flex;

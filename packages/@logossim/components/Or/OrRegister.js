@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './OrWidget';
-import model from './OrModel';
+
 import icon from './OrIcon';
+import model from './OrModel';
+import widget from './OrWidget';
 
 export default new Component({
   type: 'Or',

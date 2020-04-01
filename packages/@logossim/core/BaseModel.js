@@ -1,5 +1,5 @@
-import { NodeModel } from '@projectstorm/react-diagrams';
 import { Point } from '@projectstorm/geometry';
+import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';

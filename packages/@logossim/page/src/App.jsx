@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Tooltip from 'react-tooltip';
 
+import components, { groupedComponents } from '@logossim/components';
 import {
   SimulationEngine,
   DiagramEngine,
   Diagram,
 } from '@logossim/core';
-import components, { groupedComponents } from '@logossim/components';
 
 import {
   DiagramStateButtons,
@@ -131,7 +131,13 @@ export default class App extends Component {
         />
         <Diagram engine={this.diagram} />
         <Tooltip id="tooltip" globalEventOff="click" />
-        <ContextMenus clone={this.diagram.cloneSelected} />
+        <ContextMenus
+          cloneSelected={this.diagram.cloneSelected}
+          cutSelected={this.diagram.cutSelected}
+          copySelected={this.diagram.copySelected}
+          pasteSelected={this.diagram.pasteSelected}
+          deleteSelected={this.diagram.deleteSelected}
+        />
       </>
     );
   }

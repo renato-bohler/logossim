@@ -1,6 +1,7 @@
-const path = require('path');
-const fs = require('fs');
 const rewireBabelLoader = require('react-app-rewire-babel-loader');
+
+const fs = require('fs');
+const path = require('path');
 
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath =>

@@ -1,14 +1,26 @@
 import React from 'react';
 
+import ComponentContextMenu from './ComponentContextMenu';
+import DiagramContextMenu from './DiagramContextMenu';
+
 import 'react-contexify/dist/ReactContexify.min.css';
 
-import DiagramContextMenu from './DiagramContextMenu';
-import ComponentContextMenu from './ComponentContextMenu';
-
-const ContextMenus = ({ clone }) => (
+const ContextMenus = ({
+  cloneSelected,
+  cutSelected,
+  copySelected,
+  pasteSelected,
+  deleteSelected,
+}) => (
   <>
-    <DiagramContextMenu />
-    <ComponentContextMenu clone={clone} />
+    <DiagramContextMenu pasteSelected={pasteSelected} />
+    <ComponentContextMenu
+      cloneSelected={cloneSelected}
+      cutSelected={cutSelected}
+      copySelected={copySelected}
+      pasteSelected={pasteSelected}
+      deleteSelected={deleteSelected}
+    />
   </>
 );
 

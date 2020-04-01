@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
 
 import { samePosition } from '../Diagram/states/common';

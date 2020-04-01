@@ -1,9 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+
 import { DefaultLinkFactory } from '@projectstorm/react-diagrams-defaults';
 
-import LinkWidget from './LinkWidget';
+import styled from 'styled-components';
+
 import LinkModel from './LinkModel';
+import LinkWidget from './LinkWidget';
 
 const Path = styled.path`
   pointer-events: all;

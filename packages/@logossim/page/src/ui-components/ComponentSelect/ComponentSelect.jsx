@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+
 import styled from 'styled-components';
 
-import ComponentSearch from './ComponentSearch';
 import ComponentConfiguration from './ComponentConfiguration';
+import ComponentSearch from './ComponentSearch';
 
 const Overlay = styled.div`
   position: absolute;

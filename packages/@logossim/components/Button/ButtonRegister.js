@@ -1,7 +1,8 @@
 import { Component } from '@logossim/core';
-import widget from './ButtonWidget';
-import model from './ButtonModel';
+
 import icon from './ButtonIcon';
+import model from './ButtonModel';
+import widget from './ButtonWidget';
 
 export default new Component({
   type: 'Button',

@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
-import styled from 'styled-components';
+
 import { Port } from '@logossim/core';
+
+import styled from 'styled-components';
 
 import { PortExtension, distributePorts } from '../portExtendUtils';
 
