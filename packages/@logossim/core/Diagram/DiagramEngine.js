@@ -9,6 +9,7 @@ import PortFactory from '../Port/PortFactory';
 import ClipboardAction from './actions/ClipboardAction';
 import CloneAction from './actions/CloneAction';
 import DeleteAction from './actions/DeleteAction';
+import ZoomAction from './actions/ZoomAction';
 import States from './states/States';
 
 export default class DiagramEngine {
@@ -28,6 +29,7 @@ export default class DiagramEngine {
   initializeEngine = () => {
     this.engine = createEngine({
       registerDefaultDeleteItemsAction: false,
+      registerDefaultZoomCanvasAction: false,
     });
 
     this.engine.getStateMachine().pushState(new States());
@@ -36,6 +38,7 @@ export default class DiagramEngine {
       new CloneAction(),
       new ClipboardAction(),
       new DeleteAction(),
+      new ZoomAction(),
     ];
     actions.forEach(action =>
       this.engine.getActionEventBus().registerAction(action),
