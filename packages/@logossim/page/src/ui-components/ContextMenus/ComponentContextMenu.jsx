@@ -1,18 +1,17 @@
 import React from 'react';
-import { Menu, Item, Separator, Submenu } from 'react-contexify';
+import { Menu, Item, Separator } from 'react-contexify';
 
 import {
-  ArrowRight,
   Clone,
   Copy,
   Delete,
   Paste,
   Redo,
-  RotateClockwise,
-  RotateCounterclockwise,
   Settings,
   Undo,
   Cut,
+  ZoomIn,
+  ZoomOut,
 } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
@@ -22,85 +21,72 @@ const ComponentContextMenu = ({
   copySelected,
   pasteSelected,
   deleteSelected,
+  zoomIn,
+  zoomOut,
 }) => (
   <Menu id="component">
     <Item onClick={cloneSelected}>
       <ContextMenuIconContainer>
-        <Clone size={16} />
+        <Clone />
       </ContextMenuIconContainer>
       Clone
     </Item>
     <Item onClick={cutSelected}>
       <ContextMenuIconContainer>
-        <Cut size={16} />
+        <Cut />
       </ContextMenuIconContainer>
       Cut
     </Item>
     <Item onClick={copySelected}>
       <ContextMenuIconContainer>
-        <Copy size={16} />
+        <Copy />
       </ContextMenuIconContainer>
       Copy
     </Item>
     <Item onClick={pasteSelected}>
       <ContextMenuIconContainer>
-        <Paste size={16} />
+        <Paste />
       </ContextMenuIconContainer>
       Paste
     </Item>
     <Item onClick={deleteSelected}>
       <ContextMenuIconContainer>
-        <Delete size={16} />
+        <Delete />
       </ContextMenuIconContainer>
       Delete
     </Item>
     <Separator />
+    <Item onClick={zoomIn}>
+      <ContextMenuIconContainer>
+        <ZoomIn />
+      </ContextMenuIconContainer>
+      Zoom in
+    </Item>
+    <Item onClick={zoomOut}>
+      <ContextMenuIconContainer>
+        <ZoomOut />
+      </ContextMenuIconContainer>
+      Zoom out
+    </Item>
+    <Separator />
     <Item onClick={() => window.alert('TODO: undo feature')}>
       <ContextMenuIconContainer>
-        <Undo size={16} />
+        <Undo />
       </ContextMenuIconContainer>
       Undo
     </Item>
     <Item onClick={() => window.alert('TODO: redo feature')}>
       <ContextMenuIconContainer>
-        <Redo size={16} />
+        <Redo />
       </ContextMenuIconContainer>
       Redo
     </Item>
     <Separator />
-    <Submenu
-      label={
-        <div style={{ display: 'flex' }}>
-          <ContextMenuIconContainer />
-          Rotate
-        </div>
-      }
-      arrow={<ArrowRight size={10} />}
-    >
-      <Item
-        onClick={() => window.alert('TODO: rotate clockwise feature')}
-      >
-        <ContextMenuIconContainer>
-          <RotateClockwise size={16} />
-        </ContextMenuIconContainer>
-        Clockwise
-      </Item>
-      <Item
-        onClick={() =>
-          window.alert('TODO: rotate counterclockwise feature')
-        }
-      >
-        <ContextMenuIconContainer>
-          <RotateCounterclockwise size={16} />
-        </ContextMenuIconContainer>
-        Counterclockwise
-      </Item>
-    </Submenu>
     <Item
       onClick={() => window.alert('TODO: configurations feature')}
     >
       <ContextMenuIconContainer>
-        <Settings size={16} />
+        <Settings />
       </ContextMenuIconContainer>
       Configurations...
     </Item>

@@ -1,7 +1,7 @@
 import { Action, InputType } from '@projectstorm/react-canvas-core';
 
 /**
- * Deletes all selected items
+ * Handles delete actions
  */
 export default class DeleteAction extends Action {
   constructor() {
@@ -9,6 +9,7 @@ export default class DeleteAction extends Action {
       type: InputType.KEY_DOWN,
       fire: ({ event }) => {
         if (this.matchesInput(event)) {
+          event.preventDefault();
           this.handleAction();
         }
       },

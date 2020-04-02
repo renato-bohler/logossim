@@ -11,15 +11,23 @@ const ContextMenus = ({
   copySelected,
   pasteSelected,
   deleteSelected,
+  zoomIn,
+  zoomOut,
 }) => (
   <>
-    <DiagramContextMenu pasteSelected={pasteSelected} />
+    <DiagramContextMenu
+      pasteSelected={pasteSelected}
+      zoomIn={zoomIn}
+      zoomOut={zoomOut}
+    />
     <ComponentContextMenu
       cloneSelected={cloneSelected}
       cutSelected={cutSelected}
       copySelected={copySelected}
       pasteSelected={pasteSelected}
       deleteSelected={deleteSelected}
+      zoomIn={zoomIn}
+      zoomOut={zoomOut}
     />
   </>
 );

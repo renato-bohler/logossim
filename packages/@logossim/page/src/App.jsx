@@ -137,6 +137,8 @@ export default class App extends Component {
           copySelected={this.diagram.copySelected}
           pasteSelected={this.diagram.pasteSelected}
           deleteSelected={this.diagram.deleteSelected}
+          zoomIn={this.diagram.zoomIn}
+          zoomOut={this.diagram.zoomOut}
         />
       </>
     );

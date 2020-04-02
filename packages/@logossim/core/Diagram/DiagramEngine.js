@@ -6,12 +6,10 @@ import createEngine, {
 import BaseModel from '../BaseModel';
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
+import ClipboardAction from './actions/ClipboardAction';
 import CloneAction from './actions/CloneAction';
-import CopyAction from './actions/CopyAction';
-import CutAction from './actions/CutAction';
 import DeleteAction from './actions/DeleteAction';
-import PasteAction from './actions/PasteAction';
-import PreventDefaultAction from './actions/PreventDefaultAction';
+import ZoomAction from './actions/ZoomAction';
 import States from './states/States';
 
 export default class DiagramEngine {
@@ -31,17 +29,16 @@ export default class DiagramEngine {
   initializeEngine = () => {
     this.engine = createEngine({
       registerDefaultDeleteItemsAction: false,
+      registerDefaultZoomCanvasAction: false,
     });
 
     this.engine.getStateMachine().pushState(new States());
 
     const actions = [
       new CloneAction(),
-      new CutAction(),
-      new CopyAction(),
-      new PasteAction(),
+      new ClipboardAction(),
       new DeleteAction(),
-      new PreventDefaultAction(),
+      new ZoomAction(),
     ];
     actions.forEach(action =>
       this.engine.getActionEventBus().registerAction(action),
@@ -187,6 +184,22 @@ export default class DiagramEngine {
 
   deleteSelected = () =>
     this.fireAction({ type: 'keydown', key: 'Delete' });
+
+  zoomIn = ({ event }) =>
+    this.fireAction({
+      clientX: event.clientX,
+      clientY: event.clientY,
+      type: 'wheel',
+      deltaY: +1,
+    });
+
+  zoomOut = ({ event }) =>
+    this.fireAction({
+      clientX: event.clientX,
+      clientY: event.clientY,
+      type: 'wheel',
+      deltaY: -1,
+    });
 
   /**
    * Simulation methods

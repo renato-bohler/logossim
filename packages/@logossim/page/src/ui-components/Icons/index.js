@@ -10,11 +10,11 @@ import Paste from './Paste';
 import Pause from './Pause';
 import Play from './Play';
 import Redo from './Redo';
-import RotateClockwise from './RotateClockwise';
-import RotateCounterclockwise from './RotateCounterclockwise';
 import Settings from './Settings';
 import Stop from './Stop';
 import Undo from './Undo';
+import ZoomIn from './ZoomIn';
+import ZoomOut from './ZoomOut';
 
 export {
   ArrowLeft,
@@ -29,9 +29,9 @@ export {
   Pause,
   Play,
   Redo,
-  RotateClockwise,
-  RotateCounterclockwise,
   Settings,
   Stop,
   Undo,
+  ZoomIn,
+  ZoomOut,
 };
