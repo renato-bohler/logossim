@@ -1,13 +1,13 @@
 import { Action, InputType } from '@projectstorm/react-canvas-core';
 
-const ZOOM_LEVELS = [10, 25, 50, 75, 100, 150, 200, 300];
+const ZOOM_LEVELS = [15, 25, 50, 75, 100, 150, 200, 300];
 
 export default class ZoomAction extends Action {
   constructor() {
     super({
       type: InputType.MOUSE_WHEEL,
       fire: ({ event }) => {
-        // event.stopPropagation();
+        event.stopPropagation();
 
         const model = this.engine.getModel();
 
@@ -37,7 +37,9 @@ export default class ZoomAction extends Action {
         model.setZoomLevel(ZOOM_LEVELS[nextZoomLevelIndex]);
         const zoomFactor = model.getZoomLevel() / 100;
 
-        const boundingRect = event.currentTarget.getBoundingClientRect();
+        const boundingRect = this.engine
+          .getCanvas()
+          .getBoundingClientRect();
         const clientWidth = boundingRect.width;
         const clientHeight = boundingRect.height;
 

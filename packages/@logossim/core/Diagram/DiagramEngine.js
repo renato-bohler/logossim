@@ -185,6 +185,22 @@ export default class DiagramEngine {
   deleteSelected = () =>
     this.fireAction({ type: 'keydown', key: 'Delete' });
 
+  zoomIn = ({ event }) =>
+    this.fireAction({
+      clientX: event.clientX,
+      clientY: event.clientY,
+      type: 'wheel',
+      deltaY: +1,
+    });
+
+  zoomOut = ({ event }) =>
+    this.fireAction({
+      clientX: event.clientX,
+      clientY: event.clientY,
+      type: 'wheel',
+      deltaY: -1,
+    });
+
   /**
    * Simulation methods
    */

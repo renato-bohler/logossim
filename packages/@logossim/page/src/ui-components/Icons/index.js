@@ -13,6 +13,8 @@ import Redo from './Redo';
 import Settings from './Settings';
 import Stop from './Stop';
 import Undo from './Undo';
+import ZoomIn from './ZoomIn';
+import ZoomOut from './ZoomOut';
 
 export {
   ArrowLeft,
@@ -30,4 +32,6 @@ export {
   Settings,
   Stop,
   Undo,
+  ZoomIn,
+  ZoomOut,
 };
