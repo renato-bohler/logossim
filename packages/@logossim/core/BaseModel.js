@@ -76,6 +76,16 @@ export default class BaseModel extends NodeModel {
     );
   }
 
+  getAllLinks() {
+    return Object.values(this.getPorts())
+      .map(port => port.getMainLink())
+      .filter(link => !!link)
+      .reduce(
+        (arr, link) => [...arr, link, ...link.getAllBifurcations()],
+        [],
+      );
+  }
+
   clone(...args) {
     const clone = super.clone(...args);
     clone.setPosition(new Point(this.getX() + 15, this.getY() + 15));

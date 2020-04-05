@@ -7,6 +7,7 @@ import {
 } from '@projectstorm/react-canvas-core';
 import { NodeModel } from '@projectstorm/react-diagrams-core';
 
+import BaseModel from '../../BaseModel';
 import {
   snap,
   samePosition,
@@ -35,22 +36,85 @@ export default class MoveItemsState extends AbstractDisplacementState {
 
           this.lastDisplacement = new Point(0, 0);
 
-          const element = this.engine
+          this.element = this.engine
             .getActionEventBus()
             .getModelForEvent(event);
 
-          if (!element) return;
+          if (!this.element) return;
 
-          if (!element.isSelected()) {
+          if (!this.element.isSelected()) {
             this.engine.getModel().clearSelection();
           }
 
-          this.linkDirections = this.getLinkDirections(element);
+          this.linkDirections = this.getLinkDirections(this.element);
 
-          element.setSelected(true);
+          this.element.setSelected(true);
           this.engine.repaintCanvas();
+
+          this.nodesBefore = this.getNodesPositions();
+          this.linksBefore = this.getLinksPoints();
         },
       }),
+    );
+
+    this.registerAction(
+      new Action({
+        type: InputType.MOUSE_UP,
+        fire: () => {
+          if (
+            this.lastDisplacement.x === 0 &&
+            this.lastDisplacement.y === 0
+          ) {
+            return;
+          }
+
+          this.fireEvent();
+        },
+      }),
+    );
+  }
+
+  getNodesPositions = () =>
+    this.engine
+      .getModel()
+      .getSelectedEntities()
+      .filter(model => model instanceof BaseModel)
+      .map(node => ({
+        id: node.getID(),
+        position: node.getPosition(),
+      }));
+
+  getLinksPoints = () =>
+    this.engine
+      .getModel()
+      .getSelectedEntities()
+      .filter(model => model instanceof BaseModel)
+      .map(node =>
+        this.getLinksFromNode(node).map(([, link]) => link),
+      )
+      .flat()
+      .map(link => ({
+        id: link.getID(),
+        points: link.getPoints().map(point => point.getPosition()),
+      }));
+
+  /**
+   * Event is fired to be on the command manager, so the user can undo
+   * and redo it.
+   */
+  fireEvent() {
+    this.engine.fireEvent(
+      {
+        nodes: {
+          before: this.nodesBefore,
+          after: this.getNodesPositions(),
+        },
+        links: {
+          before: this.linksBefore,
+          after: this.getLinksPoints(),
+        },
+      },
+      'entitiesMoved',
     );
   }
 

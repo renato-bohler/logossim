@@ -3,27 +3,30 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 import BaseModel from '../../BaseModel';
 
 /**
- * Handles clipboard actions
+ * Handles clipboard actions.
  */
 export default class ClipboardAction extends Action {
   constructor() {
     super({
       type: InputType.KEY_DOWN,
       fire: ({ event }) => {
+        if (this.engine.getModel().isLocked()) return;
+
         if (this.matchesInput(event)) {
           event.preventDefault();
 
-          const { key } = event;
-          if (key === 'x') this.handleCut();
-          if (key === 'c') this.handleCopy();
-          if (key === 'v') this.handlePaste();
+          const { code } = event;
+          if (code === 'KeyX') this.handleCut();
+          if (code === 'KeyC') this.handleCopy();
+          if (code === 'KeyV') this.handlePaste();
         }
       },
     });
   }
 
-  matchesInput = ({ ctrlKey, key }) =>
-    ctrlKey && (key === 'x' || key === 'c' || key === 'v');
+  matchesInput = ({ ctrlKey, code }) =>
+    ctrlKey &&
+    (code === 'KeyX' || code === 'KeyC' || code === 'KeyV');
 
   getSelectedComponents = () =>
     this.engine
@@ -37,6 +40,16 @@ export default class ClipboardAction extends Action {
     const selected = this.getSelectedComponents();
     const copies = selected.map(entity => entity.clone().serialize());
 
+    this.engine.fireEvent(
+      {
+        nodes: selected,
+        links: selected.reduce(
+          (arr, node) => [...arr, ...node.getAllLinks()],
+          [],
+        ),
+      },
+      'entitiesRemoved',
+    );
     selected.forEach(node => node.remove());
     this.engine.repaintCanvas();
 
@@ -90,6 +103,8 @@ export default class ClipboardAction extends Action {
         ),
       ),
     );
+
+    this.engine.fireEvent({ nodes: models }, 'componentsAdded');
 
     this.engine.repaintCanvas();
   };

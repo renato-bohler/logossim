@@ -21,6 +21,8 @@ const ComponentContextMenu = ({
   copySelected,
   pasteSelected,
   deleteSelected,
+  undo,
+  redo,
   zoomIn,
   zoomOut,
 }) => (
@@ -69,13 +71,13 @@ const ComponentContextMenu = ({
       Zoom out
     </Item>
     <Separator />
-    <Item onClick={() => window.alert('TODO: undo feature')}>
+    <Item onClick={undo}>
       <ContextMenuIconContainer>
         <Undo />
       </ContextMenuIconContainer>
       Undo
     </Item>
-    <Item onClick={() => window.alert('TODO: redo feature')}>
+    <Item onClick={redo}>
       <ContextMenuIconContainer>
         <Redo />
       </ContextMenuIconContainer>

@@ -4,7 +4,13 @@ import { Menu, Item, Separator } from 'react-contexify';
 import { Redo, Undo, Paste, ZoomIn, ZoomOut } from '../Icons';
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
-const DiagramContextMenu = ({ pasteSelected, zoomIn, zoomOut }) => (
+const DiagramContextMenu = ({
+  pasteSelected,
+  undo,
+  redo,
+  zoomIn,
+  zoomOut,
+}) => (
   <Menu id="diagram">
     <Item onClick={pasteSelected}>
       <ContextMenuIconContainer>
@@ -26,13 +32,13 @@ const DiagramContextMenu = ({ pasteSelected, zoomIn, zoomOut }) => (
       Zoom out
     </Item>
     <Separator />
-    <Item onClick={() => window.alert('TODO: handle undo')}>
+    <Item onClick={undo}>
       <ContextMenuIconContainer>
         <Undo />
       </ContextMenuIconContainer>
       Undo
     </Item>
-    <Item onClick={() => window.alert('TODO: handle redo')}>
+    <Item onClick={redo}>
       <ContextMenuIconContainer>
         <Redo />
       </ContextMenuIconContainer>

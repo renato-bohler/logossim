@@ -9,7 +9,10 @@ import PortFactory from '../Port/PortFactory';
 import ClipboardAction from './actions/ClipboardAction';
 import CloneAction from './actions/CloneAction';
 import DeleteAction from './actions/DeleteAction';
+import UndoRedoAction from './actions/UndoRedoAction';
 import ZoomAction from './actions/ZoomAction';
+import commandHandlers from './Command/commandHandlers';
+import CommandManager from './Command/CommandManager';
 import States from './states/States';
 
 export default class DiagramEngine {
@@ -32,12 +35,16 @@ export default class DiagramEngine {
       registerDefaultZoomCanvasAction: false,
     });
 
+    this.engine.commands = new CommandManager();
+    this.engine.registerListener(commandHandlers(this.engine));
+
     this.engine.getStateMachine().pushState(new States());
 
     const actions = [
       new CloneAction(),
       new ClipboardAction(),
       new DeleteAction(),
+      new UndoRedoAction(),
       new ZoomAction(),
     ];
     actions.forEach(action =>
@@ -147,6 +154,8 @@ export default class DiagramEngine {
     this.model.addNode(node);
     node.setPosition(point);
 
+    this.engine.fireEvent({ nodes: [node] }, 'componentsAdded');
+
     this.engine.repaintCanvas();
   };
 
@@ -165,25 +174,37 @@ export default class DiagramEngine {
     this.engine.getActionEventBus().fireAction({
       event: {
         ...event,
+        key: '',
         preventDefault: () => {},
         stopPropagation: () => {},
       },
     });
 
   cloneSelected = () =>
-    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'd' });
+    this.fireAction({ type: 'keydown', ctrlKey: true, code: 'KeyD' });
 
   cutSelected = () =>
-    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'x' });
+    this.fireAction({ type: 'keydown', ctrlKey: true, code: 'KeyX' });
 
   copySelected = () =>
-    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'c' });
+    this.fireAction({ type: 'keydown', ctrlKey: true, code: 'KeyC' });
 
   pasteSelected = () =>
-    this.fireAction({ type: 'keydown', ctrlKey: true, key: 'v' });
+    this.fireAction({ type: 'keydown', ctrlKey: true, code: 'KeyV' });
 
   deleteSelected = () =>
-    this.fireAction({ type: 'keydown', key: 'Delete' });
+    this.fireAction({ type: 'keydown', code: 'Delete' });
+
+  undo = () =>
+    this.fireAction({ type: 'keydown', ctrlKey: true, code: 'KeyZ' });
+
+  redo = () =>
+    this.fireAction({
+      type: 'keydown',
+      ctrlKey: true,
+      shiftKey: true,
+      code: 'KeyZ',
+    });
 
   zoomIn = ({ event }) =>
     this.fireAction({

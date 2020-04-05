@@ -54,6 +54,8 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
           this.hasStartedMoving = false;
 
           this.source = this.engine.getMouseElement(event.event);
+          this.sourceBefore = this.getLinkPoints(this.source);
+          this.sourceEdited = false;
 
           const position = this.snapPointToSourceLink(
             this.engine.getRelativeMousePoint(event.event),
@@ -121,6 +123,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             model.reportPosition();
             this.adjustBifurcationOverlayingSource(this.bifurcation);
             this.engine.repaintCanvas();
+            this.fireEvent();
             return;
           }
 
@@ -145,9 +148,38 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             this.bifurcation.getBifurcationSource(),
           );
           this.adjustBifurcationOverlayingSource(this.bifurcation);
+          this.fireEvent();
         },
       }),
     );
+  }
+
+  /**
+   * Event is fired to be on the command manager, so the user can undo
+   * and redo it.
+   */
+  fireEvent = () => {
+    if (this.sourceEdited) {
+      this.engine.fireEvent(
+        {
+          before: this.sourceBefore,
+          after: this.getLinkPoints(this.source),
+        },
+        'linkChanged',
+      );
+    } else {
+      this.engine.fireEvent({ link: this.bifurcation }, 'linkAdded');
+    }
+  };
+
+  getLinkPoints(link) {
+    return {
+      id: link.getID(),
+      points: link.getPoints().map(point => point.getPosition()),
+      bifurcationTarget: link.getBifurcationTarget()
+        ? link.getBifurcationTarget().getID()
+        : null,
+    };
   }
 
   cleanUp() {
@@ -382,6 +414,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
       link.setBifurcationTarget(bifurcationTarget);
       bifurcationTarget.addBifurcation(link);
     }
+    this.sourceEdited = true;
     bifurcationToMerge.remove();
 
     if (

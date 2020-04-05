@@ -2,6 +2,9 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 
 const ZOOM_LEVELS = [15, 25, 50, 75, 100, 150, 200, 300];
 
+/**
+ * Handles zoom in/out actions.
+ */
 export default class ZoomAction extends Action {
   constructor() {
     super({
