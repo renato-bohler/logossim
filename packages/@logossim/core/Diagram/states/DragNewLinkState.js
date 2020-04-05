@@ -81,6 +81,7 @@ export default class DragNewLinkState extends AbstractDisplacementState {
             this.link.setTargetPort(model);
             model.reportPosition();
             this.engine.repaintCanvas();
+            this.fireEvent();
             return;
           }
 
@@ -89,10 +90,19 @@ export default class DragNewLinkState extends AbstractDisplacementState {
           if (landing) {
             handleReverseBifurcation.call(this, this.link, landing);
           }
+          this.fireEvent();
         },
       }),
     );
   }
+
+  /**
+   * Event is fired to be on the command manager, so the user can undo
+   * and redo it.
+   */
+  fireEvent = () => {
+    this.engine.fireEvent({ link: this.link }, 'linkAdded');
+  };
 
   isNearbySourcePort(event) {
     const point = this.engine.getRelativeMousePoint(event);

@@ -3,13 +3,15 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 import BaseModel from '../../BaseModel';
 
 /**
- * Handle clone actions
+ * Handle clone actions.
  */
 export default class CloneAction extends Action {
   constructor() {
     super({
       type: InputType.KEY_DOWN,
       fire: ({ event }) => {
+        if (this.engine.getModel().isLocked()) return;
+
         if (this.matchesInput(event)) {
           event.preventDefault();
           this.handleAction();
@@ -18,7 +20,7 @@ export default class CloneAction extends Action {
     });
   }
 
-  matchesInput = event => event.ctrlKey && event.key === 'd';
+  matchesInput = event => event.ctrlKey && event.code === 'KeyD';
 
   handleAction = () => {
     const model = this.engine.getModel();
@@ -35,6 +37,8 @@ export default class CloneAction extends Action {
       model.addNode(clone);
       clone.setSelected(true);
     });
+
+    this.engine.fireEvent({ nodes: clones }, 'componentsAdded');
 
     this.engine.repaintCanvas();
   };

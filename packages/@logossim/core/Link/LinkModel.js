@@ -56,6 +56,14 @@ export default class LinkModel extends RDLinkModel {
   }
 
   addBifurcation(link) {
+    if (
+      this.bifurcations.find(
+        bifurcation => bifurcation.getID() === link.getID(),
+      )
+    ) {
+      return;
+    }
+
     this.bifurcations.push(link);
   }
 
@@ -67,6 +75,14 @@ export default class LinkModel extends RDLinkModel {
 
   getBifurcations() {
     return this.bifurcations;
+  }
+
+  getAllBifurcations() {
+    const result = [...this.bifurcations];
+    this.bifurcations.forEach(bifurcation =>
+      result.push(bifurcation.getAllBifurcations()),
+    );
+    return result.flat(Infinity);
   }
 
   getSelectionEntities() {
@@ -90,6 +106,10 @@ export default class LinkModel extends RDLinkModel {
 
     if (this.bifurcationSource) {
       this.bifurcationSource.removeBifurcation(this);
+    }
+
+    if (this.bifurcationTarget) {
+      this.bifurcationTarget.removeBifurcation(this);
     }
 
     super.remove();
