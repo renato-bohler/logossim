@@ -86,6 +86,7 @@ export default class DiagramEngine {
   serialize = () => this.model.serialize();
 
   load = circuit => {
+    this.engine.commands.clear();
     this.model.deserializeModel(circuit, this.engine);
     this.realignGrid();
     this.engine.repaintCanvas();

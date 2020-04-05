@@ -4,12 +4,13 @@ import Command from './Command';
  * This class manages the undo/redo stack.
  */
 export default class CommandManager {
-  stack = [];
+  constructor() {
+    this.clear();
+  }
 
-  index = 0;
-
-  constructor(engine) {
-    this.engine = engine;
+  clear() {
+    this.stack = [];
+    this.index = 0;
   }
 
   add({ execute, undo }) {
@@ -23,14 +24,14 @@ export default class CommandManager {
     if (this.index > 0) {
       this.index -= 1;
       const command = this.stack[this.index];
-      command.undo(this.engine);
+      command.undo();
     }
   }
 
   redo() {
     if (this.index < this.stack.length) {
       const command = this.stack[this.index];
-      command.execute(this.engine);
+      command.execute();
       this.index += 1;
     }
   }
