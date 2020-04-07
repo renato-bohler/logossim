@@ -104,27 +104,36 @@ const getInitialValues = component =>
     ]),
   );
 
+const getFormSubmitLabel = (isValid, editMode) => {
+  if (!isValid) return 'Check form errors';
+  if (editMode) return 'Edit component';
+  return 'Add to circuit';
+};
+
 const ComponentConfiguration = ({
+  editMode,
   component,
   handleClose,
   handleBack,
-  handleComponentDrop,
+  handleSubmit,
 }) => {
   useEffect(Tooltip.rebuild);
 
   return (
     <>
       <Header>
-        <IconButton
-          first
-          onClick={handleBack}
-          data-for="tooltip"
-          data-tip="Go back..."
-          data-place="right"
-        >
-          <ArrowLeft />
-        </IconButton>
-        <Title>Configure component</Title>
+        {!editMode && (
+          <IconButton
+            first
+            onClick={handleBack}
+            data-for="tooltip"
+            data-tip="Go back..."
+            data-place="right"
+          >
+            <ArrowLeft />
+          </IconButton>
+        )}
+        <Title>{editMode ? 'Edit' : 'Configure'} component</Title>
         <IconButton
           last
           onClick={handleClose}
@@ -140,7 +149,7 @@ const ComponentConfiguration = ({
         <Formik
           initialValues={getInitialValues(component)}
           onSubmit={values => {
-            handleComponentDrop(null, {
+            handleSubmit(null, {
               type: component.type,
               configurations: values,
             });
@@ -155,6 +164,7 @@ const ComponentConfiguration = ({
                   configurations={values}
                   handleClose={handleClose}
                   error={!isValid}
+                  disabled={editMode}
                 />
               </DragArea>
 
@@ -175,9 +185,11 @@ const ComponentConfiguration = ({
               </FormScroll>
 
               <Footer>
-                <Hint>(hint: you can also drag the component)</Hint>
+                {!editMode && (
+                  <Hint>(hint: you can also drag the component)</Hint>
+                )}
                 <SubmitButton disabled={!isValid}>
-                  {isValid ? 'Add to circuit' : 'Check form errors'}
+                  {getFormSubmitLabel(isValid, editMode)}
                 </SubmitButton>
               </Footer>
             </Form>

@@ -15,6 +15,7 @@ const ContextMenus = ({
   redo,
   zoomIn,
   zoomOut,
+  configureComponent,
 }) => (
   <>
     <DiagramContextMenu
@@ -34,6 +35,7 @@ const ContextMenus = ({
       redo={redo}
       zoomIn={zoomIn}
       zoomOut={zoomOut}
+      configureComponent={configureComponent}
     />
   </>
 );

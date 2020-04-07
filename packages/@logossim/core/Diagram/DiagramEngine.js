@@ -160,6 +160,64 @@ export default class DiagramEngine {
     this.engine.repaintCanvas();
   };
 
+  /**
+   * When the component configuration is changed, we create a new
+   * instance with the correct configurations and delete the old
+   * instance.
+   */
+  handleComponentEdit = old => {
+    const { Model } = this.components.find(
+      c => c.type === old.options.type,
+    );
+
+    const newInstance = new Model(
+      old.options.type,
+      old.configurations,
+    );
+    newInstance.setPosition(old.position);
+
+    const hasNewPort = Object.values(newInstance.getPorts()).some(
+      newPort => !old.ports[newPort.getName()],
+    );
+
+    const hasRemovedPort = Object.values(old.ports).some(
+      oldPort => !newInstance.getPort(oldPort.options.name),
+    );
+
+    if (hasNewPort || hasRemovedPort) {
+      /**
+       * If there was any port added or removed, we need to remove all
+       * links connected to the edited component.
+       */
+      const oldLinks = Object.values(old.ports)
+        .map(port => Object.values(port.links)[0])
+        .filter(link => !!link);
+      oldLinks.forEach(link => link.remove());
+    } else {
+      /**
+       * If no port was neither added or removed, we need to map old
+       * port links to new ports
+       */
+      Object.values(newInstance.getPorts()).forEach(newPort => {
+        const oldPort = old.ports[newPort.getName()];
+        const link = Object.values(oldPort.links)[0];
+        if (!link) return;
+        newPort.addLink(link);
+        if (oldPort === link.getSourcePort())
+          link.setSourcePort(newPort);
+        if (oldPort === link.getTargetPort())
+          link.setTargetPort(newPort);
+      });
+    }
+
+    // Removes the old instance and adds the new one
+    this.model.removeNode(old.options.id);
+    this.model.addNode(newInstance);
+
+    // this.engine.fireEvent({node}, 'componentEdited');
+    this.engine.repaintCanvas();
+  };
+
   clearSelection = () =>
     this.getEngine()
       .getModel()

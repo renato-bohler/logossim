@@ -13,6 +13,7 @@ import {
   SimulationControlButtons,
   ComponentSelectButton,
   ComponentSelect,
+  ComponentEdit,
   ContextMenus,
 } from './ui-components';
 
@@ -24,6 +25,8 @@ export default class App extends Component {
 
     this.state = {
       isComponentSelectOpen: false,
+      isComponentEditOpen: false,
+      componentEdit: null,
     };
 
     this.diagram = new DiagramEngine(components);
@@ -103,8 +106,27 @@ export default class App extends Component {
       isComponentSelectOpen: false,
     });
 
+  showEditComponent = componentEdit => {
+    this.diagram.clearSelection();
+
+    this.setState({
+      isComponentEditOpen: true,
+      componentEdit,
+    });
+  };
+
+  hideEditComponent = () =>
+    this.setState({
+      isComponentEditOpen: false,
+      componentEdit: null,
+    });
+
   render() {
-    const { isComponentSelectOpen } = this.state;
+    const {
+      isComponentSelectOpen,
+      isComponentEditOpen,
+      componentEdit,
+    } = this.state;
 
     return (
       <>
@@ -129,6 +151,13 @@ export default class App extends Component {
           handleClose={this.hideAddComponent}
           handleComponentDrop={this.diagram.handleComponentDrop}
         />
+        <ComponentEdit
+          isOpen={isComponentEditOpen}
+          components={components}
+          component={componentEdit}
+          handleClose={this.hideEditComponent}
+          handleComponentEdit={this.diagram.handleComponentEdit}
+        />
         <Diagram engine={this.diagram} />
         <Tooltip id="tooltip" globalEventOff="click" />
         <ContextMenus
@@ -141,6 +170,7 @@ export default class App extends Component {
           redo={this.diagram.redo}
           zoomIn={this.diagram.zoomIn}
           zoomOut={this.diagram.zoomOut}
+          configureComponent={this.showEditComponent}
         />
       </>
     );
