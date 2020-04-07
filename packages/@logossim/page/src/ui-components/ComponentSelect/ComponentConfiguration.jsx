@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Tooltip from 'react-tooltip';
 
 import { Formik, Form, Field } from 'formik';
@@ -117,6 +117,17 @@ const ComponentConfiguration = ({
   handleBack,
   handleSubmit,
 }) => {
+  const firstInputRef = useRef();
+  const buttonRef = useRef();
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    } else {
+      buttonRef.current.focus();
+    }
+  });
+
   useEffect(Tooltip.rebuild);
 
   return (
@@ -169,26 +180,29 @@ const ComponentConfiguration = ({
               </DragArea>
 
               <FormScroll autoComplete="off">
-                {component.configurations.map(configuration => (
-                  <Field
-                    key={configuration.name}
-                    component={ComponentConfigurationInput}
-                    {...configuration}
-                    validate={
-                      configuration.validate
-                        ? value =>
-                            configuration.validate(value, values)
-                        : null
-                    }
-                  />
-                ))}
+                {component.configurations.map(
+                  (configuration, index) => (
+                    <Field
+                      key={configuration.name}
+                      component={ComponentConfigurationInput}
+                      innerRef={index === 0 ? firstInputRef : null}
+                      {...configuration}
+                      validate={
+                        configuration.validate
+                          ? value =>
+                              configuration.validate(value, values)
+                          : null
+                      }
+                    />
+                  ),
+                )}
               </FormScroll>
 
               <Footer>
                 {!editMode && (
                   <Hint>(hint: you can also drag the component)</Hint>
                 )}
-                <SubmitButton disabled={!isValid}>
+                <SubmitButton disabled={!isValid} ref={buttonRef}>
                   {getFormSubmitLabel(isValid, editMode)}
                 </SubmitButton>
               </Footer>
