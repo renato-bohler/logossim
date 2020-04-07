@@ -33,6 +33,33 @@ export default class App extends Component {
     this.simulation = new SimulationEngine(components);
   }
 
+  componentDidMount() {
+    window.addEventListener('keydown', this.shortcutHandler);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.shortcutHandler);
+  }
+
+  shortcutHandler = event => {
+    const { ctrlKey, code } = event;
+
+    // Add component
+    if (ctrlKey && code === 'KeyA') {
+      event.preventDefault();
+      this.showAddComponent();
+    }
+
+    // Component configuration
+    if (ctrlKey && code === 'KeyE') {
+      event.preventDefault();
+      const selectedNodes = this.diagram.getSelectedNodes();
+      if (selectedNodes.length !== 1) return;
+      const node = selectedNodes[0];
+      this.showEditComponent(node);
+    }
+  };
+
   synchronizeSimulation = () => {
     const diff = this.simulation.getDiff();
 
