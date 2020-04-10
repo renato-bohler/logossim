@@ -89,9 +89,7 @@ export default class MoveItemsState extends AbstractDisplacementState {
       .getModel()
       .getSelectedEntities()
       .filter(model => model instanceof BaseModel)
-      .map(node =>
-        this.getLinksFromNode(node).map(([, link]) => link),
-      )
+      .map(node => node.getAllLinks())
       .flat()
       .map(link => ({
         id: link.getID(),

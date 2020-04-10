@@ -36,7 +36,7 @@ export default class DiagramEngine {
     });
 
     this.engine.commands = new CommandManager();
-    this.engine.registerListener(commandHandlers(this.engine));
+    this.engine.registerListener(commandHandlers(this));
 
     this.engine.getStateMachine().pushState(new States());
 
@@ -160,28 +160,50 @@ export default class DiagramEngine {
     this.engine.repaintCanvas();
   };
 
+  handleComponentEdit = (node, configurations) => {
+    const configurationsBefore = node.configurations;
+    const linksBefore = node.getAllLinks();
+
+    this.editComponentConfiguration(node, configurations);
+
+    this.engine.fireEvent(
+      {
+        node,
+        configurations: {
+          before: configurationsBefore,
+          after: node.configurations,
+        },
+        links: {
+          before: linksBefore,
+          after: node.getAllLinks(),
+        },
+      },
+      'componentEdited',
+    );
+
+    this.engine.repaintCanvas();
+  };
+
   /**
-   * When the component configuration is changed, we create a new
-   * instance with the correct configurations and delete the old
-   * instance.
+   * When the component configuration is changed, we reinitialize the
+   * given component with the given configurations.
+   *
+   * For simplicity's sake, if this configuration edit creates or
+   * removes a port, we delete all its links.
    */
-  handleComponentEdit = old => {
-    const { Model } = this.components.find(
-      c => c.type === old.options.type,
-    );
+  editComponentConfiguration = (node, configurations) => {
+    const portsBefore = node.getPorts();
 
-    const newInstance = new Model(
-      old.options.type,
-      old.configurations,
-    );
-    newInstance.setPosition(old.position);
+    // Resets configurations and ports for the node and reinitialize
+    node.configurations = configurations; // eslint-disable-line no-param-reassign
+    node.ports = {}; // eslint-disable-line no-param-reassign
+    node.initialize(configurations);
 
-    const hasNewPort = Object.values(newInstance.getPorts()).some(
-      newPort => !old.ports[newPort.getName()],
+    const hasNewPort = Object.values(node.getPorts()).some(
+      newPort => !portsBefore[newPort.getName()],
     );
-
-    const hasRemovedPort = Object.values(old.ports).some(
-      oldPort => !newInstance.getPort(oldPort.options.name),
+    const hasRemovedPort = Object.values(portsBefore).some(
+      oldPort => !node.getPort(oldPort.getName()),
     );
 
     if (hasNewPort || hasRemovedPort) {
@@ -189,33 +211,26 @@ export default class DiagramEngine {
        * If there was any port added or removed, we need to remove all
        * links connected to the edited component.
        */
-      const oldLinks = Object.values(old.ports)
-        .map(port => Object.values(port.links)[0])
-        .filter(link => !!link);
-      oldLinks.forEach(link => link.remove());
+      Object.values(portsBefore).forEach(port =>
+        Object.values(port.getLinks()).forEach(link => link.remove()),
+      );
     } else {
       /**
        * If no port was neither added or removed, we need to map old
        * port links to new ports
        */
-      Object.values(newInstance.getPorts()).forEach(newPort => {
-        const oldPort = old.ports[newPort.getName()];
-        const link = Object.values(oldPort.links)[0];
+      Object.values(portsBefore).forEach(portBefore => {
+        const newPort = node.getPort(portBefore.getName());
+        const link = Object.values(portBefore.getLinks())[0];
         if (!link) return;
         newPort.addLink(link);
-        if (oldPort === link.getSourcePort())
+        if (portBefore === link.getSourcePort())
           link.setSourcePort(newPort);
-        if (oldPort === link.getTargetPort())
+        if (portBefore === link.getTargetPort())
           link.setTargetPort(newPort);
+        portBefore.remove();
       });
     }
-
-    // Removes the old instance and adds the new one
-    this.model.removeNode(old.options.id);
-    this.model.addNode(newInstance);
-
-    // this.engine.fireEvent({node}, 'componentEdited');
-    this.engine.repaintCanvas();
   };
 
   clearSelection = () =>

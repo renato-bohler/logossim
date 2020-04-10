@@ -30,7 +30,7 @@ const ComponentEdit = ({
         editMode
         handleClose={handleClose}
         handleSubmit={(event, { configurations }) =>
-          handleComponentEdit({ ...component, configurations })
+          handleComponentEdit(component, configurations)
         }
         component={edit}
       />
