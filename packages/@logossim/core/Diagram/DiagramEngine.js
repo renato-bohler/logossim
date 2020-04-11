@@ -16,8 +16,9 @@ import CommandManager from './Command/CommandManager';
 import States from './states/States';
 
 export default class DiagramEngine {
-  constructor(components) {
+  constructor(components, areShortcutsAllowed) {
     this.components = components;
+    this.areShortcutsAllowed = areShortcutsAllowed;
     this.locked = false;
 
     this.initializeEngine();
@@ -41,14 +42,16 @@ export default class DiagramEngine {
     this.engine.getStateMachine().pushState(new States());
 
     const actions = [
-      new CloneAction(),
-      new ClipboardAction(),
-      new DeleteAction(),
-      new UndoRedoAction(),
-      new ZoomAction(),
+      CloneAction,
+      ClipboardAction,
+      DeleteAction,
+      UndoRedoAction,
+      ZoomAction,
     ];
-    actions.forEach(action =>
-      this.engine.getActionEventBus().registerAction(action),
+    actions.forEach(Action =>
+      this.engine
+        .getActionEventBus()
+        .registerAction(new Action(this.areShortcutsAllowed)),
     );
 
     this.engine.getPortFactories().registerFactory(new PortFactory());

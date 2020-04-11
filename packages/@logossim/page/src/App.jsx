@@ -29,7 +29,10 @@ export default class App extends Component {
       componentEdit: null,
     };
 
-    this.diagram = new DiagramEngine(components);
+    this.diagram = new DiagramEngine(
+      components,
+      this.areShortcutsAllowed,
+    );
     this.simulation = new SimulationEngine(components);
   }
 
@@ -41,8 +44,15 @@ export default class App extends Component {
     window.removeEventListener('keydown', this.shortcutHandler);
   }
 
+  areShortcutsAllowed = () => {
+    const { isComponentSelectOpen, isComponentEditOpen } = this.state;
+    return !(isComponentSelectOpen || isComponentEditOpen);
+  };
+
   shortcutHandler = event => {
-    const { ctrlKey, code } = event;
+    const { ctrlKey, shiftKey, code } = event;
+
+    if (!this.areShortcutsAllowed()) return;
 
     // Add component
     if (ctrlKey && code === 'KeyA') {
@@ -57,6 +67,35 @@ export default class App extends Component {
       if (selectedNodes.length !== 1) return;
       const node = selectedNodes[0];
       this.showEditComponent(node);
+    }
+
+    // Play/pause toggle simulation
+    if (!ctrlKey && code === 'Space') {
+      event.preventDefault();
+      if (this.simulation.isRunning()) this.handleClickPause();
+      else this.handleClickStart();
+    }
+
+    // Stop simulation
+    if ((ctrlKey && code === 'Space') || code === 'Escape') {
+      event.preventDefault();
+
+      if (!this.simulation.isStopped()) this.handleClickStop();
+    }
+
+    // Save circuit
+    if (ctrlKey && !shiftKey && code === 'KeyS') {
+      event.preventDefault();
+      this.handleClickSave();
+    }
+
+    // Load circuit
+    if (
+      (ctrlKey && code === 'KeyL') ||
+      (ctrlKey && shiftKey && code === 'KeyS')
+    ) {
+      event.preventDefault();
+      this.handleClickLoad();
     }
   };
 
@@ -104,10 +143,10 @@ export default class App extends Component {
   handleClickStart = () => {
     this.diagram.clearSelection();
     this.diagram.setLocked(true);
-    this.forceUpdate();
 
     this.simulation.start(this.diagram.getEngine().getModel());
     this.renderSimulation();
+    this.forceUpdate();
   };
 
   handleClickPause = () => {
