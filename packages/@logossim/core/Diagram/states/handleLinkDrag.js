@@ -43,7 +43,7 @@ const nextLinkPosition = (
  *
  * This implementation mimics logisim link creation behavior.
  */
-export function handleMouseMoved(event, link) {
+export default function handleLinkDrag(event, link) {
   const first = link.getFirstPosition();
   const last = link.getLastPosition();
 
@@ -125,31 +125,4 @@ export function handleMouseMoved(event, link) {
   link.getLastPoint().setPosition(next.x, next.y);
 
   this.engine.repaintCanvas();
-}
-
-/**
- * Handles bifurcations which have a link as a target.
- */
-export function handleLinkToLinkBifurcation(link, landingLink) {
-  link.setBifurcationTarget(landingLink);
-  landingLink.addBifurcation(link);
-  landingLink.setSelected(true);
-}
-
-/**
- * Handles new links created targeting existing links.
- */
-export function handleReverseBifurcation(link, landingLink) {
-  const reverseLink = this.engine
-    .getFactoryForLink(landingLink)
-    .generateModel();
-  reverseLink.setPoints(link.getPoints().reverse());
-  reverseLink.setTargetPort(link.getSourcePort());
-  reverseLink.setBifurcationSource(landingLink);
-
-  landingLink.addBifurcation(reverseLink);
-  landingLink.setSelected(true);
-
-  link.remove();
-  this.engine.getModel().addLink(reverseLink);
 }

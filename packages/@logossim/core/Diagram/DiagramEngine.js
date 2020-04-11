@@ -36,7 +36,7 @@ export default class DiagramEngine {
     });
 
     this.engine.commands = new CommandManager();
-    this.engine.registerListener(commandHandlers(this.engine));
+    this.engine.registerListener(commandHandlers(this));
 
     this.engine.getStateMachine().pushState(new States());
 
@@ -158,6 +158,79 @@ export default class DiagramEngine {
     this.engine.fireEvent({ nodes: [node] }, 'componentsAdded');
 
     this.engine.repaintCanvas();
+  };
+
+  handleComponentEdit = (node, configurations) => {
+    const configurationsBefore = node.configurations;
+    const linksBefore = node.getAllLinks();
+
+    this.editComponentConfiguration(node, configurations);
+
+    this.engine.fireEvent(
+      {
+        node,
+        configurations: {
+          before: configurationsBefore,
+          after: node.configurations,
+        },
+        links: {
+          before: linksBefore,
+          after: node.getAllLinks(),
+        },
+      },
+      'componentEdited',
+    );
+
+    this.engine.repaintCanvas();
+  };
+
+  /**
+   * When the component configuration is changed, we reinitialize the
+   * given component with the given configurations.
+   *
+   * For simplicity's sake, if this configuration edit creates or
+   * removes a port, we delete all its links.
+   */
+  editComponentConfiguration = (node, configurations) => {
+    const portsBefore = node.getPorts();
+
+    // Resets configurations and ports for the node and reinitialize
+    node.configurations = configurations; // eslint-disable-line no-param-reassign
+    node.ports = {}; // eslint-disable-line no-param-reassign
+    node.initialize(configurations);
+
+    const hasNewPort = Object.values(node.getPorts()).some(
+      newPort => !portsBefore[newPort.getName()],
+    );
+    const hasRemovedPort = Object.values(portsBefore).some(
+      oldPort => !node.getPort(oldPort.getName()),
+    );
+
+    if (hasNewPort || hasRemovedPort) {
+      /**
+       * If there was any port added or removed, we need to remove all
+       * links connected to the edited component.
+       */
+      Object.values(portsBefore).forEach(port =>
+        Object.values(port.getLinks()).forEach(link => link.remove()),
+      );
+    } else {
+      /**
+       * If no port was neither added or removed, we need to map old
+       * port links to new ports
+       */
+      Object.values(portsBefore).forEach(portBefore => {
+        const newPort = node.getPort(portBefore.getName());
+        const link = Object.values(portBefore.getLinks())[0];
+        if (!link) return;
+        newPort.addLink(link);
+        if (portBefore === link.getSourcePort())
+          link.setSourcePort(newPort);
+        if (portBefore === link.getTargetPort())
+          link.setTargetPort(newPort);
+        portBefore.remove();
+      });
+    }
   };
 
   clearSelection = () =>

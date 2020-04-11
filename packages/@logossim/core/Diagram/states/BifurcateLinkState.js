@@ -18,11 +18,7 @@ import {
   sameAxis,
   closestPointToLink,
 } from './common';
-import {
-  handleMouseMoved,
-  handleReverseBifurcation,
-  handleLinkToLinkBifurcation,
-} from './handlers';
+import handleLinkDrag from './handleLinkDrag';
 
 /**
  * This State is responsible for handling bifurcation events.
@@ -32,11 +28,9 @@ import {
  *
  * There are three ways the user can create bifurcations:
  *
- * 1. By dragging from a port into an existing link
- *    (reverse bifurcation)
- * 2. By dragging an existing link into another existing link
+ * 1. By dragging an existing link into another existing link
  *    (link-to-link bifurcation)
- * 3. By dragging an existing link to any other point on the canvas,
+ * 2. By dragging an existing link to any other point on the canvas,
  *    except on top of nodes
  *
  * If the drag start and end points are near each other, this action
@@ -133,15 +127,9 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             this.engine,
           );
           if (landing) {
-            if (this.bifurcation.getBifurcationSource()) {
-              handleLinkToLinkBifurcation(this.bifurcation, landing);
-            } else {
-              handleReverseBifurcation.call(
-                this,
-                this.bifurcation,
-                landing,
-              );
-            }
+            this.bifurcation.setBifurcationTarget(landing);
+            landing.addBifurcation(this.bifurcation);
+            landing.setSelected(true);
           }
 
           this.mergeWithBifurcation(
@@ -480,6 +468,6 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
    * Updates bifurcation's points upon mouse move.
    */
   fireMouseMoved(event) {
-    handleMouseMoved.call(this, event, this.bifurcation);
+    handleLinkDrag.call(this, event, this.bifurcation);
   }
 }

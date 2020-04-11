@@ -25,6 +25,7 @@ const ComponentContextMenu = ({
   redo,
   zoomIn,
   zoomOut,
+  configureComponent,
 }) => (
   <Menu id="component">
     <Item onClick={cloneSelected}>
@@ -85,7 +86,9 @@ const ComponentContextMenu = ({
     </Item>
     <Separator />
     <Item
-      onClick={() => window.alert('TODO: configurations feature')}
+      onClick={({ props: component }) =>
+        configureComponent(component)
+      }
     >
       <ContextMenuIconContainer>
         <Settings />

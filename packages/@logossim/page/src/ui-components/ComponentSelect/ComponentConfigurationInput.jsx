@@ -45,6 +45,7 @@ const Input = ({
   label,
   componentType,
   type,
+  innerRef,
   // Select
   options = [],
   // Number
@@ -57,7 +58,7 @@ const Input = ({
       return (
         <>
           <label htmlFor={name}>{label}</label>
-          <select id={field.name} {...field}>
+          <select id={field.name} ref={innerRef} {...field}>
             {options.map(option => (
               <option value={option.value} key={option.value}>
                 {option.label}
@@ -72,6 +73,7 @@ const Input = ({
           <label htmlFor={name}>{label}</label>
           <input
             id={field.name}
+            ref={innerRef}
             {...field}
             step={step}
             min={min}
@@ -84,7 +86,12 @@ const Input = ({
       return (
         <>
           <label htmlFor={name}>{label}</label>
-          <input id={field.name} {...field} type="text" />
+          <input
+            id={field.name}
+            ref={innerRef}
+            {...field}
+            type="text"
+          />
         </>
       );
     default:

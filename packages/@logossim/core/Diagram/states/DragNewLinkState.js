@@ -9,10 +9,7 @@ import {
 } from '@projectstorm/react-diagrams-core';
 
 import { nearby, getLandingLink } from './common';
-import {
-  handleMouseMoved,
-  handleReverseBifurcation,
-} from './handlers';
+import handleLinkDrag from './handleLinkDrag';
 
 /**
  * This State is responsible for handling link creation events.
@@ -88,8 +85,21 @@ export default class DragNewLinkState extends AbstractDisplacementState {
           // Link landing on another link
           const landing = getLandingLink(this.link, this.engine);
           if (landing) {
-            handleReverseBifurcation.call(this, this.link, landing);
+            const reverse = this.engine
+              .getFactoryForLink(landing)
+              .generateModel();
+            reverse.setPoints(this.link.getPoints().reverse());
+            reverse.setTargetPort(this.link.getSourcePort());
+            reverse.setBifurcationSource(landing);
+
+            landing.addBifurcation(reverse);
+            landing.setSelected(true);
+
+            this.link.remove();
+            this.engine.getModel().addLink(reverse);
+            this.link = reverse;
           }
+
           this.fireEvent();
         },
       }),
@@ -118,6 +128,6 @@ export default class DragNewLinkState extends AbstractDisplacementState {
    * Updates link's points upon mouse move.
    */
   fireMouseMoved(event) {
-    handleMouseMoved.call(this, event, this.link);
+    handleLinkDrag.call(this, event, this.link);
   }
 }

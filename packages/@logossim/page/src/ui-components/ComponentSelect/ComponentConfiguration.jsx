@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Tooltip from 'react-tooltip';
 
 import { Formik, Form, Field } from 'formik';
@@ -104,27 +104,47 @@ const getInitialValues = component =>
     ]),
   );
 
+const getFormSubmitLabel = (isValid, editMode) => {
+  if (!isValid) return 'Check form errors';
+  if (editMode) return 'Edit component';
+  return 'Add to circuit';
+};
+
 const ComponentConfiguration = ({
+  editMode,
   component,
   handleClose,
   handleBack,
-  handleComponentDrop,
+  handleSubmit,
 }) => {
+  const firstInputRef = useRef();
+  const buttonRef = useRef();
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    } else {
+      buttonRef.current.focus();
+    }
+  });
+
   useEffect(Tooltip.rebuild);
 
   return (
     <>
       <Header>
-        <IconButton
-          first
-          onClick={handleBack}
-          data-for="tooltip"
-          data-tip="Go back..."
-          data-place="right"
-        >
-          <ArrowLeft />
-        </IconButton>
-        <Title>Configure component</Title>
+        {!editMode && (
+          <IconButton
+            first
+            onClick={handleBack}
+            data-for="tooltip"
+            data-tip="Go back..."
+            data-place="right"
+          >
+            <ArrowLeft />
+          </IconButton>
+        )}
+        <Title>{editMode ? 'Edit' : 'Configure'} component</Title>
         <IconButton
           last
           onClick={handleClose}
@@ -140,7 +160,7 @@ const ComponentConfiguration = ({
         <Formik
           initialValues={getInitialValues(component)}
           onSubmit={values => {
-            handleComponentDrop(null, {
+            handleSubmit(null, {
               type: component.type,
               configurations: values,
             });
@@ -155,29 +175,35 @@ const ComponentConfiguration = ({
                   configurations={values}
                   handleClose={handleClose}
                   error={!isValid}
+                  disabled={editMode}
                 />
               </DragArea>
 
               <FormScroll autoComplete="off">
-                {component.configurations.map(configuration => (
-                  <Field
-                    key={configuration.name}
-                    component={ComponentConfigurationInput}
-                    {...configuration}
-                    validate={
-                      configuration.validate
-                        ? value =>
-                            configuration.validate(value, values)
-                        : null
-                    }
-                  />
-                ))}
+                {component.configurations.map(
+                  (configuration, index) => (
+                    <Field
+                      key={configuration.name}
+                      component={ComponentConfigurationInput}
+                      innerRef={index === 0 ? firstInputRef : null}
+                      {...configuration}
+                      validate={
+                        configuration.validate
+                          ? value =>
+                              configuration.validate(value, values)
+                          : null
+                      }
+                    />
+                  ),
+                )}
               </FormScroll>
 
               <Footer>
-                <Hint>(hint: you can also drag the component)</Hint>
-                <SubmitButton disabled={!isValid}>
-                  {isValid ? 'Add to circuit' : 'Check form errors'}
+                {!editMode && (
+                  <Hint>(hint: you can also drag the component)</Hint>
+                )}
+                <SubmitButton disabled={!isValid} ref={buttonRef}>
+                  {getFormSubmitLabel(isValid, editMode)}
                 </SubmitButton>
               </Footer>
             </Form>

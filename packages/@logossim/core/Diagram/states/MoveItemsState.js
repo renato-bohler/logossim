@@ -32,7 +32,10 @@ export default class MoveItemsState extends AbstractDisplacementState {
       new Action({
         type: InputType.MOUSE_DOWN,
         fire: event => {
-          if (this.engine.getModel().isLocked()) return;
+          if (this.engine.getModel().isLocked()) {
+            this.eject();
+            return;
+          }
 
           this.lastDisplacement = new Point(0, 0);
 
@@ -40,7 +43,10 @@ export default class MoveItemsState extends AbstractDisplacementState {
             .getActionEventBus()
             .getModelForEvent(event);
 
-          if (!this.element) return;
+          if (!this.element) {
+            this.eject();
+            return;
+          }
 
           if (!this.element.isSelected()) {
             this.engine.getModel().clearSelection();
@@ -89,9 +95,7 @@ export default class MoveItemsState extends AbstractDisplacementState {
       .getModel()
       .getSelectedEntities()
       .filter(model => model instanceof BaseModel)
-      .map(node =>
-        this.getLinksFromNode(node).map(([, link]) => link),
-      )
+      .map(node => node.getAllLinks())
       .flat()
       .map(link => ({
         id: link.getID(),

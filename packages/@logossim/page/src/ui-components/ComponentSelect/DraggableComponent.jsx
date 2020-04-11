@@ -14,6 +14,12 @@ const engineStub = {
   getModel: () => ({ isLocked: () => false }),
 };
 
+const getTooltip = (error, disabled) => {
+  if (disabled) return '';
+  if (error) return 'Check form errors';
+  return 'Drag me!';
+};
+
 const ErrorWidget = styled.div`
   border: 1px dashed var(--value-error);
   border-radius: 5px;
@@ -26,9 +32,10 @@ const DraggableComponent = ({
   configurations,
   handleClose,
   error,
+  disabled,
 }) => (
   <div
-    draggable={!error}
+    draggable={!error && !disabled}
     onDragStart={event => {
       event.dataTransfer.setDragImage(
         event.currentTarget.children[0],
@@ -50,7 +57,7 @@ const DraggableComponent = ({
       });
     }}
     data-for="tooltip"
-    data-tip={error ? 'Check form errors' : 'Drag me!'}
+    data-tip={getTooltip(error, disabled)}
     data-place="bottom"
   >
     {error ? (

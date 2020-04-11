@@ -71,8 +71,8 @@ const ComponentSearch = ({
     if (
       key === 'Enter' &&
       searchText &&
-      filteredGroups.length === 1 &&
-      filteredGroups[0].components.length === 1
+      filteredGroups.length > 0 &&
+      filteredGroups[0].components.length > 0
     ) {
       handleComponentSelect(filteredGroups[0].components[0]);
     }
