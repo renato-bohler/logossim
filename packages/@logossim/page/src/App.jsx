@@ -38,10 +38,18 @@ export default class App extends Component {
 
   componentDidMount() {
     window.addEventListener('keydown', this.shortcutHandler);
+    window.addEventListener('load', this.loadHandler);
+    window.addEventListener('beforeunload', this.unloadHandler);
+
+    this.autoSaveInterval = setInterval(this.autoSave, 15000);
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.shortcutHandler);
+    window.addEventListener('load', this.loadHandler);
+    window.removeEventListener('beforeunload', this.unloadHandler);
+
+    clearInterval(this.autoSaveInterval);
   }
 
   areShortcutsAllowed = () => {
@@ -97,6 +105,56 @@ export default class App extends Component {
       event.preventDefault();
       this.handleClickLoad();
     }
+  };
+
+  isCircuitEmpty = circuit => {
+    if (!circuit) return true;
+
+    return Object.keys(circuit.layers[1].models).length === 0;
+  };
+
+  loadHandler = () => {
+    const lastSaved = JSON.parse(
+      localStorage.getItem('circuit-autosave'),
+    );
+
+    if (this.isCircuitEmpty(lastSaved)) return;
+
+    const reload = window.confirm('Reload last unsaved circuit?');
+    if (reload) this.diagram.load(lastSaved);
+    else localStorage.removeItem('circuit-autosave');
+  };
+
+  shouldWarnUnload = (currentCircuit, lastSavedCircuit) => {
+    if (this.isCircuitEmpty(currentCircuit)) return false;
+
+    return (
+      JSON.stringify(lastSavedCircuit.layers) !==
+      JSON.stringify(currentCircuit.layers)
+    );
+  };
+
+  unloadHandler = event => {
+    const lastSaved = JSON.parse(localStorage.getItem('circuit'));
+    const current = this.diagram.serialize();
+
+    if (this.shouldWarnUnload(current, lastSaved)) {
+      localStorage.setItem(
+        'circuit-autosave',
+        JSON.stringify(current),
+      );
+      // eslint-disable-next-line no-param-reassign
+      event.returnValue =
+        'You have unsaved changes. Sure you want to leave?';
+    }
+  };
+
+  autoSave = () => {
+    const circuit = this.diagram.serialize();
+
+    if (this.isCircuitEmpty(circuit)) return;
+
+    localStorage.setItem('circuit-autosave', JSON.stringify(circuit));
   };
 
   synchronizeSimulation = () => {
