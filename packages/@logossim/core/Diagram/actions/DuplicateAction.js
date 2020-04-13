@@ -3,13 +3,14 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 import BaseModel from '../../BaseModel';
 
 /**
- * Handle clone actions.
+ * Handle duplication (clone) actions.
  */
-export default class CloneAction extends Action {
-  constructor() {
+export default class DuplicateAction extends Action {
+  constructor(areShortcutsAllowed) {
     super({
       type: InputType.KEY_DOWN,
       fire: ({ event }) => {
+        if (!areShortcutsAllowed()) return;
         if (this.engine.getModel().isLocked()) return;
 
         if (this.matchesInput(event)) {

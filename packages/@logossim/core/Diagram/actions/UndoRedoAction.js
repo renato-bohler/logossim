@@ -4,10 +4,11 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
  * Handles undo/redo actions.
  */
 export default class UndoRedoAction extends Action {
-  constructor() {
+  constructor(areShortcutsAllowed) {
     super({
       type: InputType.KEY_DOWN,
       fire: ({ event }) => {
+        if (!areShortcutsAllowed()) return;
         if (this.engine.getModel().isLocked()) return;
 
         if (this.matchesInput(event)) {

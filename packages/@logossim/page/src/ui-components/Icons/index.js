@@ -1,11 +1,11 @@
 import ArrowLeft from './ArrowLeft';
 import ArrowRight from './ArrowRight';
 import Chevron from './Chevron';
-import Clone from './Clone';
 import Close from './Close';
 import Copy from './Copy';
 import Cut from './Cut';
 import Delete from './Delete';
+import Duplicate from './Duplicate';
 import Paste from './Paste';
 import Pause from './Pause';
 import Play from './Play';
@@ -20,11 +20,11 @@ export {
   ArrowLeft,
   ArrowRight,
   Chevron,
-  Clone,
   Close,
   Copy,
   Cut,
   Delete,
+  Duplicate,
   Paste,
   Pause,
   Play,

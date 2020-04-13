@@ -7,8 +7,8 @@ import BaseModel from '../BaseModel';
 import LinkFactory from '../Link/LinkFactory';
 import PortFactory from '../Port/PortFactory';
 import ClipboardAction from './actions/ClipboardAction';
-import CloneAction from './actions/CloneAction';
 import DeleteAction from './actions/DeleteAction';
+import DuplicateAction from './actions/DuplicateAction';
 import UndoRedoAction from './actions/UndoRedoAction';
 import ZoomAction from './actions/ZoomAction';
 import commandHandlers from './Command/commandHandlers';
@@ -16,8 +16,9 @@ import CommandManager from './Command/CommandManager';
 import States from './states/States';
 
 export default class DiagramEngine {
-  constructor(components) {
+  constructor(components, areShortcutsAllowed) {
     this.components = components;
+    this.areShortcutsAllowed = areShortcutsAllowed;
     this.locked = false;
 
     this.initializeEngine();
@@ -41,14 +42,16 @@ export default class DiagramEngine {
     this.engine.getStateMachine().pushState(new States());
 
     const actions = [
-      new CloneAction(),
-      new ClipboardAction(),
-      new DeleteAction(),
-      new UndoRedoAction(),
-      new ZoomAction(),
+      DuplicateAction,
+      ClipboardAction,
+      DeleteAction,
+      UndoRedoAction,
+      ZoomAction,
     ];
-    actions.forEach(action =>
-      this.engine.getActionEventBus().registerAction(action),
+    actions.forEach(Action =>
+      this.engine
+        .getActionEventBus()
+        .registerAction(new Action(this.areShortcutsAllowed)),
     );
 
     this.engine.getPortFactories().registerFactory(new PortFactory());
@@ -254,7 +257,7 @@ export default class DiagramEngine {
       },
     });
 
-  cloneSelected = () =>
+  duplicateSelected = () =>
     this.fireAction({ type: 'keydown', ctrlKey: true, code: 'KeyD' });
 
   cutSelected = () =>

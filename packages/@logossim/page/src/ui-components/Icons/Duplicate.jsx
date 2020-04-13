@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Clone = ({ size = 16, color = 'gray' }) => (
+const Duplicate = ({ size = 16, color = 'gray' }) => (
   <svg
     width={size}
     height={(size * 18) / 24}
@@ -25,4 +25,4 @@ const Clone = ({ size = 16, color = 'gray' }) => (
   </svg>
 );
 
-export default Clone;
+export default Duplicate;

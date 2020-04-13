@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Modal from '../Modal/Modal';
 import ComponentConfiguration from './ComponentConfiguration';
 import ComponentSearch from './ComponentSearch';
+
+const closeOnEsc = (
+  { code },
+  { handleClose, setSelectedComponent },
+) => {
+  if (code !== 'Escape') return;
+  handleClose();
+  setSelectedComponent(null);
+};
 
 const ComponentSelect = ({
   isOpen,
@@ -11,6 +20,15 @@ const ComponentSelect = ({
   handleComponentDrop,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const callback = useCallback(
+    event => closeOnEsc(event, { handleClose, setSelectedComponent }),
+    [handleClose],
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', callback);
+    return () => window.removeEventListener('keydown', callback);
+  });
 
   if (!isOpen) return null;
 

@@ -29,20 +29,38 @@ export default class App extends Component {
       componentEdit: null,
     };
 
-    this.diagram = new DiagramEngine(components);
+    this.diagram = new DiagramEngine(
+      components,
+      this.areShortcutsAllowed,
+    );
     this.simulation = new SimulationEngine(components);
   }
 
   componentDidMount() {
     window.addEventListener('keydown', this.shortcutHandler);
+    window.addEventListener('load', this.loadHandler);
+    window.addEventListener('beforeunload', this.unloadHandler);
+
+    this.autoSaveInterval = setInterval(this.autoSave, 15000);
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.shortcutHandler);
+    window.addEventListener('load', this.loadHandler);
+    window.removeEventListener('beforeunload', this.unloadHandler);
+
+    clearInterval(this.autoSaveInterval);
   }
 
+  areShortcutsAllowed = () => {
+    const { isComponentSelectOpen, isComponentEditOpen } = this.state;
+    return !(isComponentSelectOpen || isComponentEditOpen);
+  };
+
   shortcutHandler = event => {
-    const { ctrlKey, code } = event;
+    const { ctrlKey, shiftKey, code } = event;
+
+    if (!this.areShortcutsAllowed()) return;
 
     // Add component
     if (ctrlKey && code === 'KeyA') {
@@ -58,6 +76,85 @@ export default class App extends Component {
       const node = selectedNodes[0];
       this.showEditComponent(node);
     }
+
+    // Play/pause toggle simulation
+    if (!ctrlKey && code === 'Space') {
+      event.preventDefault();
+      if (this.simulation.isRunning()) this.handleClickPause();
+      else this.handleClickStart();
+    }
+
+    // Stop simulation
+    if ((ctrlKey && code === 'Space') || code === 'Escape') {
+      event.preventDefault();
+
+      if (!this.simulation.isStopped()) this.handleClickStop();
+    }
+
+    // Save circuit
+    if (ctrlKey && !shiftKey && code === 'KeyS') {
+      event.preventDefault();
+      this.handleClickSave();
+    }
+
+    // Load circuit
+    if (
+      (ctrlKey && code === 'KeyL') ||
+      (ctrlKey && shiftKey && code === 'KeyS')
+    ) {
+      event.preventDefault();
+      this.handleClickLoad();
+    }
+  };
+
+  isCircuitEmpty = circuit => {
+    if (!circuit) return true;
+
+    return Object.keys(circuit.layers[1].models).length === 0;
+  };
+
+  loadHandler = () => {
+    const lastSaved = JSON.parse(
+      localStorage.getItem('circuit-autosave'),
+    );
+
+    if (this.isCircuitEmpty(lastSaved)) return;
+
+    const reload = window.confirm('Reload last unsaved circuit?');
+    if (reload) this.diagram.load(lastSaved);
+    else localStorage.removeItem('circuit-autosave');
+  };
+
+  shouldWarnUnload = (currentCircuit, lastSavedCircuit) => {
+    if (this.isCircuitEmpty(currentCircuit)) return false;
+
+    return (
+      JSON.stringify(lastSavedCircuit.layers) !==
+      JSON.stringify(currentCircuit.layers)
+    );
+  };
+
+  unloadHandler = event => {
+    const lastSaved = JSON.parse(localStorage.getItem('circuit'));
+    const current = this.diagram.serialize();
+
+    if (this.shouldWarnUnload(current, lastSaved)) {
+      localStorage.setItem(
+        'circuit-autosave',
+        JSON.stringify(current),
+      );
+      // eslint-disable-next-line no-param-reassign
+      event.returnValue =
+        'You have unsaved changes. Sure you want to leave?';
+    }
+  };
+
+  autoSave = () => {
+    const circuit = this.diagram.serialize();
+
+    if (this.isCircuitEmpty(circuit)) return;
+
+    localStorage.setItem('circuit-autosave', JSON.stringify(circuit));
   };
 
   synchronizeSimulation = () => {
@@ -104,10 +201,10 @@ export default class App extends Component {
   handleClickStart = () => {
     this.diagram.clearSelection();
     this.diagram.setLocked(true);
-    this.forceUpdate();
 
     this.simulation.start(this.diagram.getEngine().getModel());
     this.renderSimulation();
+    this.forceUpdate();
   };
 
   handleClickPause = () => {
@@ -188,7 +285,7 @@ export default class App extends Component {
         <Diagram engine={this.diagram} />
         <Tooltip id="tooltip" globalEventOff="click" />
         <ContextMenus
-          cloneSelected={this.diagram.cloneSelected}
+          duplicateSelected={this.diagram.duplicateSelected}
           cutSelected={this.diagram.cutSelected}
           copySelected={this.diagram.copySelected}
           pasteSelected={this.diagram.pasteSelected}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Item, Separator } from 'react-contexify';
 
 import {
-  Clone,
+  Duplicate,
   Copy,
   Delete,
   Paste,
@@ -16,7 +16,7 @@ import {
 import ContextMenuIconContainer from './ContextMenuIconContainer';
 
 const ComponentContextMenu = ({
-  cloneSelected,
+  duplicateSelected,
   cutSelected,
   copySelected,
   pasteSelected,
@@ -28,11 +28,11 @@ const ComponentContextMenu = ({
   configureComponent,
 }) => (
   <Menu id="component">
-    <Item onClick={cloneSelected}>
+    <Item onClick={duplicateSelected}>
       <ContextMenuIconContainer>
-        <Clone />
+        <Duplicate />
       </ContextMenuIconContainer>
-      Clone
+      Duplicate
     </Item>
     <Item onClick={cutSelected}>
       <ContextMenuIconContainer>
@@ -93,7 +93,7 @@ const ComponentContextMenu = ({
       <ContextMenuIconContainer>
         <Settings />
       </ContextMenuIconContainer>
-      Configurations...
+      Edit configurations...
     </Item>
   </Menu>
 );
