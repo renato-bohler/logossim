@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import Modal from '../Modal/Modal';
 import ComponentConfiguration from './ComponentConfiguration';
+
+const closeOnEsc = ({ code }, handleClose) => {
+  if (code !== 'Escape') return;
+  handleClose();
+};
 
 const ComponentEdit = ({
   isOpen,
@@ -10,6 +15,16 @@ const ComponentEdit = ({
   handleClose,
   handleComponentEdit,
 }) => {
+  const callback = useCallback(
+    event => closeOnEsc(event, handleClose),
+    [handleClose],
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', callback);
+    return () => window.removeEventListener('keydown', callback);
+  });
+
   if (!isOpen) return null;
 
   const factory = components.find(
