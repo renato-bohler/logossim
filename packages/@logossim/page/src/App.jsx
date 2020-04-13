@@ -65,12 +65,16 @@ export default class App extends Component {
     // Add component
     if (ctrlKey && code === 'KeyA') {
       event.preventDefault();
+      if (!this.simulation.isStopped()) return;
+
       this.showAddComponent();
     }
 
     // Component configuration
     if (ctrlKey && code === 'KeyE') {
       event.preventDefault();
+      if (!this.simulation.isStopped()) return;
+
       const selectedNodes = this.diagram.getSelectedNodes();
       if (selectedNodes.length !== 1) return;
       const node = selectedNodes[0];
@@ -139,10 +143,12 @@ export default class App extends Component {
     const current = this.diagram.serialize();
 
     if (this.shouldWarnUnload(current, lastSaved)) {
-      localStorage.setItem(
-        'circuit-autosave',
-        JSON.stringify(current),
-      );
+      if (this.simulation.isStopped()) {
+        localStorage.setItem(
+          'circuit-autosave',
+          JSON.stringify(current),
+        );
+      }
       // eslint-disable-next-line no-param-reassign
       event.returnValue =
         'You have unsaved changes. Sure you want to leave?';
@@ -153,6 +159,7 @@ export default class App extends Component {
     const circuit = this.diagram.serialize();
 
     if (this.isCircuitEmpty(circuit)) return;
+    if (!this.simulation.isStopped()) return;
 
     localStorage.setItem('circuit-autosave', JSON.stringify(circuit));
   };
@@ -199,6 +206,9 @@ export default class App extends Component {
   };
 
   handleClickStart = () => {
+    const serialized = JSON.stringify(this.diagram.serialize());
+    localStorage.setItem('circuit-autosave', serialized);
+
     this.diagram.clearSelection();
     this.diagram.setLocked(true);
 
