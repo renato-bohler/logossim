@@ -3,9 +3,9 @@ import { Action, InputType } from '@projectstorm/react-canvas-core';
 import BaseModel from '../../BaseModel';
 
 /**
- * Handle clone actions.
+ * Handle duplication (clone) actions.
  */
-export default class CloneAction extends Action {
+export default class DuplicateAction extends Action {
   constructor(areShortcutsAllowed) {
     super({
       type: InputType.KEY_DOWN,

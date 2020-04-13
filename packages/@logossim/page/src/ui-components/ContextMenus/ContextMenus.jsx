@@ -6,7 +6,7 @@ import DiagramContextMenu from './DiagramContextMenu';
 import 'react-contexify/dist/ReactContexify.min.css';
 
 const ContextMenus = ({
-  cloneSelected,
+  duplicateSelected,
   cutSelected,
   copySelected,
   pasteSelected,
@@ -26,7 +26,7 @@ const ContextMenus = ({
       zoomOut={zoomOut}
     />
     <ComponentContextMenu
-      cloneSelected={cloneSelected}
+      duplicateSelected={duplicateSelected}
       cutSelected={cutSelected}
       copySelected={copySelected}
       pasteSelected={pasteSelected}
