@@ -17,7 +17,9 @@ import {
   ContextMenus,
   Tour,
 } from './ui-components';
-import createTourCircuit from './ui-components/Tour/tourCircuit';
+import tourCircuit, {
+  DIMENSIONS,
+} from './ui-components/Tour/tourCircuit';
 
 import './App.css';
 
@@ -223,7 +225,7 @@ export default class App extends Component {
     this.diagram.clearSelection();
     this.diagram.setLocked(true);
 
-    this.simulation.start(this.diagram.getEngine().getModel());
+    this.simulation.start(this.diagram.getModel());
     this.renderSimulation();
     this.forceUpdate();
   };
@@ -268,7 +270,8 @@ export default class App extends Component {
 
   handleLoadTourCircuit = () => {
     this.circuitBeforeTour = this.diagram.serialize();
-    this.diagram.load(createTourCircuit());
+    this.diagram.load(tourCircuit);
+    this.handleCenterTourCircuitOffset();
   };
 
   handleUnloadTourCircuit = () => {
@@ -276,6 +279,17 @@ export default class App extends Component {
 
     this.diagram.load(this.circuitBeforeTour);
     this.circuitBeforeTour = null;
+  };
+
+  handleCenterTourCircuitOffset = () => {
+    this.diagram
+      .getModel()
+      .setOffset(
+        (window.innerWidth - DIMENSIONS.width) / 2,
+        (window.innerHeight - DIMENSIONS.height) / 2,
+      );
+    this.diagram.realignGrid();
+    this.diagram.repaint();
   };
 
   render() {
@@ -334,6 +348,7 @@ export default class App extends Component {
           <Tour
             loadCircuit={this.handleLoadTourCircuit}
             clearCircuit={this.handleUnloadTourCircuit}
+            recenterCircuit={this.handleCenterTourCircuitOffset}
           />
         )}
       </>

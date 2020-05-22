@@ -326,6 +326,23 @@ export default class Tour extends Component {
     };
   }
 
+  componentDidMount() {
+    window.addEventListener('resize', this.recenterTourCircuit);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.recenterTourCircuit);
+  }
+
+  recenterTourCircuit = () => {
+    const { run, currentStep } = this.state;
+    if (!run) return;
+    if (currentStep < 3) return;
+
+    const { recenterCircuit } = this.props;
+    recenterCircuit();
+  };
+
   callback = ({ type, action, index }) => {
     const { loadCircuit, clearCircuit } = this.props;
 

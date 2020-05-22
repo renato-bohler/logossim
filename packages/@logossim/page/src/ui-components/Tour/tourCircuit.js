@@ -3,11 +3,11 @@ export const DIMENSIONS = { width: 180, height: 135 };
 /**
  * Example circuit used to make the tour
  */
-export default () => ({
+export default {
   id: 'tour-circuit',
   locked: false,
-  offsetX: (window.innerWidth - DIMENSIONS.width) / 2,
-  offsetY: (window.innerHeight - DIMENSIONS.height) / 2,
+  offsetX: 0,
+  offsetY: 0,
   zoom: 100,
   gridSize: 15,
   layers: [
@@ -302,4 +302,4 @@ export default () => ({
       },
     },
   ],
-});
+};
