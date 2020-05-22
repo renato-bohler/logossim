@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const MenuIconContainer = styled.div`
+const ContextMenuIconContainer = styled.div`
   display: flex;
   align-items: center;
 
@@ -9,4 +9,4 @@ const MenuIconContainer = styled.div`
   margin-right: 16px;
 `;
 
-export default MenuIconContainer;
+export default ContextMenuIconContainer;
