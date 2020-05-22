@@ -36,6 +36,7 @@
     "react-app-rewired": "^2.1.5",
     "react-contexify": "^4.1.1",
     "react-dom": "^16.13.0",
+    "react-github-button": "^0.1.11",
     "react-joyride": "^2.2.1",
     "react-scripts": "3.4.1",
     "react-tooltip": "^4.1.0",
