@@ -15,7 +15,9 @@ import {
   ComponentSelect,
   ComponentEdit,
   ContextMenus,
+  Tour,
 } from './ui-components';
+import createTourCircuit from './ui-components/Tour/tourCircuit';
 
 import './App.css';
 
@@ -27,6 +29,7 @@ export default class App extends Component {
       isComponentSelectOpen: false,
       isComponentEditOpen: false,
       componentEdit: null,
+      isTourAvailable: false,
     };
 
     this.diagram = new DiagramEngine(
@@ -122,11 +125,18 @@ export default class App extends Component {
       localStorage.getItem('circuit-autosave'),
     );
 
-    if (this.isCircuitEmpty(lastSaved)) return;
+    if (this.isCircuitEmpty(lastSaved)) {
+      this.setState({ isTourAvailable: true });
+      return;
+    }
 
     const reload = window.confirm('Reload last unsaved circuit?');
-    if (reload) this.diagram.load(lastSaved);
-    else localStorage.removeItem('circuit-autosave');
+    if (reload) {
+      this.diagram.load(lastSaved);
+    } else {
+      this.setState({ isTourAvailable: true });
+      localStorage.removeItem('circuit-autosave');
+    }
   };
 
   shouldWarnUnload = (currentCircuit, lastSavedCircuit) => {
@@ -158,6 +168,7 @@ export default class App extends Component {
   autoSave = () => {
     const circuit = this.diagram.serialize();
 
+    if (circuit.id === 'tour-circuit') return;
     if (this.isCircuitEmpty(circuit)) return;
     if (!this.simulation.isStopped()) return;
 
@@ -255,11 +266,24 @@ export default class App extends Component {
       componentEdit: null,
     });
 
+  handleLoadTourCircuit = () => {
+    this.circuitBeforeTour = this.diagram.serialize();
+    this.diagram.load(createTourCircuit());
+  };
+
+  handleUnloadTourCircuit = () => {
+    if (!this.circuitBeforeTour) return;
+
+    this.diagram.load(this.circuitBeforeTour);
+    this.circuitBeforeTour = null;
+  };
+
   render() {
     const {
       isComponentSelectOpen,
       isComponentEditOpen,
       componentEdit,
+      isTourAvailable,
     } = this.state;
 
     return (
@@ -293,7 +317,6 @@ export default class App extends Component {
           handleComponentEdit={this.diagram.handleComponentEdit}
         />
         <Diagram engine={this.diagram} />
-        <Tooltip id="tooltip" globalEventOff="click" />
         <ContextMenus
           duplicateSelected={this.diagram.duplicateSelected}
           cutSelected={this.diagram.cutSelected}
@@ -306,6 +329,13 @@ export default class App extends Component {
           zoomOut={this.diagram.zoomOut}
           configureComponent={this.showEditComponent}
         />
+        <Tooltip id="tooltip" globalEventOff="click" />
+        {isTourAvailable && (
+          <Tour
+            loadCircuit={this.handleLoadTourCircuit}
+            clearCircuit={this.handleUnloadTourCircuit}
+          />
+        )}
       </>
     );
   }

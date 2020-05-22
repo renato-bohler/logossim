@@ -4,6 +4,7 @@ import SimulationControlButtons from './Buttons/SimulationControlButtons';
 import ComponentEdit from './ComponentSelect/ComponentEdit';
 import ComponentSelect from './ComponentSelect/ComponentSelect';
 import ContextMenus from './ContextMenus/ContextMenus';
+import Tour from './Tour/Tour';
 
 export {
   DiagramStateButtons,
@@ -12,4 +13,5 @@ export {
   ComponentSelect,
   ComponentEdit,
   ContextMenus,
+  Tour,
 };

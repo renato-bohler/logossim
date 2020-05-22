@@ -8,6 +8,9 @@ const Container = styled.div`
   right: 0;
 
   z-index: 2;
+
+  display: flex;
+  align-items: center;
 `;
 
 const Button = styled.button.attrs(({ ...props }) => ({
@@ -43,26 +46,47 @@ const Button = styled.button.attrs(({ ...props }) => ({
   }
 `;
 
+const HelpButton = styled.button.attrs(({ ...props }) => ({
+  ...props,
+  type: 'button',
+}))`
+  background: transparent;
+  border-radius: 50%;
+  border: 1px solid #6441a5;
+
+  width: 34px;
+  height: 34px;
+
+  margin: 5px;
+
+  color: #6441a5;
+  font-weight: bold;
+  font-size: 1.3em;
+`;
+
 const DiagramStateButtons = ({
   handleClickSave,
   handleClickLoad,
   disabled,
 }) => (
   <Container>
-    <Button
-      color="green"
-      onClick={handleClickSave}
-      disabled={disabled}
-    >
-      Save
-    </Button>
-    <Button
-      color="orange"
-      onClick={handleClickLoad}
-      disabled={disabled}
-    >
-      Load
-    </Button>
+    <HelpButton id="help-button">?</HelpButton>
+    <div id="save-load-buttons">
+      <Button
+        color="green"
+        onClick={handleClickSave}
+        disabled={disabled}
+      >
+        Save
+      </Button>
+      <Button
+        color="orange"
+        onClick={handleClickLoad}
+        disabled={disabled}
+      >
+        Load
+      </Button>
+    </div>
   </Container>
 );
 

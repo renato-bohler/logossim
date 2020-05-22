@@ -55,7 +55,7 @@ const SimulationControlButtons = ({
   handleClickPause,
   handleClickStop,
 }) => (
-  <Container>
+  <Container id="simulation-control-buttons">
     <Button
       onClick={handleClickStart}
       disabled={state === 'started'}
