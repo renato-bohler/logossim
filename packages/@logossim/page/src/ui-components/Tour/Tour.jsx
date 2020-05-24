@@ -217,8 +217,7 @@ export default class Tour extends Component {
                 src={simulation}
                 alt="Simulation execution example video"
                 style={{
-                  alignSelf: 'center',
-                  borderRadius: 25,
+                  ...imageStyle,
                   width: 254,
                   height: 194,
                 }}
