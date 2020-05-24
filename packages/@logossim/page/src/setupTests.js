@@ -29,3 +29,13 @@ jest.mock('@logossim/core', () => ({
     isStopped() {}
   },
 }));
+
+// Mocks createRange (for react-joyride)
+document.createRange = () => ({
+  setStart: () => {},
+  setEnd: () => {},
+  commonAncestorContainer: {
+    nodeName: 'BODY',
+    ownerDocument: document,
+  },
+});

@@ -39,7 +39,7 @@ const Button = styled.button.attrs(({ ...props }) => ({
 `;
 
 const ComponentSelectButton = ({ handleClick, disabled }) => (
-  <Container>
+  <Container id="component-select-button">
     <Button
       onClick={handleClick}
       disabled={disabled}

@@ -4,13 +4,18 @@ import Tooltip from 'react-tooltip';
 import styled from 'styled-components';
 
 import { Close } from '../Icons';
+import {
+  Header,
+  Content,
+  IconButton,
+} from '../Modal/ModalContentLayout';
 import ComponentGroup from './ComponentGroup';
-import { Header, Content, IconButton } from './ComponentLayout';
 
 const SearchBar = styled.input`
   flex-grow: 1;
 
   padding: 10px;
+  margin-right: 60px;
   font-size: 1.5em;
 
   border-radius: 25px;
@@ -91,7 +96,7 @@ const ComponentSearch = ({
           onKeyDown={({ key }) => handleKeyDown(key)}
         />
         <IconButton
-          last
+          right
           onClick={handleClose}
           data-for="tooltip"
           data-tip="Close"

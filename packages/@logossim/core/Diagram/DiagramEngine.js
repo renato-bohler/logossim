@@ -27,6 +27,8 @@ export default class DiagramEngine {
 
   getEngine = () => this.engine;
 
+  getModel = () => this.engine.getModel();
+
   /**
    * Initialization methods
    */
