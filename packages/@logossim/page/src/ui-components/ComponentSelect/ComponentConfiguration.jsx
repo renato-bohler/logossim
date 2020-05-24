@@ -5,8 +5,13 @@ import { Formik, Form, Field } from 'formik';
 import styled from 'styled-components';
 
 import { ArrowLeft, Close } from '../Icons';
+import {
+  Header,
+  Title,
+  Content,
+  IconButton,
+} from '../Modal/ModalContentLayout';
 import ComponentConfigurationInput from './ComponentConfigurationInput';
-import { Header, Content, IconButton } from './ComponentLayout';
 import DraggableComponent from './DraggableComponent';
 
 const DragArea = styled.div`
@@ -46,16 +51,6 @@ const DragArea = styled.div`
   border-radius: 25px;
 
   overflow: hidden;
-`;
-
-const Title = styled.h1`
-  flex-grow: 1;
-  font-size: 1.5em;
-
-  margin: 0;
-
-  align-self: center;
-  text-align: center;
 `;
 
 const FormScroll = styled.div`
@@ -135,7 +130,7 @@ const ComponentConfiguration = ({
       <Header>
         {!editMode && (
           <IconButton
-            first
+            left
             onClick={handleBack}
             data-for="tooltip"
             data-tip="Go back..."
@@ -146,7 +141,7 @@ const ComponentConfiguration = ({
         )}
         <Title>{editMode ? 'Edit' : 'Configure'} component</Title>
         <IconButton
-          last
+          right
           onClick={handleClose}
           data-for="tooltip"
           data-tip="Close"

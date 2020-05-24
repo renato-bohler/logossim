@@ -7,7 +7,6 @@ import styled, { keyframes } from 'styled-components';
 import Key from '../Key/Key';
 import bifurcation from './images/bifurcation.gif';
 import contextMenu from './images/context-menu.gif';
-import logossim from './images/logossim.png';
 import simulation from './images/simulation.gif';
 import wire from './images/wire.gif';
 import { DIMENSIONS } from './tourCircuit';
@@ -57,23 +56,20 @@ const imageStyle = {
 
 export default class Tour extends Component {
   constructor(props) {
-    const isTourDone = JSON.parse(localStorage.getItem('tour-done'));
-
     super(props);
     this.state = {
-      run: !isTourDone,
       currentStep: 0,
       steps: [
         {
-          title: 'Welcome to logossim!',
+          title: 'Welcome!',
           content: (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <img
-                src={logossim}
+                src={`${process.env.PUBLIC_URL}/social.png`}
                 alt="logossim's logo"
                 style={{
-                  width: 100,
-                  height: 100,
+                  width: 300,
+                  height: 158,
                   alignSelf: 'center',
                 }}
               />
@@ -253,8 +249,8 @@ export default class Tour extends Component {
                 back to this help button. Here you&apos;ll find:
               </p>
               <ol style={{ lineHeight: '200%' }}>
-                <li>Useful links</li>
                 <li>All keyboard shortcuts</li>
+                <li>More about the project</li>
                 <li>
                   And this tour, if you feel like doing it another
                   time
@@ -335,7 +331,9 @@ export default class Tour extends Component {
   }
 
   recenterTourCircuit = () => {
-    const { run, currentStep } = this.state;
+    const { currentStep } = this.state;
+    const { run } = this.props;
+
     if (!run) return;
     if (currentStep < 3) return;
 
@@ -344,7 +342,7 @@ export default class Tour extends Component {
   };
 
   callback = ({ type, action, index }) => {
-    const { loadCircuit, clearCircuit } = this.props;
+    const { setTourRunning, loadCircuit, clearCircuit } = this.props;
 
     // Next step
     if (type === EVENTS.STEP_AFTER) {
@@ -360,12 +358,13 @@ export default class Tour extends Component {
     if (type === EVENTS.TOUR_END || action === ACTIONS.CLOSE) {
       clearCircuit();
       localStorage.setItem('tour-done', true);
-      this.setState({ run: false });
+      setTourRunning(false);
     }
   };
 
   render() {
-    const { run, steps, currentStep } = this.state;
+    const { steps, currentStep } = this.state;
+    const { run } = this.props;
 
     return (
       <>

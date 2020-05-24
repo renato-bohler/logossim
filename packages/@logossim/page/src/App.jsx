@@ -16,6 +16,8 @@ import {
   ComponentEdit,
   ContextMenus,
   Tour,
+  HelpKeyboardShortcuts,
+  HelpAbout,
 } from './ui-components';
 import tourCircuit, {
   DIMENSIONS,
@@ -30,8 +32,11 @@ export default class App extends Component {
     this.state = {
       isComponentSelectOpen: false,
       isComponentEditOpen: false,
+      isHelpKeyboardOpen: false,
+      isHelpAboutOpen: false,
       componentEdit: null,
       isTourAvailable: false,
+      isTourRunning: !JSON.parse(localStorage.getItem('tour-done')),
     };
 
     this.diagram = new DiagramEngine(
@@ -58,8 +63,19 @@ export default class App extends Component {
   }
 
   areShortcutsAllowed = () => {
-    const { isComponentSelectOpen, isComponentEditOpen } = this.state;
-    return !(isComponentSelectOpen || isComponentEditOpen);
+    const {
+      isComponentSelectOpen,
+      isComponentEditOpen,
+      isHelpKeyboardOpen,
+      isHelpAboutOpen,
+    } = this.state;
+
+    return !(
+      isComponentSelectOpen ||
+      isComponentEditOpen ||
+      isHelpKeyboardOpen ||
+      isHelpAboutOpen
+    );
   };
 
   shortcutHandler = event => {
@@ -268,6 +284,20 @@ export default class App extends Component {
       componentEdit: null,
     });
 
+  setTourRunning = isTourRunning => this.setState({ isTourRunning });
+
+  showHelpTour = () => this.setTourRunning(true);
+
+  showHelpKeyboard = () =>
+    this.setState({ isHelpKeyboardOpen: true });
+
+  hideHelpKeyboard = () =>
+    this.setState({ isHelpKeyboardOpen: false });
+
+  showHelpAbout = () => this.setState({ isHelpAboutOpen: true });
+
+  hideHelpAbout = () => this.setState({ isHelpAboutOpen: false });
+
   handleLoadTourCircuit = () => {
     this.circuitBeforeTour = this.diagram.serialize();
     this.diagram.load(tourCircuit);
@@ -296,8 +326,11 @@ export default class App extends Component {
     const {
       isComponentSelectOpen,
       isComponentEditOpen,
+      isHelpKeyboardOpen,
+      isHelpAboutOpen,
       componentEdit,
       isTourAvailable,
+      isTourRunning,
     } = this.state;
 
     return (
@@ -305,6 +338,9 @@ export default class App extends Component {
         <DiagramStateButtons
           handleClickSave={this.handleClickSave}
           handleClickLoad={this.handleClickLoad}
+          handleClickKeyboardShortcuts={this.showHelpKeyboard}
+          handleClickRedoTour={this.showHelpTour}
+          handleClickAbout={this.showHelpAbout}
           disabled={!this.simulation.isStopped()}
         />
         <SimulationControlButtons
@@ -317,6 +353,7 @@ export default class App extends Component {
           handleClick={this.showAddComponent}
           disabled={!this.simulation.isStopped()}
         />
+
         <ComponentSelect
           isOpen={isComponentSelectOpen}
           groups={groupedComponents}
@@ -330,7 +367,27 @@ export default class App extends Component {
           handleClose={this.hideEditComponent}
           handleComponentEdit={this.diagram.handleComponentEdit}
         />
+
+        <HelpKeyboardShortcuts
+          isOpen={isHelpKeyboardOpen}
+          handleClose={this.hideHelpKeyboard}
+        />
+        <HelpAbout
+          isOpen={isHelpAboutOpen}
+          handleClose={this.hideHelpAbout}
+        />
+        {isTourAvailable && (
+          <Tour
+            run={isTourRunning}
+            setTourRunning={this.setTourRunning}
+            loadCircuit={this.handleLoadTourCircuit}
+            clearCircuit={this.handleUnloadTourCircuit}
+            recenterCircuit={this.handleCenterTourCircuitOffset}
+          />
+        )}
+
         <Diagram engine={this.diagram} />
+
         <ContextMenus
           duplicateSelected={this.diagram.duplicateSelected}
           cutSelected={this.diagram.cutSelected}
@@ -343,14 +400,8 @@ export default class App extends Component {
           zoomOut={this.diagram.zoomOut}
           configureComponent={this.showEditComponent}
         />
+
         <Tooltip id="tooltip" globalEventOff="click" />
-        {isTourAvailable && (
-          <Tour
-            loadCircuit={this.handleLoadTourCircuit}
-            clearCircuit={this.handleUnloadTourCircuit}
-            recenterCircuit={this.handleCenterTourCircuitOffset}
-          />
-        )}
       </>
     );
   }

@@ -77,7 +77,11 @@ const ComponentGroup = ({
       <Header onClick={() => setOpen(!isOpen)}>
         <Title>{name}</Title>
         <HorizontalSeparator />
-        <IconButton isOpen={isOpen} onClick={() => setOpen(!isOpen)}>
+        <IconButton
+          left
+          isOpen={isOpen}
+          onClick={() => setOpen(!isOpen)}
+        >
           <Chevron />
         </IconButton>
       </Header>

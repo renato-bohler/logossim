@@ -1,10 +1,34 @@
 import styled from 'styled-components';
 
 export const Header = styled.div`
+  position: relative;
+
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-content: space-between;
+
+  height: 50px;
+`;
+
+export const Title = styled.h1`
+  flex-grow: 1;
+  font-size: 1.5em;
+
+  margin: 0;
+
+  align-self: center;
+  text-align: center;
+`;
+
+export const Subtitle = styled.h2`
+  flex-grow: 1;
+  font-size: 1.2em;
+
+  margin: 0;
+
+  align-self: center;
+  text-align: center;
 `;
 
 export const Content = styled.div`
@@ -12,6 +36,8 @@ export const Content = styled.div`
 `;
 
 export const IconButton = styled.button`
+  position: absolute;
+
   flex-shrink: 0;
 
   border: 1px solid gray;
@@ -19,9 +45,12 @@ export const IconButton = styled.button`
   width: 50px;
   height: 50px;
 
+  ${props => {
+    if (props.left) return 'left: 0;';
+    return 'right: 0;';
+  }}
+
   background: none;
-  margin-right: ${props => (props.first ? '12px' : '0')};
-  margin-left: ${props => (props.last ? '12px' : '0')};
 
   :hover {
     background: rgba(0, 0, 0, 0.05);
