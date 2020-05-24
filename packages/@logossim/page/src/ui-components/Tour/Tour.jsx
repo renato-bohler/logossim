@@ -359,6 +359,7 @@ export default class Tour extends Component {
       clearCircuit();
       localStorage.setItem('tour-done', true);
       setTourRunning(false);
+      this.setState({ currentStep: 0 });
     }
   };
 
