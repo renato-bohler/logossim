@@ -21,6 +21,7 @@ export default class LinkModel extends RDLinkModel {
     this.bifurcationTarget = null;
 
     this.value = null;
+    this.bits = null;
   }
 
   addLabel(label) {
@@ -126,6 +127,7 @@ export default class LinkModel extends RDLinkModel {
         ? this.bifurcationTarget.getID()
         : null,
       value: this.value,
+      bits: this.bits,
     };
   }
 
@@ -135,12 +137,19 @@ export default class LinkModel extends RDLinkModel {
     const {
       getModel,
       registerModel,
-      data: { bifurcationSource, bifurcationTarget, bifurcations },
+      data: {
+        bifurcationSource,
+        bifurcationTarget,
+        bifurcations,
+        bits,
+      },
     } = event;
 
     registerModel(this);
 
     requestAnimationFrame(() => {
+      this.bits = bits;
+
       this.points = event.data.points.map(
         point =>
           new PointModel({
@@ -228,6 +237,19 @@ export default class LinkModel extends RDLinkModel {
     if (sameAxis(first, middle, last)) return true;
 
     return false;
+  }
+
+  getBits() {
+    return this.bits;
+  }
+
+  setBits(bits) {
+    if (![1, 2, 4, 8, 16, 32].includes(bits))
+      throw new Error(
+        '[logossim] Number of bits should be one of: 1, 2, 4, 8, 16 or 32',
+      );
+
+    this.bits = bits;
   }
 
   getValue() {

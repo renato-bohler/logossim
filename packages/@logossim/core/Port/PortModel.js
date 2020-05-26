@@ -81,7 +81,9 @@ export default class PortModel extends RDPortModel {
 
   createLinkModel() {
     if (this.isNewLinkAllowed()) {
-      return new LinkModel();
+      const link = new LinkModel();
+      link.setBits(this.bits);
+      return link;
     }
     return null;
   }
