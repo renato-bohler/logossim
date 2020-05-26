@@ -25,28 +25,30 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addInputPort(arg) {
+  addInputPort(arg, bits = 1) {
     const port = getPort(arg);
     port.setAsInput();
+    if (typeof arg === 'string') port.setBits(bits);
     super.addPort(port);
   }
 
-  addOutputPort(arg) {
+  addOutputPort(arg, bits = 1) {
     const port = getPort(arg);
     port.setAsOutput();
+    if (typeof arg === 'string') port.setBits(bits);
     super.addPort(port);
   }
 
-  addPort(arg) {
+  addPort(arg, bits = 1) {
     const port = getPort(arg);
 
     if (port.isInput()) {
-      this.addInputPort(port);
+      this.addInputPort(port, bits);
       return;
     }
 
     if (port.isOutput()) {
-      this.addOutputPort(port);
+      this.addOutputPort(port, bits);
       return;
     }
 
