@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Port } from '@logossim/core';
 
@@ -81,6 +81,23 @@ const ButtonWidget = props => {
     options: { selected },
   } = model;
 
+  const buttonRef = useRef();
+
+  const handleReleaseAway = event => {
+    if (
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target)
+    ) {
+      model.onRelease();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mouseup', handleReleaseAway);
+    return () =>
+      document.removeEventListener('mouseup', handleReleaseAway);
+  });
+
   return (
     <Wrapper selected={selected}>
       <PositionedPort
@@ -91,6 +108,7 @@ const ButtonWidget = props => {
       />
       <Shape />
       <Button
+        ref={buttonRef}
         onMouseDown={() => model.onClick()}
         onMouseUp={() => model.onRelease()}
       />
