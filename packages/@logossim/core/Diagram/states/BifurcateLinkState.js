@@ -65,6 +65,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             .getLinkFactories()
             .getFactory(this.source.getType())
             .generateModel();
+          this.bifurcation.setBits(this.source.getBits());
 
           if (!this.bifurcation) {
             this.eject();
@@ -127,6 +128,13 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             this.engine,
           );
           if (landing) {
+            // Disallows connecting links with different bit numbers
+            if (landing.getBits() !== this.bifurcation.getBits()) {
+              this.cleanUp();
+              this.engine.repaintCanvas();
+              return;
+            }
+
             this.bifurcation.setBifurcationTarget(landing);
             landing.addBifurcation(this.bifurcation);
             landing.setSelected(true);
