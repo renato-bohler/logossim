@@ -13,6 +13,7 @@ export default class PortModel extends RDPortModel {
 
     this.value = null;
     this.input = null;
+    this.bits = null;
   }
 
   serialize() {
@@ -20,6 +21,7 @@ export default class PortModel extends RDPortModel {
       ...super.serialize(),
       input: this.input,
       value: this.value,
+      bits: this.bits,
     };
   }
 
@@ -27,6 +29,7 @@ export default class PortModel extends RDPortModel {
     super.deserialize(event, engine);
     this.value = event.data.value;
     this.input = event.data.input;
+    this.bits = event.data.bits;
   }
 
   setAsInput() {
@@ -43,6 +46,19 @@ export default class PortModel extends RDPortModel {
 
   isOutput() {
     return this.input === false;
+  }
+
+  getBits() {
+    return this.bits;
+  }
+
+  setBits(bits) {
+    if (![1, 2, 4, 8, 16, 32].includes(bits))
+      throw new Error(
+        '[logossim] Number of bits should be one of: 1, 2, 4, 8, 16 or 32',
+      );
+
+    this.bits = bits;
   }
 
   getValue() {
