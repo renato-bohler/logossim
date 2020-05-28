@@ -51,7 +51,7 @@ export default class LinkWidget extends Component {
     return `M${from.getX()},${from.getY()} L${to.getX()},${to.getY()}`;
   }
 
-  renderSegment(path) {
+  renderSegment(path, key) {
     const { link, factory, options = {} } = this.props;
 
     const { selected } = options;
@@ -61,7 +61,7 @@ export default class LinkWidget extends Component {
 
     return React.cloneElement(
       factory.generateLinkSegment(link, selected, path),
-      { ref },
+      { key, ref },
     );
   }
 
