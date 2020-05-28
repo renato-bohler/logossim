@@ -113,6 +113,13 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             model instanceof PortModel &&
             model.isNewLinkAllowed()
           ) {
+            // Disallows connecting ports with different bit numbers
+            if (this.source.getBits() !== model.getBits()) {
+              this.cleanUp();
+              this.engine.repaintCanvas();
+              return;
+            }
+
             this.bifurcation.setTargetPort(model);
 
             model.reportPosition();
