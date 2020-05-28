@@ -29,9 +29,7 @@ body {
 
   --background: #eee;
 
-  --link-unselected: gray;
   --link-selected: #3ec1ff;
-  --link-width: 3;
 
   --value-on: #13e613;
   --value-off: #069206;

@@ -9,6 +9,15 @@ import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 import { sameAxis } from '../Diagram/states/common';
 import { isValueValid } from '../Simulation/utils';
 
+const LINE_STYLE_BITS = {
+  1: { lineWidth: 3, pointRadius: 5, color: 'rgb(105, 105, 105)' },
+  2: { lineWidth: 5, pointRadius: 6, color: 'rgb(90, 90, 90)' },
+  4: { lineWidth: 7, pointRadius: 8, color: 'rgb(75, 75, 75)' },
+  8: { lineWidth: 9, pointRadius: 9, color: 'rgb(60, 60, 60)' },
+  16: { lineWidth: 11, pointRadius: 9, color: 'rgb(45, 45, 45)' },
+  32: { lineWidth: 13, pointRadius: 11, color: 'rgb(30, 30, 30)' },
+};
+
 export default class LinkModel extends RDLinkModel {
   constructor(options) {
     super({
@@ -267,6 +276,14 @@ export default class LinkModel extends RDLinkModel {
     if (this.value === 1) return 'var(--value-on)';
     if (this.value === 0) return 'var(--value-off)';
 
-    return 'var(--link-unselected)';
+    return LINE_STYLE_BITS[this.bits || 1].color;
+  }
+
+  getLineWidth() {
+    return LINE_STYLE_BITS[this.bits || 1].lineWidth;
+  }
+
+  getPointRadius() {
+    return LINE_STYLE_BITS[this.bits || 1].pointRadius;
   }
 }

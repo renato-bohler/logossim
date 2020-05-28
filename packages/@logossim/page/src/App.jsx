@@ -145,25 +145,27 @@ export default class App extends Component {
 
     if (this.isCircuitEmpty(lastSaved)) {
       this.setState({ isTourAvailable: true });
-      return;
+      // return;
     }
 
-    const reload = window.confirm('Reload last unsaved circuit?');
-    if (reload) {
-      this.diagram.load(lastSaved);
-    } else {
-      this.setState({ isTourAvailable: true });
-      localStorage.removeItem('circuit-autosave');
-    }
+    // const reload = window.confirm('Reload last unsaved circuit?');
+    // if (reload) {
+    // this.diagram.load(lastSaved);
+    // } else {
+    // this.setState({ isTourAvailable: true });
+    // localStorage.removeItem('circuit-autosave');
+    // }
   };
 
   shouldWarnUnload = (currentCircuit, lastSavedCircuit) => {
-    if (this.isCircuitEmpty(currentCircuit)) return false;
+    return false;
 
-    return (
-      JSON.stringify(lastSavedCircuit.layers) !==
-      JSON.stringify(currentCircuit.layers)
-    );
+    // if (this.isCircuitEmpty(currentCircuit)) return false;
+
+    // return (
+    //   JSON.stringify(lastSavedCircuit.layers) !==
+    //   JSON.stringify(currentCircuit.layers)
+    // );
   };
 
   unloadHandler = event => {
