@@ -194,7 +194,8 @@ export default class DiagramEngine {
    * given component with the given configurations.
    *
    * For simplicity's sake, if this configuration edit creates or
-   * removes a port, we delete all its links.
+   * removes a port, we delete all its links. Also, if the number of
+   * bits of a port is changed, its main link is deleted.
    */
   editComponentConfiguration = (node, configurations) => {
     const portsBefore = node.getPorts();
@@ -219,23 +220,34 @@ export default class DiagramEngine {
       Object.values(portsBefore).forEach(port =>
         Object.values(port.getLinks()).forEach(link => link.remove()),
       );
-    } else {
-      /**
-       * If no port was neither added or removed, we need to map old
-       * port links to new ports
-       */
-      Object.values(portsBefore).forEach(portBefore => {
-        const newPort = node.getPort(portBefore.getName());
-        const link = Object.values(portBefore.getLinks())[0];
-        if (!link) return;
-        newPort.addLink(link);
-        if (portBefore === link.getSourcePort())
-          link.setSourcePort(newPort);
-        if (portBefore === link.getTargetPort())
-          link.setTargetPort(newPort);
-        portBefore.remove();
-      });
+      return;
     }
+
+    /**
+     * If no port was neither added or removed, we need to map old
+     * port links to new ports
+     */
+    Object.values(portsBefore).forEach(portBefore => {
+      const newPort = node.getPort(portBefore.getName());
+      /**
+       * If the number of bits for this port has changed, delete its
+       * main link, to avoid inconsistencies.
+       */
+      if (portBefore.getBits() !== newPort.getBits()) {
+        if (portBefore.getMainLink())
+          portBefore.getMainLink().remove();
+        return;
+      }
+
+      const link = Object.values(portBefore.getLinks())[0];
+      if (!link) return;
+      newPort.addLink(link);
+      if (portBefore === link.getSourcePort())
+        link.setSourcePort(newPort);
+      if (portBefore === link.getTargetPort())
+        link.setTargetPort(newPort);
+      portBefore.remove();
+    });
   };
 
   clearSelection = () =>
