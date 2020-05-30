@@ -4,6 +4,7 @@
   "plugins": ["prettier", "import-helpers"],
   "rules": {
     "prettier/prettier": ["error"],
+    "no-bitwise": "off",
     "react/prop-types": "off",
     "react/sort-comp": "off",
     "react/jsx-props-no-spreading": "off",
