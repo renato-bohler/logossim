@@ -31,8 +31,20 @@ body {
 
   --link-selected: #3ec1ff;
 
-  --value-on: #13e613;
-  --value-off: #069206;
+  --value-0: #069206;
+  --value-1: #079A07;
+  --value-2: #09A309;
+  --value-3: #0AAB0A;
+  --value-4: #0BB40B;
+  --value-5: #0DBC0D;
+  --value-6: #0EC40E;
+  --value-7: #0FCD0F;
+  --value-8: #10D510;
+  --value-9: #12DE12;
+  --value-10: #13E613;
+
+  --value-off: var(--value-0);
+  --value-on: var(--value-10);
   --value-error: #c80a0a;
 
   --port-unconnected: #ddd;

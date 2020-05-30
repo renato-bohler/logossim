@@ -14,7 +14,7 @@ export default class InputModel extends BaseModel {
   onClick(index) {
     const mask = 0b1 << index;
 
-    this.emit({ out: this.getOutput() ^ mask });
+    this.emit({ out: (this.getOutput() ^ mask) >>> 0 });
   }
 
   getOutput() {

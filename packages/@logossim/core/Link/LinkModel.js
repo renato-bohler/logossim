@@ -7,7 +7,7 @@ import {
 import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 
 import { sameAxis } from '../Diagram/states/common';
-import { isValueValid } from '../Simulation/utils';
+import { isValueValid, MAX_VALUE } from '../Simulation/utils';
 
 const LINE_STYLE_BITS = {
   1: { lineWidth: 3, pointRadius: 5, color: 'rgb(105, 105, 105)' },
@@ -272,11 +272,14 @@ export default class LinkModel extends RDLinkModel {
   getColor() {
     if (this.isSelected()) return 'var(--link-selected)';
 
-    if (!isValueValid(this.value)) return 'var(--value-error)';
-    if (this.value === 1) return 'var(--value-on)';
-    if (this.value === 0) return 'var(--value-off)';
+    if (!isValueValid(this.value, this.bits))
+      return 'var(--value-error)';
+    if (this.value === null)
+      return LINE_STYLE_BITS[this.bits || 1].color;
 
-    return LINE_STYLE_BITS[this.bits || 1].color;
+    return `var(--value-${Math.round(
+      (this.value / MAX_VALUE[this.bits]) * 10,
+    )})`;
   }
 
   getLineWidth() {

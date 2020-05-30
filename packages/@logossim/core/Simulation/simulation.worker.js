@@ -21,6 +21,7 @@ import {
   appendComponentDiff,
   initializeDiffAndValues,
   isInputValid,
+  isValueValid,
   getComponent,
   getAffectedMeshes,
   getMeshInputValue,
@@ -93,7 +94,11 @@ self.addEventListener(
        * EMIT
        */
       case 'emit':
-        if (self.circuit) self.emitQueue.push(emitted);
+        if (self.circuit)
+          self.emitQueue.push({
+            ...emitted,
+            from: getComponent(emitted.from),
+          });
         break;
 
       default:
@@ -111,7 +116,16 @@ const executeNextEmitted = (first = true) => {
   const emitted = self.emitQueue.shift();
   if (!emitted) return;
 
-  const emitter = getComponent(emitted.from);
+  const emitter = emitted.from;
+
+  emitted.value = Object.fromEntries(
+    Object.entries(emitted.value).map(([portName, portValue]) => [
+      portName,
+      isValueValid(portValue, emitter.getOutputPort(portName).bits)
+        ? portValue
+        : 'error',
+    ]),
+  );
   emitter.setOutputValues(emitted.value);
 
   appendComponentDiff(emitter, emitted.value);
@@ -139,14 +153,13 @@ const executeNextStep = () => {
     (obj, port) => ({ ...obj, [port.name]: port.value }),
     {},
   );
-
   const meta = component.ports.input.reduce(
     (obj, port) => ({ ...obj, [port.name]: port.meta }),
     {},
   );
 
   let result = {};
-  if (isInputValid(input)) {
+  if (isInputValid(component.ports.input)) {
     result = component.step(input, meta);
   } else {
     result = component.stepError(input, meta);
@@ -163,7 +176,7 @@ const executeNextStep = () => {
   if (component.hasOutputChanged(output)) {
     component.setOutputValues(output);
     appendComponentDiff(component, output);
-    propagate({ from: component.id, value: output });
+    propagate({ from: component, value: output });
   }
 
   executeNextStep();
