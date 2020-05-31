@@ -14,10 +14,9 @@ export default class OrModel extends BaseModel {
     this.addOutputPort('out', DATA_BITS);
   }
 
-  // TODO: adjust step logic to consider DATA_BITS
   step(input) {
     return {
-      out: Object.values(input).some(value => value === 1) ? 1 : 0,
+      out: Object.values(input).reduce((acc, curr) => acc | curr),
     };
   }
 }
