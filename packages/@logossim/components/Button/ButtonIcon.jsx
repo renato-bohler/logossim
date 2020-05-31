@@ -4,7 +4,7 @@ import { Shape, Button } from './ButtonWidget';
 
 const ButtonIcon = () => (
   <Shape>
-    <Button />
+    <Button as="div" />
   </Shape>
 );
 
