@@ -26,6 +26,7 @@ import {
   getAffectedMeshes,
   getMeshInputValue,
   getMeshOutputComponents,
+  adjustValueToBits,
 } from './utils';
 
 /**
@@ -119,12 +120,12 @@ const executeNextEmitted = (first = true) => {
   const emitter = emitted.from;
 
   emitted.value = Object.fromEntries(
-    Object.entries(emitted.value).map(([portName, portValue]) => [
-      portName,
-      isValueValid(portValue, emitter.getOutputPort(portName).bits)
-        ? portValue
-        : 'error',
-    ]),
+    Object.entries(emitted.value).map(([portName, portValue]) => {
+      const { bits } = emitter.getOutputPort(portName);
+      const value = adjustValueToBits(portValue, bits);
+
+      return [portName, isValueValid(value, bits) ? value : 'error'];
+    }),
   );
   emitter.setOutputValues(emitted.value);
 
@@ -168,9 +169,13 @@ const executeNextStep = () => {
   if (!result) return;
 
   const output = Object.fromEntries(
-    Object.entries(result).filter(([name]) =>
-      component.ports.output.find(o => o.name === name),
-    ),
+    Object.entries(result)
+      .filter(([portName]) => component.getOutputPort(portName))
+      .map(([portName, portValue]) => {
+        const { bits } = component.getOutputPort(portName);
+        const value = adjustValueToBits(portValue, bits);
+        return [portName, value];
+      }),
   );
 
   if (component.hasOutputChanged(output)) {

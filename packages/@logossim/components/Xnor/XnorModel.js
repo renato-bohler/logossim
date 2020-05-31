@@ -9,12 +9,11 @@ export default class XnorModel extends BaseModel {
       configurations.INPUT_PORTS_NUMBER,
       10,
     );
-    const DATA_BITS = parseInt(configurations.DATA_BITS, 10);
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
-      this.addInputPort(`in${i}`, DATA_BITS);
+      this.addInputPort(`in${i}`, this.bits);
     }
-    this.addOutputPort('out', DATA_BITS);
+    this.addOutputPort('out', this.bits);
   }
 
   notExclusiveOrAt(values, index) {

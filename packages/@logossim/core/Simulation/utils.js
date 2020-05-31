@@ -8,6 +8,13 @@ export const MAX_VALUE = {
   16: 0b1111_1111_1111_1111,
 };
 
+export const adjustValueToBits = (value, dataBits = 1) => {
+  const allBitsSet = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+  const mask = allBitsSet >>> (32 - dataBits);
+
+  return value & mask;
+};
+
 export const isValueValid = (value, dataBits = 1) =>
   value === null ||
   (value >= MIN_VALUE && value <= MAX_VALUE[dataBits]);
