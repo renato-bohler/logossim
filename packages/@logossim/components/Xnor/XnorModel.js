@@ -3,6 +3,7 @@ import { BaseModel } from '@logossim/core';
 export default class XnorModel extends BaseModel {
   initialize(configurations) {
     this.behavior = configurations.MULTIPLE_INPUT_BEHAVIOR;
+    this.bits = parseInt(configurations.DATA_BITS, 10);
 
     const INPUT_PORTS_NUMBER = parseInt(
       configurations.INPUT_PORTS_NUMBER,
@@ -16,17 +17,39 @@ export default class XnorModel extends BaseModel {
     this.addOutputPort('out', DATA_BITS);
   }
 
-  // TODO: adjust step logic to consider DATA_BITS
+  notExclusiveOrAt(values, index) {
+    const mask = 0b1 << index;
+
+    const sum = values
+      .map(value => ((value & mask) > 0 ? 1 : 0))
+      .reduce((acc, curr) => acc + curr);
+
+    return sum === 1 ? 0 : 1;
+  }
+
   step(input) {
-    const numberOfOnInputs = Object.values(input).filter(
-      value => value === 1,
-    ).length;
+    const MAX_VALUE = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+    const mask = MAX_VALUE >>> (32 - this.bits);
+
+    const values = Object.values(input);
 
     switch (this.behavior) {
       case 'ONE':
-        return { out: numberOfOnInputs === 1 ? 0 : 1 };
-      case 'ODD':
-        return { out: numberOfOnInputs % 2 === 1 ? 0 : 1 };
+        return {
+          out: parseInt(
+            [...new Array(this.bits)]
+              .map((_, index) => this.notExclusiveOrAt(values, index))
+              .reverse()
+              .join(''),
+            2,
+          ),
+        };
+      case 'ODD': {
+        const xor = values.reduce((acc, curr) => curr ^ acc);
+        return {
+          out: ~xor & mask,
+        };
+      }
       default:
         return {};
     }
