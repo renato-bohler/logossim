@@ -2,14 +2,18 @@ import { BaseModel } from '@logossim/core';
 
 export default class BufferModel extends BaseModel {
   initialize(configurations) {
-    const DATA_BITS = parseInt(configurations.DATA_BITS, 10);
+    this.bits = parseInt(configurations.DATA_BITS, 10);
 
-    this.addInputPort('in', DATA_BITS);
-    this.addOutputPort('out', DATA_BITS);
+    this.addInputPort('in', this.bits);
+    this.addOutputPort('out', this.bits);
   }
 
-  // TODO: adjust step logic to consider DATA_BITS
   step(input) {
-    return { out: input.in === 1 ? 0 : 1 };
+    const MAX_VALUE = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+    const mask = MAX_VALUE >>> (32 - this.bits);
+
+    return {
+      out: ~input.in & mask,
+    };
   }
 }
