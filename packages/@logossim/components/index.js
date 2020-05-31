@@ -7,6 +7,7 @@ import Nand from './Nand/NandRegister';
 import Nor from './Nor/NorRegister';
 import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
+import Output from './Output/OutputRegister';
 import Xnor from './Xnor/XnorRegister';
 import Xor from './Xor/XorRegister';
 
@@ -20,6 +21,7 @@ const components = [
   Buffer,
   Not,
   Input,
+  Output,
   Button,
   Clock,
 ];
