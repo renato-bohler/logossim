@@ -14,16 +14,16 @@ export default class InputModel extends BaseModel {
   onClick(index) {
     const mask = 0b1 << index;
 
-    this.emit({ out: (this.getOutput() ^ mask) >>> 0 });
+    this.emit({ out: this.getOutput() ^ mask });
   }
 
   getOutput() {
     return this.getPort('out').getValue() || 0;
   }
 
-  getValueAt(index) {
+  getBitAt(index) {
     const mask = 0b1 << index;
-    const result = (this.getOutput() & mask) >>> 0;
+    const result = this.getOutput() & mask;
 
     return result > 0 ? 1 : 0;
   }

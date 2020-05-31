@@ -16,7 +16,7 @@ export default new Component({
       default: 2,
       label: 'Number of input ports',
       min: 2,
-      max: 32,
+      max: 16,
       validate(value) {
         if (value < this.min)
           return `Minimum input ports is ${this.min}`;
@@ -50,10 +50,6 @@ export default new Component({
         {
           label: '16 bits',
           value: '16',
-        },
-        {
-          label: '32 bits',
-          value: '32',
         },
       ],
     },

@@ -42,7 +42,7 @@ export class GenericComponent {
       if (values[port.name] !== undefined) {
         current = values[port.name];
         if (typeof current === 'number') {
-          current = values[port.name] >>> 0;
+          current = values[port.name];
         } else {
           error = true;
         }

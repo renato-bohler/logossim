@@ -15,7 +15,6 @@ const LINE_STYLE_BITS = {
   4: { lineWidth: 7, pointRadius: 8, color: 'rgb(75, 75, 75)' },
   8: { lineWidth: 9, pointRadius: 9, color: 'rgb(60, 60, 60)' },
   16: { lineWidth: 11, pointRadius: 9, color: 'rgb(45, 45, 45)' },
-  32: { lineWidth: 13, pointRadius: 11, color: 'rgb(30, 30, 30)' },
 };
 
 export default class LinkModel extends RDLinkModel {
@@ -253,9 +252,9 @@ export default class LinkModel extends RDLinkModel {
   }
 
   setBits(bits) {
-    if (![1, 2, 4, 8, 16, 32].includes(bits))
+    if (![1, 2, 4, 8, 16].includes(bits))
       throw new Error(
-        '[logossim] Number of bits should be one of: 1, 2, 4, 8, 16 or 32',
+        '[logossim] Number of bits should be one of: 1, 2, 4, 8 or 16',
       );
 
     this.bits = bits;

@@ -10,7 +10,6 @@ const SHAPE_SIZES = {
   4: { width: 120, height: 30 },
   8: { width: 120, height: 60 },
   16: { width: 240, height: 60 },
-  32: { width: 240, height: 120 },
 };
 
 const PositionedPort = styled(Port)`
@@ -87,7 +86,7 @@ const InputWidget = props => {
     <Shape selected={selected} dataBits={dataBits}>
       <PinContainer>
         {[...new Array(dataBits)].map((_, index) => {
-          const value = model.getValueAt(index);
+          const value = model.getBitAt(index);
 
           return (
             <Pin

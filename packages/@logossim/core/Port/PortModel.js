@@ -52,9 +52,9 @@ export default class PortModel extends RDPortModel {
   }
 
   setBits(bits) {
-    if (![1, 2, 4, 8, 16, 32].includes(bits))
+    if (![1, 2, 4, 8, 16].includes(bits))
       throw new Error(
-        '[logossim] Number of bits should be one of: 1, 2, 4, 8, 16 or 32',
+        '[logossim] Number of bits should be one of: 1, 2, 4, 8 or 16',
       );
 
     this.bits = bits;

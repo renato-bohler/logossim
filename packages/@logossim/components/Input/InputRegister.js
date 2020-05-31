@@ -36,10 +36,6 @@ export default new Component({
           label: '16 bits',
           value: '16',
         },
-        {
-          label: '32 bits',
-          value: '32',
-        },
       ],
     },
   ],

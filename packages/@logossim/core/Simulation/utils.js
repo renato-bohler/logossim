@@ -6,7 +6,6 @@ export const MAX_VALUE = {
   4: 0b1111,
   8: 0b1111_1111,
   16: 0b1111_1111_1111_1111,
-  32: 0b1111_1111_1111_1111_1111_1111_1111_1111,
 };
 
 export const isValueValid = (value, dataBits = 1) =>
