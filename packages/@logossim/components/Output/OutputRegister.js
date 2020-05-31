@@ -38,6 +38,26 @@ export default new Component({
         },
       ],
     },
+    {
+      name: 'OUTPUT_TYPE',
+      type: 'select',
+      default: 'BITS',
+      label: 'Output type',
+      options: [
+        {
+          label: 'Bit by bit',
+          value: 'BITS',
+        },
+        {
+          label: 'Decimal number',
+          value: 'DECIMAL',
+        },
+        {
+          label: 'Hexadecimal number',
+          value: 'HEXADECIMAL',
+        },
+      ],
+    },
   ],
   model,
   widget,

@@ -26,8 +26,18 @@ export const Shape = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: ${props => SHAPE_SIZES[props.dataBits].width}px;
-  height: ${props => SHAPE_SIZES[props.dataBits].height}px;
+  width: ${props => {
+    if (props.outputType === 'BITS')
+      return SHAPE_SIZES[props.dataBits].width;
+
+    return SHAPE_SIZES[4].width;
+  }}px;
+  height: ${props => {
+    if (props.outputType === 'BITS')
+      return SHAPE_SIZES[props.dataBits].height;
+
+    return SHAPE_SIZES[4].height;
+  }}px;
 
   background: ${props =>
     props.selected
@@ -73,31 +83,50 @@ export const Pin = styled.div`
   transition: 100ms linear;
 `;
 
+const mapBits = model => {
+  const {
+    configurations: { DATA_BITS },
+  } = model;
+  const dataBits = parseInt(DATA_BITS, 10);
+
+  return [...new Array(dataBits)].map((_, index) => {
+    const value = model.getBitAt(index);
+
+    return (
+      <Pin
+        // eslint-disable-next-line react/no-array-index-key
+        key={index}
+        value={value}
+      >
+        {value}
+      </Pin>
+    );
+  });
+};
+
 const OutputWidget = props => {
   const { model, engine } = props;
   const {
     options: { selected },
-    configurations: { DATA_BITS },
+    configurations: { OUTPUT_TYPE, DATA_BITS },
   } = model;
 
   const dataBits = parseInt(DATA_BITS, 10);
 
   return (
-    <Shape selected={selected} dataBits={dataBits}>
+    <Shape
+      selected={selected}
+      outputType={OUTPUT_TYPE}
+      dataBits={dataBits}
+    >
       <PinContainer>
-        {[...new Array(dataBits)].map((_, index) => {
-          const value = model.getBitAt(index);
-
-          return (
-            <Pin
-              // eslint-disable-next-line react/no-array-index-key
-              key={index}
-              value={value}
-            >
-              {value}
-            </Pin>
-          );
-        })}
+        {OUTPUT_TYPE === 'BITS' && mapBits(model)}
+        {OUTPUT_TYPE === 'DECIMAL' && model.getInput()}
+        {OUTPUT_TYPE === 'HEXADECIMAL' &&
+          `0x${model
+            .getInput()
+            .toString(16)
+            .padStart(4, '0')}`}
       </PinContainer>
       <PositionedPort
         name="in"
