@@ -94,14 +94,6 @@ const InputWidget = props => {
               key={index}
               onClick={() => model.onClick(index)}
               value={value}
-              data-for="tooltip"
-              data-tip={`${index}${
-                dataBits > 1
-                  ? `${index === 0 ? ' (LSB)' : ''}${
-                      index === dataBits - 1 ? ' (MSB)' : ''
-                    }`
-                  : ''
-              }`}
             >
               {value}
             </Pin>
