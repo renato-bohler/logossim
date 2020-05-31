@@ -4,8 +4,9 @@ import { Port } from '@logossim/core';
 
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
+export const Shape = styled.div`
   position: relative;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,20 +14,20 @@ const Wrapper = styled.div`
   width: 30px;
   height: 30px;
 
-  transition: 100ms linear;
-  svg {
-    fill: ${props =>
-      props.selected
-        ? 'var(--body-selected)'
-        : 'var(--body-unselected)'};
-    stroke: ${props =>
+  background: ${props =>
+    props.selected
+      ? 'var(--body-selected)'
+      : 'var(--body-unselected)'};
+  border: 2px solid
+    ${props =>
       props.selected
         ? 'var(--border-selected)'
         : 'var(--border-unselected)'};
-  }
+
+  transition: 100ms linear;
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   position: absolute;
   border-radius: 50%;
   width: 18px;
@@ -52,28 +53,8 @@ const Button = styled.button`
 
 const PositionedPort = styled(Port)`
   position: absolute;
-  right: -5px;
+  right: -7px;
 `;
-
-export const Shape = ({ size = 30 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 7.9374997 7.9375003"
-    fill="var(--body-unselected)"
-    stroke="var(--border-unselected)"
-    strokeWidth="1"
-  >
-    <g>
-      <rect
-        y="0.26458332"
-        x="0.26458332"
-        height="7.4083333"
-        width="7.4083333"
-      />
-    </g>
-  </svg>
-);
 
 const ButtonWidget = props => {
   const { model, engine } = props;
@@ -99,20 +80,19 @@ const ButtonWidget = props => {
   });
 
   return (
-    <Wrapper selected={selected}>
+    <Shape selected={selected}>
       <PositionedPort
         name="out"
         model={model}
         port={model.getPort('out')}
         engine={engine}
       />
-      <Shape />
       <Button
         ref={buttonRef}
         onMouseDown={() => model.onClick()}
         onMouseUp={() => model.onRelease()}
       />
-    </Wrapper>
+    </Shape>
   );
 };
 
