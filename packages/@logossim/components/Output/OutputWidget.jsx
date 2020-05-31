@@ -27,13 +27,13 @@ export const Shape = styled.div`
   align-items: center;
 
   width: ${props => {
-    if (props.outputType === 'BITS')
+    if (props.format === 'BITS')
       return SHAPE_SIZES[props.dataBits].width;
 
     return SHAPE_SIZES[4].width;
   }}px;
   height: ${props => {
-    if (props.outputType === 'BITS')
+    if (props.format === 'BITS')
       return SHAPE_SIZES[props.dataBits].height;
 
     return SHAPE_SIZES[4].height;
@@ -108,7 +108,7 @@ const OutputWidget = props => {
   const { model, engine } = props;
   const {
     options: { selected },
-    configurations: { OUTPUT_TYPE, DATA_BITS },
+    configurations: { OUTPUT_FORMAT, DATA_BITS },
   } = model;
 
   const dataBits = parseInt(DATA_BITS, 10);
@@ -116,13 +116,13 @@ const OutputWidget = props => {
   return (
     <Shape
       selected={selected}
-      outputType={OUTPUT_TYPE}
+      format={OUTPUT_FORMAT}
       dataBits={dataBits}
     >
       <PinContainer>
-        {OUTPUT_TYPE === 'BITS' && mapBits(model)}
-        {OUTPUT_TYPE === 'DECIMAL' && model.getInput()}
-        {OUTPUT_TYPE === 'HEXADECIMAL' &&
+        {OUTPUT_FORMAT === 'BITS' && mapBits(model)}
+        {OUTPUT_FORMAT === 'DECIMAL' && model.getInput()}
+        {OUTPUT_FORMAT === 'HEXADECIMAL' &&
           `0x${model
             .getInput()
             .toString(16)

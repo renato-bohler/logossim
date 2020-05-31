@@ -39,10 +39,10 @@ export default new Component({
       ],
     },
     {
-      name: 'OUTPUT_TYPE',
+      name: 'OUTPUT_FORMAT',
       type: 'select',
       default: 'BITS',
-      label: 'Output type',
+      label: 'Output format',
       options: [
         {
           label: 'Bit by bit',
