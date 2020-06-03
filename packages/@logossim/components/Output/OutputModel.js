@@ -12,6 +12,10 @@ export default class OutputModel extends BaseModel {
   }
 
   getBitAt(index) {
+    const input = this.getInput();
+
+    if (input === 'error') return input;
+
     const mask = 0b1 << index;
     const result = this.getInput() & mask;
 

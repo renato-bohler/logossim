@@ -70,17 +70,28 @@ export const Pin = styled.div`
   height: 20px;
   margin: 2px;
 
-  background: ${props =>
-    props.value === 1 ? 'var(--value-on)' : 'var(--value-off)'};
+  background: ${props => {
+    if (props.value === 0) return 'var(--value-off)';
+    if (props.value === 1) return 'var(--value-on)';
+    return 'var(--value-error)';
+  }};
   border: 2px solid
-    ${props =>
-      props.value === 1 ? 'var(--value-off)' : 'var(--value-on)'};
+    ${props => {
+      if (props.value === 0) return 'var(--value-on)';
+      if (props.value === 1) return 'var(--value-off)';
+      return 'black';
+    }};
   border-radius: 100%;
 
   color: ${props => (props.value === 1 ? 'black' : 'white')};
   font-family: monospace;
 
   transition: 100ms linear;
+`;
+
+const ErrorMessage = styled.span`
+  color: var(--value-error);
+  font-weight: bold;
 `;
 
 const mapBits = model => {
@@ -98,10 +109,19 @@ const mapBits = model => {
         key={index}
         value={value}
       >
-        {value}
+        {value === 0 || value === 1 ? value : 'E'}
       </Pin>
     );
   });
+};
+
+const showAsNumber = (input, format) => {
+  if (input === 'error') return <ErrorMessage>ERROR</ErrorMessage>;
+
+  if (format === 'DECIMAL') return input;
+  if (format === 'HEXADECIMAL')
+    return `0x${input.toString(16).padStart(4, '0')}`;
+  return '';
 };
 
 const OutputWidget = props => {
@@ -120,13 +140,9 @@ const OutputWidget = props => {
       dataBits={dataBits}
     >
       <PinContainer>
-        {OUTPUT_FORMAT === 'BITS' && mapBits(model)}
-        {OUTPUT_FORMAT === 'DECIMAL' && model.getInput()}
-        {OUTPUT_FORMAT === 'HEXADECIMAL' &&
-          `0x${model
-            .getInput()
-            .toString(16)
-            .padStart(4, '0')}`}
+        {OUTPUT_FORMAT === 'BITS'
+          ? mapBits(model)
+          : showAsNumber(model.getInput(), OUTPUT_FORMAT)}
       </PinContainer>
       <PositionedPort
         name="in"
