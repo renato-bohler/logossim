@@ -1,7 +1,11 @@
 import React from 'react';
 
-import { Shape } from './ClockWidget';
+import { Shape, Decoration } from './ClockWidget';
 
-const ClockIcon = () => <Shape size={30} />;
+const ClockIcon = () => (
+  <Shape>
+    <Decoration color="var(--port-unconnected)" />
+  </Shape>
+);
 
 export default ClockIcon;

@@ -4,8 +4,14 @@ import { Port } from '@logossim/core';
 
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
+const PositionedPort = styled(Port)`
+  position: absolute;
+  right: -7px;
+`;
+
+export const Shape = styled.div`
   position: relative;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,48 +19,31 @@ const Wrapper = styled.div`
   width: 30px;
   height: 30px;
 
-  transition: 100ms linear;
-  .shape {
-    fill: ${props =>
-      props.selected
-        ? 'var(--body-selected)'
-        : 'var(--body-unselected)'};
-    stroke: ${props =>
+  background: ${props =>
+    props.selected
+      ? 'var(--body-selected)'
+      : 'var(--body-unselected)'};
+  border: 2px solid
+    ${props =>
       props.selected
         ? 'var(--border-selected)'
         : 'var(--border-unselected)'};
-  }
+
+  transition: 100ms linear;
 `;
 
-const PositionedPort = styled(Port)`
-  position: absolute;
-  right: -5px;
-`;
-
-export const Shape = ({
-  size = 30,
+export const Decoration = ({
   output,
   color,
   periodMs,
   animateTransition,
 }) => (
   <svg
-    className="shape"
-    height={size}
-    width={size}
+    width={30}
+    height={30}
     viewBox="0 0 7.9374997 7.9375003"
-    fill="var(--body-unselected)"
-    stroke="var(--border-unselected)"
     strokeWidth="1"
   >
-    <g>
-      <rect
-        y="0.26458332"
-        x="0.26458332"
-        height="7.4083333"
-        width="7.4083333"
-      />
-    </g>
     <path
       stroke={color}
       strokeWidth={0.75}
@@ -81,20 +70,20 @@ const ClockWidget = props => {
   const out = model.getPort('out');
 
   return (
-    <Wrapper selected={selected}>
+    <Shape selected={selected}>
       <PositionedPort
         name="out"
         model={model}
         port={out}
         engine={engine}
       />
-      <Shape
+      <Decoration
         output={out.getValue()}
         color={out.getColor()}
         periodMs={periodMs}
         animateTransition={periodMs >= 500}
       />
-    </Wrapper>
+    </Shape>
   );
 };
 
