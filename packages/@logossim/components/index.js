@@ -3,6 +3,7 @@ import Buffer from './Buffer/BufferRegister';
 import Button from './Button/ButtonRegister';
 import Clock from './Clock/ClockRegister';
 import Input from './Input/InputRegister';
+import Joiner from './Joiner/JoinerRegister';
 import Nand from './Nand/NandRegister';
 import Nor from './Nor/NorRegister';
 import Not from './Not/NotRegister';
@@ -26,6 +27,7 @@ const components = [
   Button,
   Clock,
   Splitter,
+  Joiner,
 ];
 
 export default components;
