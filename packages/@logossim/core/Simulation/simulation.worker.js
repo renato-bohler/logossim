@@ -162,6 +162,13 @@ const executeNextStep = () => {
   let result = {};
   if (isInputValid(component.ports.input)) {
     result = component.step(input, meta);
+    result = Object.fromEntries(
+      Object.entries(result).map(([portName, portValue]) => {
+        const { bits } = component.getOutputPort(portName);
+        const value = adjustValueToBits(portValue, bits);
+        return [portName, value];
+      }),
+    );
   } else {
     result = component.stepError(input, meta);
   }
@@ -169,13 +176,9 @@ const executeNextStep = () => {
   if (!result) return;
 
   const output = Object.fromEntries(
-    Object.entries(result)
-      .filter(([portName]) => component.getOutputPort(portName))
-      .map(([portName, portValue]) => {
-        const { bits } = component.getOutputPort(portName);
-        const value = adjustValueToBits(portValue, bits);
-        return [portName, value];
-      }),
+    Object.entries(result).filter(([portName]) =>
+      component.getOutputPort(portName),
+    ),
   );
 
   if (component.hasOutputChanged(output)) {
