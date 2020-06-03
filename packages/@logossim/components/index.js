@@ -8,6 +8,7 @@ import Nor from './Nor/NorRegister';
 import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
 import Output from './Output/OutputRegister';
+import Splitter from './Splitter/SplitterRegister';
 import Xnor from './Xnor/XnorRegister';
 import Xor from './Xor/XorRegister';
 
@@ -24,6 +25,7 @@ const components = [
   Output,
   Button,
   Clock,
+  Splitter,
 ];
 
 export default components;
