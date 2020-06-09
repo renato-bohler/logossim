@@ -13,13 +13,9 @@ export default new Component({
     {
       name: 'DATA_BITS',
       type: 'select',
-      default: '1',
+      default: '2',
       label: 'Output data bits',
       options: [
-        {
-          label: '1 bit',
-          value: '1',
-        },
         {
           label: '2 bits',
           value: '2',

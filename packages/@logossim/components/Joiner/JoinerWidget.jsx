@@ -8,31 +8,49 @@ const PositionedPort = styled(Port)`
   position: absolute;
 
   ${props => {
-    if (props.name === 'out') return `right: -7px; top: -7px`;
-    return `left: -7px; bottom: ${props.position - 7}px;`;
+    if (props.name === 'out') return `right: -5px; top: -5px`;
+    return `left: -5px; bottom: ${props.position - 5}px;`;
   }}
 `;
 
-export const Shape = styled.div`
+const Wrapper = styled.div`
   position: relative;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   width: 30px;
   height: ${props => 15 * props.dataBits}px;
-
-  background: ${props =>
-    props.selected
-      ? 'var(--body-selected)'
-      : 'var(--body-unselected)'};
-  border: 2px solid
-    ${props =>
-      props.selected
-        ? 'var(--border-selected)'
-        : 'var(--border-unselected)'};
 `;
+
+export const Shape = ({ selected, dataBits }) => {
+  const height = dataBits * 15;
+
+  return (
+    <svg
+      viewBox={`0 0 30 ${height}`}
+      height={height}
+      width="30"
+      fill="none"
+      stroke={
+        selected ? 'var(--link-selected)' : 'var(--link-16-bit-color)'
+      }
+      strokeLinecap="butt"
+      strokeWidth="2"
+    >
+      <path strokeWidth="4" d={`M30,0 L15,15 L15,${height}`} />
+      {[...new Array(dataBits)]
+        .map((_, index) => index)
+        .map(index => {
+          const bitHeight = height - index * 15;
+
+          return (
+            <path
+              key={index}
+              d={`M15,${bitHeight} L0,${bitHeight}`}
+            />
+          );
+        })}
+    </svg>
+  );
+};
 
 const JoinerWidget = props => {
   const { model, engine } = props;
@@ -45,7 +63,7 @@ const JoinerWidget = props => {
   const inputPorts = Object.values(model.getInputPorts());
 
   return (
-    <Shape selected={selected} dataBits={dataBits}>
+    <Wrapper dataBits={dataBits}>
       {inputPorts.map((port, i) => (
         <PositionedPort
           key={port.getName()}
@@ -62,7 +80,8 @@ const JoinerWidget = props => {
         port={model.getPort('out')}
         engine={engine}
       />
-    </Shape>
+      <Shape selected={selected} dataBits={dataBits} />
+    </Wrapper>
   );
 };
 
