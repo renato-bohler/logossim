@@ -9,14 +9,6 @@ import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 import { sameAxis } from '../Diagram/states/common';
 import { isValueValid, MAX_VALUE } from '../Simulation/utils';
 
-const LINE_STYLE_BITS = {
-  1: { lineWidth: 3, pointRadius: 5, color: 'rgb(105, 105, 105)' },
-  2: { lineWidth: 5, pointRadius: 6, color: 'rgb(90, 90, 90)' },
-  4: { lineWidth: 7, pointRadius: 8, color: 'rgb(75, 75, 75)' },
-  8: { lineWidth: 9, pointRadius: 9, color: 'rgb(60, 60, 60)' },
-  16: { lineWidth: 11, pointRadius: 9, color: 'rgb(45, 45, 45)' },
-};
-
 export default class LinkModel extends RDLinkModel {
   constructor(options) {
     super({
@@ -274,7 +266,7 @@ export default class LinkModel extends RDLinkModel {
     if (!isValueValid(this.value, this.bits))
       return 'var(--value-error)';
     if (this.value === null)
-      return LINE_STYLE_BITS[this.bits || 1].color;
+      return `var(--link-${this.bits || 1}-bit-color)`;
 
     return `var(--value-${Math.round(
       (this.value / MAX_VALUE[this.bits]) * 10,
@@ -282,10 +274,10 @@ export default class LinkModel extends RDLinkModel {
   }
 
   getLineWidth() {
-    return LINE_STYLE_BITS[this.bits || 1].lineWidth;
+    return `var(--link-${this.bits || 1}-bit-width)`;
   }
 
   getPointRadius() {
-    return LINE_STYLE_BITS[this.bits || 1].pointRadius;
+    return `var(--link-${this.bits || 1}-bit-join-radius)`;
   }
 }
