@@ -6,30 +6,51 @@ import styled from 'styled-components';
 
 const PositionedPort = styled(Port)`
   position: absolute;
-  ${props => (props.name === 'in' ? 'left: -7px' : 'right: -7px')};
-  bottom: ${props => (props.position || 0) - 7}px;
+  ${props => (props.name === 'in' ? 'left: -5px' : 'right: -5px')};
+  bottom: ${props => (props.position || 0) - 5}px;
 `;
 
-export const Shape = styled.div`
+const Wrapper = styled.div`
   position: relative;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   width: 30px;
   height: ${props => 15 * props.dataBits}px;
-
-  background: ${props =>
-    props.selected
-      ? 'var(--body-selected)'
-      : 'var(--body-unselected)'};
-  border: 2px solid
-    ${props =>
-      props.selected
-        ? 'var(--border-selected)'
-        : 'var(--border-unselected)'};
 `;
+
+export const Shape = ({ selected, dataBits }) => {
+  const height = dataBits * 15;
+
+  return (
+    <svg
+      viewBox={`0 0 30 ${height}`}
+      height={height}
+      width="30"
+      fill="none"
+      stroke={
+        selected ? 'var(--link-selected)' : 'var(--link-16-bit-color)'
+      }
+      strokeLinecap="butt"
+      strokeWidth="2"
+    >
+      <path
+        strokeWidth="4"
+        d={`M0,${height} L15,${height - 15} L15,0`}
+      />
+      {[...new Array(dataBits)]
+        .map((_, index) => index + 1)
+        .map(index => {
+          const bitHeight = height - index * 15;
+
+          return (
+            <path
+              key={index}
+              d={`M15,${bitHeight} L30,${bitHeight}`}
+            />
+          );
+        })}
+    </svg>
+  );
+};
 
 const SplitterWidget = props => {
   const { model, engine } = props;
@@ -42,7 +63,7 @@ const SplitterWidget = props => {
   const outputPorts = Object.values(model.getOutputPorts());
 
   return (
-    <Shape selected={selected} dataBits={dataBits}>
+    <Wrapper dataBits={dataBits}>
       <PositionedPort
         name="in"
         model={model}
@@ -59,7 +80,8 @@ const SplitterWidget = props => {
           position={(i + 1) * 15}
         />
       ))}
-    </Shape>
+      <Shape selected={selected} dataBits={dataBits} />
+    </Wrapper>
   );
 };
 
