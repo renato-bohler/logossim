@@ -1,11 +1,11 @@
 body {
   background-color: var(--background);
-  
+
   background-position-x: var(--offset-x);
   background-position-y: var(--offset-y);
 
   background-size: calc(var(--grid-size) * 3)
-                   calc(var(--grid-size) * 3);
+    calc(var(--grid-size) * 3);
 
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAA8AXHiAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOnAAADpwBB5RT3QAAABZ0RVh0Q3JlYXRpb24gVGltZQAwMy8yMi8yMM3KBJQAAAAcdEVYdFNvZnR3YXJlAEFkb2JlIEZpcmV3b3JrcyBDUzbovLKMAAAB7ElEQVR4nO3dUW1CQRRF0TsNMjDQb3Ripg4QUBf4eBUBO49O1lJwbrKT+Zw1Mz8z85j/7zozz7NHvMEWd1xm5nEcx/3sIa9aa92O4/g9e8erdrnj6+wB7ElYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCSERUJYJIRFQlgkhEVCWCQuM3Nda93OHvIG32utsze8wxZ3XGbmucOPnmutccfn8BSSEBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCT+sfp4t7vDD6ofZ5Q5PIQlhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZEQFglhkRAWCWGREBYJYZH4A5/pKth/6zgKAAAAAElFTkSuQmCC');
 
@@ -29,12 +29,42 @@ body {
 
   --background: #eee;
 
-  --link-unselected: gray;
   --link-selected: #3ec1ff;
-  --link-width: 3;
 
-  --value-on: #13e613;
-  --value-off: #069206;
+  --link-1-bit-color: rgb(105, 105, 105);
+  --link-1-bit-width: 3;
+  --link-1-bit-join-radius: 5;
+
+  --link-2-bit-color: rgb(90, 90, 90);
+  --link-2-bit-width: 5;
+  --link-2-bit-join-radius: 6;
+
+  --link-4-bit-color: rgb(75, 75, 75);
+  --link-4-bit-width: 7;
+  --link-4-bit-join-radius: 8;
+
+  --link-8-bit-color: rgb(60, 60, 60);
+  --link-8-bit-width: 9;
+  --link-8-bit-join-radius: 9;
+
+  --link-16-bit-color: rgb(45, 45, 45);
+  --link-16-bit-width: 11;
+  --link-16-bit-join-radius: 9;
+
+  --value-0: #069206;
+  --value-1: #079a07;
+  --value-2: #09a309;
+  --value-3: #0aab0a;
+  --value-4: #0bb40b;
+  --value-5: #0dbc0d;
+  --value-6: #0ec40e;
+  --value-7: #0fcd0f;
+  --value-8: #10d510;
+  --value-9: #12de12;
+  --value-10: #13e613;
+
+  --value-off: var(--value-0);
+  --value-on: var(--value-10);
   --value-error: #c80a0a;
 
   --port-unconnected: #ddd;
@@ -43,7 +73,7 @@ body {
   --port-unconnected-border: #333;
   --port-width: 2px;
 
-  --border-selected: rgba(115,190,255,0.95);
+  --border-selected: rgba(115, 190, 255, 0.95);
   --border-unselected: #598897;
   --border-width: 2;
 
@@ -128,7 +158,7 @@ body {
 
 .gh-count:hover,
 .gh-count:focus {
-  color: #4183C4;
+  color: #4183c4;
 }
 
 .gh-count:before,

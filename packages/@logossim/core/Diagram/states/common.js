@@ -176,3 +176,14 @@ export const getLandingLink = (link, engine) => {
     return isPointOverLink(point, target);
   });
 };
+
+/**
+ * Generates the error message displayed to the user for incompatible
+ * display widths.
+ */
+export const getIncompatibleWidthsErrorMessage = (
+  source,
+  target,
+) => `Incompatible bit widths!
+\nSource: ${source.getBits()} bit${source.getBits() > 1 ? 's' : ''}
+\nTarget: ${target.getBits()} bit${target.getBits() > 1 ? 's' : ''}`;

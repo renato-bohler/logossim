@@ -1,14 +1,14 @@
 import { Component } from '@logossim/core';
 
-import icon from './BufferIcon';
-import model from './BufferModel';
-import widget from './BufferWidget';
+import icon from './InputIcon';
+import model from './InputModel';
+import widget from './InputWidget';
 
 export default new Component({
-  type: 'Buffer',
-  name: 'Buffer',
-  description: 'Simple buffer',
-  group: 'Logic gates',
+  type: 'Input',
+  name: 'Input pin',
+  description: 'Simple input pin',
+  group: 'Input & output',
   configurations: [
     {
       name: 'DATA_BITS',

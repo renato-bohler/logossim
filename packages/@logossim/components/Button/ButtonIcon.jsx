@@ -1,7 +1,11 @@
 import React from 'react';
 
-import { Shape } from './ButtonWidget';
+import { Shape, Button } from './ButtonWidget';
 
-const ButtonIcon = () => <Shape size={30} />;
+const ButtonIcon = () => (
+  <Shape>
+    <Button as="div" />
+  </Shape>
+);
 
 export default ButtonIcon;

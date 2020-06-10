@@ -55,6 +55,7 @@ const serializePorts = ports =>
     id: port.getID(),
     name: port.getName(),
     input: port.isInput(),
+    bits: port.getBits(),
   }));
 
 /**
@@ -97,6 +98,7 @@ const serializeLinks = links =>
       target: getLinkId(link.getBifurcationTarget()),
     },
     isBifurcation: link.isBifurcation(),
+    bits: link.getBits(),
   }));
 
 /**
@@ -104,9 +106,11 @@ const serializeLinks = links =>
  */
 const serialize = (diagram, models) => ({
   models: serializeModels(models),
-  links: serializeLinks(Object.values(diagram.layers[0].models)),
+  links: serializeLinks(
+    Object.values(diagram.getActiveLinkLayer().getModels()),
+  ),
   components: serializeComponents(
-    Object.values(diagram.layers[1].models),
+    Object.values(diagram.getActiveNodeLayer().getModels()),
   ),
 });
 

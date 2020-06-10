@@ -1,7 +1,6 @@
 import { PortModel as RDPortModel } from '@projectstorm/react-diagrams';
 
 import LinkModel from '../Link/LinkModel';
-import { isValueValid } from '../Simulation/utils';
 
 export default class PortModel extends RDPortModel {
   constructor(options = {}) {
@@ -13,6 +12,7 @@ export default class PortModel extends RDPortModel {
 
     this.value = null;
     this.input = null;
+    this.bits = null;
   }
 
   serialize() {
@@ -20,6 +20,7 @@ export default class PortModel extends RDPortModel {
       ...super.serialize(),
       input: this.input,
       value: this.value,
+      bits: this.bits,
     };
   }
 
@@ -27,6 +28,7 @@ export default class PortModel extends RDPortModel {
     super.deserialize(event, engine);
     this.value = event.data.value;
     this.input = event.data.input;
+    this.bits = event.data.bits;
   }
 
   setAsInput() {
@@ -43,6 +45,19 @@ export default class PortModel extends RDPortModel {
 
   isOutput() {
     return this.input === false;
+  }
+
+  getBits() {
+    return this.bits;
+  }
+
+  setBits(bits) {
+    if (![1, 2, 4, 8, 16].includes(bits))
+      throw new Error(
+        '[logossim] Number of bits should be one of: 1, 2, 4, 8 or 16',
+      );
+
+    this.bits = bits;
   }
 
   getValue() {
@@ -65,7 +80,9 @@ export default class PortModel extends RDPortModel {
 
   createLinkModel() {
     if (this.isNewLinkAllowed()) {
-      return new LinkModel();
+      const link = new LinkModel();
+      link.setBits(this.bits);
+      return link;
     }
     return null;
   }
@@ -76,15 +93,9 @@ export default class PortModel extends RDPortModel {
   }
 
   getColor() {
-    if (this.value === null) {
-      const link = this.getMainLink();
-      if (link) return link.getColor();
-      return 'var(--port-unconnected)';
-    }
+    const link = this.getMainLink();
+    if (link) return link.getColor();
 
-    if (!isValueValid(this.value)) return 'var(--value-error)';
-    if (this.value === 1) return 'var(--value-on)';
-    if (this.value === 0) return 'var(--value-off)';
-    return 'none';
+    return 'var(--port-unconnected)';
   }
 }

@@ -6,6 +6,7 @@ import ComponentSelect from './ComponentSelect/ComponentSelect';
 import ContextMenus from './ContextMenus/ContextMenus';
 import HelpAbout from './Help/HelpAbout';
 import HelpKeyboardShortcuts from './Help/HelpKeyboardShortcuts';
+import Snackbar from './Snackbar/Snackbar';
 import Tour from './Tour/Tour';
 
 export {
@@ -17,5 +18,6 @@ export {
   ContextMenus,
   HelpAbout,
   HelpKeyboardShortcuts,
+  Snackbar,
   Tour,
 };

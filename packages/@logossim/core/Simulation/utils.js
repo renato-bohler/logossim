@@ -1,9 +1,26 @@
 /* eslint-disable no-restricted-globals */
-export const isValueValid = value =>
-  value === null || value === 0 || value === 1;
+export const MIN_VALUE = 0;
+export const MAX_VALUE = {
+  1: 0b1,
+  2: 0b11,
+  4: 0b1111,
+  8: 0b1111_1111,
+  16: 0b1111_1111_1111_1111,
+};
+
+export const adjustValueToBits = (value, dataBits = 1) => {
+  const allBitsSet = 0b1111_1111_1111_1111_1111_1111_1111_1111;
+  const mask = allBitsSet >>> (32 - dataBits);
+
+  return value & mask;
+};
+
+export const isValueValid = (value, dataBits = 1) =>
+  value === null ||
+  (value >= MIN_VALUE && value <= MAX_VALUE[dataBits]);
 
 export const isInputValid = input =>
-  Object.values(input).every(isValueValid);
+  input.every(item => isValueValid(item.value, item.bits));
 
 export const getCleanDiff = () => ({
   components: {},
@@ -26,7 +43,7 @@ export const getAffectedMeshes = emitted =>
   self.circuit.meshes.filter(mesh =>
     mesh.inputs.some(
       meshInput =>
-        emitted.from === meshInput.componentId &&
+        emitted.from.id === meshInput.componentId &&
         Object.keys(emitted.value).includes(meshInput.name),
     ),
   );
@@ -47,9 +64,7 @@ export const getMeshOutputComponents = mesh =>
 export const getMeshInputValue = mesh => {
   const allInputValues = mesh.inputs
     .map(portInfo => {
-      const component = self.circuit.components.find(
-        c => c.id === portInfo.componentId,
-      );
+      const component = getComponent(portInfo.componentId);
 
       /**
        * From the mesh's perspective, a component's output port is an

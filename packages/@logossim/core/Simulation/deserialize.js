@@ -37,13 +37,19 @@ export class GenericComponent {
     this.ports[type] = this.ports[type].map(port => {
       const previous = port.value;
 
-      const current =
-        values[port.name] !== undefined
-          ? values[port.name]
-          : previous;
+      let current = previous;
+      let error = false;
+      if (values[port.name] !== undefined) {
+        current = values[port.name];
+        if (typeof current === 'number') {
+          current = values[port.name];
+        } else {
+          error = true;
+        }
+      }
 
-      const risingEdge = previous === 0 && current === 1;
-      const fallingEdge = previous === 1 && current === 0;
+      const risingEdge = !error && previous < current;
+      const fallingEdge = !error && previous > current;
 
       return {
         ...port,

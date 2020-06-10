@@ -1,18 +1,30 @@
 import { PointModel } from '@projectstorm/react-diagrams';
 
 const commandHandlers = ({ engine, editComponentConfiguration }) => {
-  const adjustLink = link => {
+  const adjustLink = (link, nodes = []) => {
+    const nodeList = [
+      ...Object.values(
+        engine
+          .getModel()
+          .getActiveNodeLayer()
+          .getModels(),
+      ),
+      ...nodes,
+    ];
+
     /**
      * Port instance could have changed in consequence of component
      * configuration edit.
      */
     let sourcePort = link.getSourcePort();
     if (sourcePort) {
-      const node = engine.getModel().getNode(
-        link
-          .getSourcePort()
-          .getParent()
-          .getID(),
+      const node = nodeList.find(
+        n =>
+          n.getID() ===
+          link
+            .getSourcePort()
+            .getParent()
+            .getID(),
       );
 
       sourcePort = node.getPort(sourcePort.getName());
@@ -23,12 +35,15 @@ const commandHandlers = ({ engine, editComponentConfiguration }) => {
 
     let targetPort = link.getTargetPort();
     if (targetPort) {
-      const node = engine.getModel().getNode(
-        link
-          .getTargetPort()
-          .getParent()
-          .getID(),
+      const node = nodeList.find(
+        n =>
+          n.getID() ===
+          link
+            .getTargetPort()
+            .getParent()
+            .getID(),
       );
+
       targetPort = node.getPort(targetPort.getName());
 
       link.setTargetPort(targetPort);
@@ -153,7 +168,7 @@ const commandHandlers = ({ engine, editComponentConfiguration }) => {
            * rendered.
            */
           links
-            .map(adjustLink)
+            .map(link => adjustLink(link, nodes))
             .sort((l1, l2) => {
               if (
                 l1.getBifurcationSource() === l2 ||
@@ -169,9 +184,7 @@ const commandHandlers = ({ engine, editComponentConfiguration }) => {
 
               return 0;
             })
-            .forEach(link =>
-              engine.getModel().addLink(adjustLink(link)),
-            );
+            .forEach(link => engine.getModel().addLink(link));
 
           // Adds all nodes
           nodes.forEach(node => engine.getModel().addNode(node));

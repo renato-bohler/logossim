@@ -1,14 +1,14 @@
 import { Component } from '@logossim/core';
 
-import icon from './BufferIcon';
-import model from './BufferModel';
-import widget from './BufferWidget';
+import icon from './OutputIcon';
+import model from './OutputModel';
+import widget from './OutputWidget';
 
 export default new Component({
-  type: 'Buffer',
-  name: 'Buffer',
-  description: 'Simple buffer',
-  group: 'Logic gates',
+  type: 'Output',
+  name: 'Output pin',
+  description: 'Simple output pin',
+  group: 'Input & output',
   configurations: [
     {
       name: 'DATA_BITS',
@@ -35,6 +35,26 @@ export default new Component({
         {
           label: '16 bits',
           value: '16',
+        },
+      ],
+    },
+    {
+      name: 'OUTPUT_FORMAT',
+      type: 'select',
+      default: 'BITS',
+      label: 'Output format',
+      options: [
+        {
+          label: 'Bit by bit',
+          value: 'BITS',
+        },
+        {
+          label: 'Decimal number',
+          value: 'DECIMAL',
+        },
+        {
+          label: 'Hexadecimal number',
+          value: 'HEXADECIMAL',
         },
       ],
     },

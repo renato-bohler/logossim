@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 
-import { DefaultLinkSegmentWidget } from '@projectstorm/react-diagrams-defaults';
-
 import { samePosition } from '../Diagram/states/common';
 
 export default class LinkWidget extends Component {
@@ -50,28 +48,20 @@ export default class LinkWidget extends Component {
   }
 
   generateLinePath({ from, to }) {
-    return `M${from.getX()},${from.getY()} L ${to.getX()},${to.getY()}`;
+    return `M${from.getX()},${from.getY()} L${to.getX()},${to.getY()}`;
   }
 
-  renderSegment(path, index) {
-    const { diagramEngine, link, factory, options = {} } = this.props;
+  renderSegment(path, key) {
+    const { link, factory, options = {} } = this.props;
 
     const { selected } = options;
 
     const ref = React.createRef();
     this.refPaths.push(ref);
 
-    return (
-      <DefaultLinkSegmentWidget
-        key={`link-${index}`}
-        path={path}
-        selected={selected}
-        diagramEngine={diagramEngine}
-        factory={factory}
-        link={link}
-        forwardRef={ref}
-        onSelection={() => {}}
-      />
+    return React.cloneElement(
+      factory.generateLinkSegment(link, selected, path),
+      { key, ref },
     );
   }
 
@@ -81,10 +71,10 @@ export default class LinkWidget extends Component {
 
     return (
       <circle
-        r={5}
+        r={loose ? 6 : link.getPointRadius()}
         fill={loose ? 'var(--background)' : color}
         stroke={loose ? color : 'none'}
-        strokeWidth="var(--link-width)"
+        strokeWidth={3}
         cx={position.x}
         cy={position.y}
       />

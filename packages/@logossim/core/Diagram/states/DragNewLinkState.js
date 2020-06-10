@@ -8,19 +8,19 @@ import {
   PortModel,
 } from '@projectstorm/react-diagrams-core';
 
-import { nearby, getLandingLink } from './common';
+import {
+  nearby,
+  getLandingLink,
+  getIncompatibleWidthsErrorMessage,
+} from './common';
 import handleLinkDrag from './handleLinkDrag';
 
 /**
  * This State is responsible for handling link creation events.
  */
 export default class DragNewLinkState extends AbstractDisplacementState {
-  constructor(options = {}) {
+  constructor(showSnackbar) {
     super({ name: 'drag-new-link' });
-
-    this.config = {
-      ...options,
-    };
 
     this.registerAction(
       new Action({
@@ -70,11 +70,21 @@ export default class DragNewLinkState extends AbstractDisplacementState {
             this.engine.repaintCanvas();
           }
 
-          // Link connected to port
+          // Link connecting to port
           if (
             model instanceof PortModel &&
             this.port.canLinkToPort(model)
           ) {
+            // Disallows connecting ports with different bit numbers
+            if (this.port.getBits() !== model.getBits()) {
+              this.link.remove();
+              this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(this.port, model),
+              );
+              return;
+            }
+
             this.link.setTargetPort(model);
             model.reportPosition();
             this.engine.repaintCanvas();
@@ -85,12 +95,23 @@ export default class DragNewLinkState extends AbstractDisplacementState {
           // Link landing on another link
           const landing = getLandingLink(this.link, this.engine);
           if (landing) {
+            // Disallows connecting links with different bit numbers
+            if (landing.getBits() !== this.link.getBits()) {
+              this.link.remove();
+              this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(this.link, landing),
+              );
+              return;
+            }
+
             const reverse = this.engine
               .getFactoryForLink(landing)
               .generateModel();
             reverse.setPoints(this.link.getPoints().reverse());
             reverse.setTargetPort(this.link.getSourcePort());
             reverse.setBifurcationSource(landing);
+            reverse.setBits(landing.getBits());
 
             landing.addBifurcation(reverse);
             landing.setSelected(true);

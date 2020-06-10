@@ -2,10 +2,14 @@ import And from './And/AndRegister';
 import Buffer from './Buffer/BufferRegister';
 import Button from './Button/ButtonRegister';
 import Clock from './Clock/ClockRegister';
+import Input from './Input/InputRegister';
+import Joiner from './Joiner/JoinerRegister';
 import Nand from './Nand/NandRegister';
 import Nor from './Nor/NorRegister';
 import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
+import Output from './Output/OutputRegister';
+import Splitter from './Splitter/SplitterRegister';
 import Xnor from './Xnor/XnorRegister';
 import Xor from './Xor/XorRegister';
 
@@ -18,8 +22,12 @@ const components = [
   Xnor,
   Buffer,
   Not,
+  Input,
+  Output,
   Button,
   Clock,
+  Splitter,
+  Joiner,
 ];
 
 export default components;

@@ -1,25 +1,21 @@
 import { Component } from '@logossim/core';
 
-import icon from './BufferIcon';
-import model from './BufferModel';
-import widget from './BufferWidget';
+import icon from './JoinerIcon';
+import model from './JoinerModel';
+import widget from './JoinerWidget';
 
 export default new Component({
-  type: 'Buffer',
-  name: 'Buffer',
-  description: 'Simple buffer',
-  group: 'Logic gates',
+  type: 'Joiner',
+  name: 'Joiner',
+  description: 'Joins N 1 bit wires into one N bit wire',
+  group: 'Organizers',
   configurations: [
     {
       name: 'DATA_BITS',
       type: 'select',
-      default: '1',
-      label: 'Data bits',
+      default: '2',
+      label: 'Output data bits',
       options: [
-        {
-          label: '1 bit',
-          value: '1',
-        },
         {
           label: '2 bits',
           value: '2',

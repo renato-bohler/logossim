@@ -1,25 +1,21 @@
 import { Component } from '@logossim/core';
 
-import icon from './BufferIcon';
-import model from './BufferModel';
-import widget from './BufferWidget';
+import icon from './SplitterIcon';
+import model from './SplitterModel';
+import widget from './SplitterWidget';
 
 export default new Component({
-  type: 'Buffer',
-  name: 'Buffer',
-  description: 'Simple buffer',
-  group: 'Logic gates',
+  type: 'Splitter',
+  name: 'Splitter',
+  description: 'Split wire with N bits into N 1 bit wires',
+  group: 'Organizers',
   configurations: [
     {
       name: 'DATA_BITS',
       type: 'select',
-      default: '1',
-      label: 'Data bits',
+      default: '2',
+      label: 'Input data bits',
       options: [
-        {
-          label: '1 bit',
-          value: '1',
-        },
         {
           label: '2 bits',
           value: '2',

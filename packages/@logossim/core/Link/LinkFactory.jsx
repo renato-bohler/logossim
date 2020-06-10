@@ -9,6 +9,7 @@ import LinkWidget from './LinkWidget';
 
 const Path = styled.path`
   pointer-events: all;
+  stroke-linecap: round;
 `;
 
 export default class LinkFactory extends DefaultLinkFactory {
@@ -32,11 +33,15 @@ export default class LinkFactory extends DefaultLinkFactory {
 
   generateLinkSegment(model, selected, path) {
     return (
-      <Path
-        stroke={model.getColor()}
-        strokeWidth="var(--link-width)"
-        d={path}
-      />
+      <>
+        <Path
+          stroke={model.getColor()}
+          strokeWidth={model.getLineWidth()}
+          d={path}
+        />
+        {/* This path is to facilitate link selection */}
+        <Path stroke="none" strokeWidth={20} d={path} />
+      </>
     );
   }
 }

@@ -21,10 +21,12 @@ import {
   appendComponentDiff,
   initializeDiffAndValues,
   isInputValid,
+  isValueValid,
   getComponent,
   getAffectedMeshes,
   getMeshInputValue,
   getMeshOutputComponents,
+  adjustValueToBits,
 } from './utils';
 
 /**
@@ -93,7 +95,11 @@ self.addEventListener(
        * EMIT
        */
       case 'emit':
-        if (self.circuit) self.emitQueue.push(emitted);
+        if (self.circuit)
+          self.emitQueue.push({
+            ...emitted,
+            from: getComponent(emitted.from),
+          });
         break;
 
       default:
@@ -111,7 +117,16 @@ const executeNextEmitted = (first = true) => {
   const emitted = self.emitQueue.shift();
   if (!emitted) return;
 
-  const emitter = getComponent(emitted.from);
+  const emitter = emitted.from;
+
+  emitted.value = Object.fromEntries(
+    Object.entries(emitted.value).map(([portName, portValue]) => {
+      const { bits } = emitter.getOutputPort(portName);
+      const value = adjustValueToBits(portValue, bits);
+
+      return [portName, isValueValid(value, bits) ? value : 'error'];
+    }),
+  );
   emitter.setOutputValues(emitted.value);
 
   appendComponentDiff(emitter, emitted.value);
@@ -139,15 +154,21 @@ const executeNextStep = () => {
     (obj, port) => ({ ...obj, [port.name]: port.value }),
     {},
   );
-
   const meta = component.ports.input.reduce(
     (obj, port) => ({ ...obj, [port.name]: port.meta }),
     {},
   );
 
   let result = {};
-  if (isInputValid(input)) {
+  if (isInputValid(component.ports.input)) {
     result = component.step(input, meta);
+    result = Object.fromEntries(
+      Object.entries(result).map(([portName, portValue]) => {
+        const { bits } = component.getOutputPort(portName);
+        const value = adjustValueToBits(portValue, bits);
+        return [portName, value];
+      }),
+    );
   } else {
     result = component.stepError(input, meta);
   }
@@ -155,15 +176,15 @@ const executeNextStep = () => {
   if (!result) return;
 
   const output = Object.fromEntries(
-    Object.entries(result).filter(([name]) =>
-      component.ports.output.find(o => o.name === name),
+    Object.entries(result).filter(([portName]) =>
+      component.getOutputPort(portName),
     ),
   );
 
   if (component.hasOutputChanged(output)) {
     component.setOutputValues(output);
     appendComponentDiff(component, output);
-    propagate({ from: component.id, value: output });
+    propagate({ from: component, value: output });
   }
 
   executeNextStep();

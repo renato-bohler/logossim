@@ -19,15 +19,15 @@ import SelectingState from './SelectingState';
  * clicking events on certain elements.
  */
 export default class States extends State {
-  constructor() {
+  constructor(showSnackbar) {
     super({
       name: 'diagram-states',
     });
 
     this.childStates = [new SelectingState()];
     this.dragCanvas = new DragCanvasState();
-    this.dragNewLink = new DragNewLinkState();
-    this.bifurcateLink = new BifurcateLinkState();
+    this.dragNewLink = new DragNewLinkState(showSnackbar);
+    this.bifurcateLink = new BifurcateLinkState(showSnackbar);
     this.dragItems = new MoveItemsState();
 
     // Determine what was clicked on

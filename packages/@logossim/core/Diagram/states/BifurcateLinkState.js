@@ -17,6 +17,7 @@ import {
   sameX,
   sameAxis,
   closestPointToLink,
+  getIncompatibleWidthsErrorMessage,
 } from './common';
 import handleLinkDrag from './handleLinkDrag';
 
@@ -37,7 +38,7 @@ import handleLinkDrag from './handleLinkDrag';
  * will behave as a link selection.
  */
 export default class BifurcateLinkState extends AbstractDisplacementState {
-  constructor() {
+  constructor(showSnackbar) {
     super({ name: 'bifurcate-link' });
 
     this.registerAction(
@@ -65,6 +66,7 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             .getLinkFactories()
             .getFactory(this.source.getType())
             .generateModel();
+          this.bifurcation.setBits(this.source.getBits());
 
           if (!this.bifurcation) {
             this.eject();
@@ -112,6 +114,16 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             model instanceof PortModel &&
             model.isNewLinkAllowed()
           ) {
+            // Disallows connecting ports with different bit numbers
+            if (this.source.getBits() !== model.getBits()) {
+              this.cleanUp();
+              this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(this.source, model),
+              );
+              return;
+            }
+
             this.bifurcation.setTargetPort(model);
 
             model.reportPosition();
@@ -127,6 +139,19 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             this.engine,
           );
           if (landing) {
+            // Disallows connecting links with different bit numbers
+            if (landing.getBits() !== this.bifurcation.getBits()) {
+              this.cleanUp();
+              this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(
+                  this.bifurcation,
+                  landing,
+                ),
+              );
+              return;
+            }
+
             this.bifurcation.setBifurcationTarget(landing);
             landing.addBifurcation(this.bifurcation);
             landing.setSelected(true);
