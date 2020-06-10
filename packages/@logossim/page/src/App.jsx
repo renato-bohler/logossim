@@ -15,9 +15,10 @@ import {
   ComponentSelect,
   ComponentEdit,
   ContextMenus,
-  Tour,
   HelpKeyboardShortcuts,
   HelpAbout,
+  Snackbar,
+  Tour,
 } from './ui-components';
 import tourCircuit, {
   DIMENSIONS,
@@ -37,11 +38,19 @@ export default class App extends Component {
       componentEdit: null,
       isTourAvailable: false,
       isTourRunning: !JSON.parse(localStorage.getItem('tour-done')),
+      snackbar: {
+        open: false,
+        message: '',
+        type: 'success',
+        timeout: 0,
+        timeoutID: null,
+      },
     };
 
     this.diagram = new DiagramEngine(
       components,
       this.areShortcutsAllowed,
+      this.showSnackbar,
     );
     this.simulation = new SimulationEngine(components);
   }
@@ -145,27 +154,25 @@ export default class App extends Component {
 
     if (this.isCircuitEmpty(lastSaved)) {
       this.setState({ isTourAvailable: true });
-      // return;
+      return;
     }
 
-    // const reload = window.confirm('Reload last unsaved circuit?');
-    // if (reload) {
-    // this.diagram.load(lastSaved);
-    // } else {
-    // this.setState({ isTourAvailable: true });
-    // localStorage.removeItem('circuit-autosave');
-    // }
+    const reload = window.confirm('Reload last unsaved circuit?');
+    if (reload) {
+      this.diagram.load(lastSaved);
+    } else {
+      this.setState({ isTourAvailable: true });
+      localStorage.removeItem('circuit-autosave');
+    }
   };
 
   shouldWarnUnload = (currentCircuit, lastSavedCircuit) => {
-    return false;
+    if (this.isCircuitEmpty(currentCircuit)) return false;
 
-    // if (this.isCircuitEmpty(currentCircuit)) return false;
-
-    // return (
-    //   JSON.stringify(lastSavedCircuit.layers) !==
-    //   JSON.stringify(currentCircuit.layers)
-    // );
+    return (
+      JSON.stringify(lastSavedCircuit.layers) !==
+      JSON.stringify(currentCircuit.layers)
+    );
   };
 
   unloadHandler = event => {
@@ -300,6 +307,39 @@ export default class App extends Component {
 
   hideHelpAbout = () => this.setState({ isHelpAboutOpen: false });
 
+  showSnackbar = async (message, type = 'error') => {
+    const { snackbar } = this.state;
+    const timeout = 3000 + message.split(' ').length * 50;
+
+    if (snackbar.open) {
+      clearTimeout(snackbar.timeoutID);
+      this.hideSnackbar();
+      await new Promise(res => setTimeout(res, 500));
+    }
+
+    this.setState({
+      snackbar: {
+        open: true,
+        message,
+        type,
+        timeout,
+        timeoutID: setTimeout(this.hideSnackbar, timeout),
+      },
+    });
+  };
+
+  hideSnackbar = () => {
+    const { snackbar } = this.state;
+    clearTimeout(snackbar.timeoutID);
+
+    this.setState(state => ({
+      snackbar: {
+        ...state.snackbar,
+        open: false,
+      },
+    }));
+  };
+
   handleLoadTourCircuit = () => {
     this.circuitBeforeTour = this.diagram.serialize();
     this.diagram.load(tourCircuit);
@@ -333,6 +373,7 @@ export default class App extends Component {
       componentEdit,
       isTourAvailable,
       isTourRunning,
+      snackbar,
     } = this.state;
 
     return (
@@ -404,6 +445,13 @@ export default class App extends Component {
         />
 
         <Tooltip id="tooltip" globalEventOff="click" />
+        <Snackbar
+          open={snackbar.open}
+          type={snackbar.type}
+          message={snackbar.message}
+          timeout={snackbar.timeout}
+          handleClose={this.hideSnackbar}
+        />
       </>
     );
   }
