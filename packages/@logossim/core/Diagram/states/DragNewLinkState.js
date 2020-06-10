@@ -8,19 +8,19 @@ import {
   PortModel,
 } from '@projectstorm/react-diagrams-core';
 
-import { nearby, getLandingLink } from './common';
+import {
+  nearby,
+  getLandingLink,
+  getIncompatibleWidthsErrorMessage,
+} from './common';
 import handleLinkDrag from './handleLinkDrag';
 
 /**
  * This State is responsible for handling link creation events.
  */
 export default class DragNewLinkState extends AbstractDisplacementState {
-  constructor(options = {}) {
+  constructor(showSnackbar) {
     super({ name: 'drag-new-link' });
-
-    this.config = {
-      ...options,
-    };
 
     this.registerAction(
       new Action({
@@ -79,6 +79,9 @@ export default class DragNewLinkState extends AbstractDisplacementState {
             if (this.port.getBits() !== model.getBits()) {
               this.link.remove();
               this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(this.port, model),
+              );
               return;
             }
 
@@ -96,6 +99,9 @@ export default class DragNewLinkState extends AbstractDisplacementState {
             if (landing.getBits() !== this.link.getBits()) {
               this.link.remove();
               this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(this.link, landing),
+              );
               return;
             }
 

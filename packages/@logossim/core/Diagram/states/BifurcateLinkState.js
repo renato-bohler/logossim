@@ -17,6 +17,7 @@ import {
   sameX,
   sameAxis,
   closestPointToLink,
+  getIncompatibleWidthsErrorMessage,
 } from './common';
 import handleLinkDrag from './handleLinkDrag';
 
@@ -37,7 +38,7 @@ import handleLinkDrag from './handleLinkDrag';
  * will behave as a link selection.
  */
 export default class BifurcateLinkState extends AbstractDisplacementState {
-  constructor() {
+  constructor(showSnackbar) {
     super({ name: 'bifurcate-link' });
 
     this.registerAction(
@@ -117,6 +118,9 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             if (this.source.getBits() !== model.getBits()) {
               this.cleanUp();
               this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(this.source, model),
+              );
               return;
             }
 
@@ -139,6 +143,12 @@ export default class BifurcateLinkState extends AbstractDisplacementState {
             if (landing.getBits() !== this.bifurcation.getBits()) {
               this.cleanUp();
               this.engine.repaintCanvas();
+              showSnackbar(
+                getIncompatibleWidthsErrorMessage(
+                  this.bifurcation,
+                  landing,
+                ),
+              );
               return;
             }
 

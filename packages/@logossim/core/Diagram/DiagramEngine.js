@@ -16,9 +16,10 @@ import CommandManager from './Command/CommandManager';
 import States from './states/States';
 
 export default class DiagramEngine {
-  constructor(components, areShortcutsAllowed) {
+  constructor(components, areShortcutsAllowed, showSnackbar) {
     this.components = components;
     this.areShortcutsAllowed = areShortcutsAllowed;
+    this.showSnackbar = showSnackbar;
     this.locked = false;
 
     this.initializeEngine();
@@ -41,7 +42,9 @@ export default class DiagramEngine {
     this.engine.commands = new CommandManager();
     this.engine.registerListener(commandHandlers(this));
 
-    this.engine.getStateMachine().pushState(new States());
+    this.engine
+      .getStateMachine()
+      .pushState(new States(this.showSnackbar));
 
     const actions = [
       DuplicateAction,
