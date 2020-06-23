@@ -24,14 +24,14 @@ const Wrapper = styled.div`
   height: ${props => (props.inputNumber + 2) * 15}px;
 `;
 
-export const Shape = ({ selected, inputNumber }) => {
+export const Shape = ({ selected, inputNumber, icon }) => {
   const height = (inputNumber + 2) * 15;
 
   return (
     <svg
       viewBox={`0 0 30 ${height}`}
-      height={height}
-      width="30"
+      height={icon ? 30 : height}
+      width={icon ? 15 : 30}
       fill={
         selected ? 'var(--body-selected)' : 'var(--body-unselected)'
       }
