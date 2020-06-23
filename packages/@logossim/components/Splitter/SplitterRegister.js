@@ -8,7 +8,7 @@ export default new Component({
   type: 'Splitter',
   name: 'Splitter',
   description: 'Split wire with N bits into N 1 bit wires',
-  group: 'Organizers',
+  group: 'Wiring',
   configurations: [
     {
       name: 'DATA_BITS',

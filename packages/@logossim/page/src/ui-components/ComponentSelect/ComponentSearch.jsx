@@ -27,6 +27,12 @@ const SearchBar = styled.input`
   }
 `;
 
+const Scroll = styled.div`
+  padding-right: 16px;
+  max-height: calc(min(800px, 80vh) - 130px);
+  overflow-y: auto;
+`;
+
 const ComponentSearch = ({
   groups,
   handleComponentSelect,
@@ -107,14 +113,16 @@ const ComponentSearch = ({
       </Header>
 
       <Content>
-        {filteredGroups.map(({ name, components }) => (
-          <ComponentGroup
-            name={name}
-            components={components}
-            handleComponentSelect={handleComponentSelect}
-            key={name}
-          />
-        ))}
+        <Scroll>
+          {filteredGroups.map(({ name, components }) => (
+            <ComponentGroup
+              name={name}
+              components={components}
+              handleComponentSelect={handleComponentSelect}
+              key={name}
+            />
+          ))}
+        </Scroll>
       </Content>
     </>
   );
