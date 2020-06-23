@@ -32,7 +32,7 @@ export const Subtitle = styled.h2`
 `;
 
 export const Content = styled.div`
-  padding-top: 32px;
+  margin-top: 32px;
 `;
 
 export const IconButton = styled.button`
