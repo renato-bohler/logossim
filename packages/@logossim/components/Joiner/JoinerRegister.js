@@ -8,7 +8,7 @@ export default new Component({
   type: 'Joiner',
   name: 'Joiner',
   description: 'Joins N 1 bit wires into one N bit wire',
-  group: 'Organizers',
+  group: 'Wiring',
   configurations: [
     {
       name: 'DATA_BITS',
