@@ -2,7 +2,7 @@ import { BaseModel } from '@logossim/core';
 
 export default class OutputModel extends BaseModel {
   initialize(configurations) {
-    const DATA_BITS = parseInt(configurations.DATA_BITS, 10);
+    const DATA_BITS = Number(configurations.DATA_BITS);
 
     this.addInputPort('in', DATA_BITS);
   }

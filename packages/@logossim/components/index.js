@@ -2,6 +2,7 @@ import And from './And/AndRegister';
 import Buffer from './Buffer/BufferRegister';
 import Button from './Button/ButtonRegister';
 import Clock from './Clock/ClockRegister';
+import Demux from './Demux/DemuxRegister';
 import Input from './Input/InputRegister';
 import Joiner from './Joiner/JoinerRegister';
 import Mux from './Mux/MuxRegister';
@@ -30,6 +31,7 @@ const components = [
   Splitter,
   Joiner,
   Mux,
+  Demux,
 ];
 
 export default components;

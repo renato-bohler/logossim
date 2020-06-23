@@ -59,7 +59,7 @@ const JoinerWidget = props => {
     configurations: { DATA_BITS },
   } = model;
 
-  const dataBits = parseInt(DATA_BITS, 10);
+  const dataBits = Number(DATA_BITS);
   const inputPorts = Object.values(model.getInputPorts());
 
   return (

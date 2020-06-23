@@ -2,7 +2,7 @@ import { BaseModel } from '@logossim/core';
 
 export default class JoinerModel extends BaseModel {
   initialize(configurations) {
-    this.bits = parseInt(configurations.DATA_BITS, 10);
+    this.bits = Number(configurations.DATA_BITS);
 
     for (let i = 0; i < this.bits; i += 1) {
       this.addInputPort(`in${i}`);

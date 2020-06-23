@@ -98,7 +98,7 @@ const mapBits = model => {
   const {
     configurations: { DATA_BITS },
   } = model;
-  const dataBits = parseInt(DATA_BITS, 10);
+  const dataBits = Number(DATA_BITS);
 
   return [...new Array(dataBits)].map((_, index) => {
     const value = model.getBitAt(index);
@@ -131,7 +131,7 @@ const OutputWidget = props => {
     configurations: { OUTPUT_FORMAT, DATA_BITS },
   } = model;
 
-  const dataBits = parseInt(DATA_BITS, 10);
+  const dataBits = Number(DATA_BITS);
 
   return (
     <Shape

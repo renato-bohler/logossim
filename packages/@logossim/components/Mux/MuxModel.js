@@ -2,8 +2,8 @@ import { BaseModel } from '@logossim/core';
 
 export default class MuxModel extends BaseModel {
   initialize(configurations) {
-    const DATA_BITS = parseInt(configurations.DATA_BITS, 10);
-    const INPUT_NUMBER = parseInt(configurations.INPUT_NUMBER, 10);
+    const DATA_BITS = Number(configurations.DATA_BITS);
+    const INPUT_NUMBER = Number(configurations.INPUT_NUMBER);
 
     for (let i = 0; i < INPUT_NUMBER; i += 1) {
       this.addInputPort(`in${i}`, DATA_BITS);
