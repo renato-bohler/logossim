@@ -2,7 +2,7 @@ import { BaseModel } from '@logossim/core';
 
 export default class SplitterModel extends BaseModel {
   initialize(configurations) {
-    this.bits = parseInt(configurations.DATA_BITS, 10);
+    this.bits = Number(configurations.DATA_BITS);
 
     this.addInputPort('in', this.bits);
     for (let i = 0; i < this.bits; i += 1) {

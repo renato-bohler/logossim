@@ -80,7 +80,7 @@ const InputWidget = props => {
     configurations: { DATA_BITS },
   } = model;
 
-  const dataBits = parseInt(DATA_BITS, 10);
+  const dataBits = Number(DATA_BITS);
 
   return (
     <Shape selected={selected} dataBits={dataBits}>

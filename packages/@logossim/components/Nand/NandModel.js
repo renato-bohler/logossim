@@ -2,11 +2,10 @@ import { BaseModel } from '@logossim/core';
 
 export default class NandModel extends BaseModel {
   initialize(configurations) {
-    const INPUT_PORTS_NUMBER = parseInt(
+    const INPUT_PORTS_NUMBER = Number(
       configurations.INPUT_PORTS_NUMBER,
-      10,
     );
-    const DATA_BITS = parseInt(configurations.DATA_BITS, 10);
+    const DATA_BITS = Number(configurations.DATA_BITS);
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
       this.addInputPort(`in${i}`, DATA_BITS);

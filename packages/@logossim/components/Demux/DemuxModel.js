@@ -2,8 +2,8 @@ import { BaseModel } from '@logossim/core';
 
 export default class DemuxModel extends BaseModel {
   initialize(configurations) {
-    const DATA_BITS = parseInt(configurations.DATA_BITS, 10);
-    this.outputNumber = parseInt(configurations.OUTPUT_NUMBER, 10);
+    const DATA_BITS = Number(configurations.DATA_BITS);
+    this.outputNumber = Number(configurations.OUTPUT_NUMBER);
 
     this.addInputPort('in', DATA_BITS);
     this.addInputPort('selection', Math.log2(this.outputNumber));

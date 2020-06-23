@@ -3,11 +3,10 @@ import { BaseModel } from '@logossim/core';
 export default class XorModel extends BaseModel {
   initialize(configurations) {
     this.behavior = configurations.MULTIPLE_INPUT_BEHAVIOR;
-    this.bits = parseInt(configurations.DATA_BITS, 10);
+    this.bits = Number(configurations.DATA_BITS);
 
-    const INPUT_PORTS_NUMBER = parseInt(
+    const INPUT_PORTS_NUMBER = Number(
       configurations.INPUT_PORTS_NUMBER,
-      10,
     );
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {

@@ -59,7 +59,7 @@ const SplitterWidget = props => {
     configurations: { DATA_BITS },
   } = model;
 
-  const dataBits = parseInt(DATA_BITS, 10);
+  const dataBits = Number(DATA_BITS);
   const outputPorts = Object.values(model.getOutputPorts());
 
   return (
