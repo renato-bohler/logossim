@@ -5,6 +5,7 @@ import Clock from './Clock/ClockRegister';
 import Demux from './Demux/DemuxRegister';
 import Input from './Input/InputRegister';
 import Joiner from './Joiner/JoinerRegister';
+import Led from './Led/LedRegister';
 import Mux from './Mux/MuxRegister';
 import Nand from './Nand/NandRegister';
 import Nor from './Nor/NorRegister';
@@ -20,6 +21,7 @@ const components = [
   Output,
   Button,
   Clock,
+  Led,
   And,
   Nand,
   Or,

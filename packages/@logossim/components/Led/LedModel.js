@@ -1,0 +1,30 @@
+import { BaseModel } from '@logossim/core';
+
+export default class LedModel extends BaseModel {
+  initialize(configurations) {
+    this.activeWhen = configurations.ACTIVE_WHEN;
+    this.colors = {
+      on: configurations.ON_COLOR,
+      off: configurations.OFF_COLOR,
+    };
+
+    this.addInputPort('in');
+  }
+
+  isActive() {
+    const input = this.getPort('in').getValue() || 0;
+
+    if (this.activeWhen === 'high') {
+      if (input === 0) return false;
+      return true;
+    }
+
+    if (input === 0) return true;
+    return false;
+  }
+
+  getColor() {
+    if (this.isActive()) return this.colors.on;
+    return this.colors.off;
+  }
+}
