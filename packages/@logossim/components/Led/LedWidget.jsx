@@ -17,7 +17,8 @@ export const Shape = styled.div`
   width: 30px;
   height: 30px;
 
-  background: ${props => props.color};
+  background: ${props =>
+    `${props.color}${props.selected ? '80' : 'ff'}`};
   box-shadow: 0 0 ${props => (props.isActive ? 15 : 0)}px
     ${props => props.color};
   border: 2px solid
