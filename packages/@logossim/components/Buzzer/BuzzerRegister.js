@@ -13,7 +13,7 @@ export default new Component({
     {
       name: 'FREQUENCY_HZ',
       type: 'number',
-      default: 2,
+      default: 300,
       label: 'Sound frequency (in Hertz)',
       min: 0,
       max: 20000,
