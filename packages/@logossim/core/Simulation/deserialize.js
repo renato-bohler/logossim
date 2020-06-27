@@ -88,12 +88,19 @@ export class GenericComponent {
         ),
     );
 
-    return customPropertyNames
-      .filter(property => typeof this[property] !== 'function')
-      .reduce(
-        (obj, property) => ({ ...obj, [property]: this[property] }),
-        {},
-      );
+    return JSON.parse(
+      JSON.stringify(
+        customPropertyNames
+          .filter(property => typeof this[property] !== 'function')
+          .reduce(
+            (obj, property) => ({
+              ...obj,
+              [property]: this[property],
+            }),
+            {},
+          ),
+      ),
+    );
   }
 
   // Defaults
@@ -132,6 +139,68 @@ export class GenericComponent {
   addOutputPort() {}
 
   removePort() {}
+
+  // Functionality that requires calling main thread
+  createAudio(frequency, waveform) {
+    if (!this.audioCount) {
+      this.audioCount = 0;
+    }
+
+    const AUDIO_ID = `${this.audioCount}-${this.id}`;
+    this.audioCount += 1;
+
+    postMessage({
+      type: 'audio',
+      payload: {
+        command: 'create',
+        id: AUDIO_ID,
+        frequency,
+        waveform,
+      },
+    });
+
+    const play = () =>
+      postMessage({
+        type: 'audio',
+        payload: {
+          command: 'play',
+          id: AUDIO_ID,
+        },
+      });
+
+    const pause = () =>
+      postMessage({
+        type: 'audio',
+        payload: { command: 'pause', id: AUDIO_ID },
+      });
+
+    const setFrequency = freq =>
+      postMessage({
+        type: 'audio',
+        payload: {
+          command: 'setFrequency',
+          id: AUDIO_ID,
+          frequency: freq,
+        },
+      });
+
+    const setWaveform = wf =>
+      postMessage({
+        type: 'audio',
+        payload: {
+          command: 'setWaveform',
+          id: AUDIO_ID,
+          waveform: wf,
+        },
+      });
+
+    return {
+      play,
+      pause,
+      setFrequency,
+      setWaveform,
+    };
+  }
 }
 
 /**

@@ -123,7 +123,7 @@ export const initializeDiffAndValues = () => {
 
   postMessage({
     type: 'diff',
-    diff: { links: diffLinks, components: diffComponents },
+    payload: { links: diffLinks, components: diffComponents },
   });
 };
 

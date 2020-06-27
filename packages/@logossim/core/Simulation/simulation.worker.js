@@ -136,7 +136,7 @@ const executeNextEmitted = (first = true) => {
   executeNextEmitted(false);
 
   if (first) {
-    postMessage({ type: 'diff', diff: self.diff });
+    postMessage({ type: 'diff', payload: self.diff });
     self.diff = getCleanDiff();
   }
 };
@@ -163,7 +163,7 @@ const executeNextStep = () => {
   if (isInputValid(component.ports.input)) {
     result = component.step(input, meta);
     result = Object.fromEntries(
-      Object.entries(result).map(([portName, portValue]) => {
+      Object.entries(result || {}).map(([portName, portValue]) => {
         const { bits } = component.getOutputPort(portName);
         const value = adjustValueToBits(portValue, bits);
         return [portName, value];

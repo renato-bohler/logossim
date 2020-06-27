@@ -1,3 +1,4 @@
+import AudioEngine from './AudioEngine';
 import serialize from './serialize';
 import SimulationWorker from './simulation.worker';
 import { getCleanDiff } from './utils';
@@ -16,13 +17,24 @@ export default class SimulationEngine {
 
     this.worker = worker;
     this.worker.addEventListener('message', this.onSimulationMessage);
+
+    this.audioEngine = new AudioEngine();
+
     this.state = 'stopped';
     this.clearDiff();
   }
 
-  onSimulationMessage = ({ data: { type, diff } }) => {
+  onSimulationMessage = ({ data: { type, payload } }) => {
     if (type === 'diff') {
-      this.appendDiff(diff);
+      this.appendDiff(payload);
+    }
+
+    if (type === 'audio') {
+      this.audioEngine.handlePayload(payload);
+    }
+
+    if (type === 'clear') {
+      this.audioEngine.cleanUp();
     }
   };
 
