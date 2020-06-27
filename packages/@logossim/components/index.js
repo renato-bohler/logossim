@@ -1,6 +1,7 @@
 import And from './And/AndRegister';
 import Buffer from './Buffer/BufferRegister';
 import Button from './Button/ButtonRegister';
+import Buzzer from './Buzzer/BuzzerRegister';
 import Clock from './Clock/ClockRegister';
 import Demux from './Demux/DemuxRegister';
 import Input from './Input/InputRegister';
@@ -22,6 +23,7 @@ const components = [
   Button,
   Clock,
   Led,
+  Buzzer,
   And,
   Nand,
   Or,
