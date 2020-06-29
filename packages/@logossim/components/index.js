@@ -4,6 +4,7 @@ import Button from './Button/ButtonRegister';
 import Buzzer from './Buzzer/BuzzerRegister';
 import Clock from './Clock/ClockRegister';
 import Demux from './Demux/DemuxRegister';
+import Ground from './Ground/GroundRegister';
 import Input from './Input/InputRegister';
 import Joiner from './Joiner/JoinerRegister';
 import Led from './Led/LedRegister';
@@ -13,6 +14,7 @@ import Nor from './Nor/NorRegister';
 import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
 import Output from './Output/OutputRegister';
+import Power from './Power/PowerRegister';
 import Splitter from './Splitter/SplitterRegister';
 import Xnor from './Xnor/XnorRegister';
 import Xor from './Xor/XorRegister';
@@ -34,6 +36,8 @@ const components = [
   Not,
   Splitter,
   Joiner,
+  Power,
+  Ground,
   Mux,
   Demux,
 ];
