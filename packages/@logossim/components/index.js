@@ -4,6 +4,7 @@ import Button from './Button/ButtonRegister';
 import Buzzer from './Buzzer/BuzzerRegister';
 import Clock from './Clock/ClockRegister';
 import Demux from './Demux/DemuxRegister';
+import Ground from './Ground/GroundRegister';
 import Input from './Input/InputRegister';
 import Joiner from './Joiner/JoinerRegister';
 import Led from './Led/LedRegister';
@@ -36,6 +37,7 @@ const components = [
   Splitter,
   Joiner,
   Power,
+  Ground,
   Mux,
   Demux,
 ];
