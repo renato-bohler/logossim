@@ -13,6 +13,7 @@ import Nor from './Nor/NorRegister';
 import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
 import Output from './Output/OutputRegister';
+import Power from './Power/PowerRegister';
 import Splitter from './Splitter/SplitterRegister';
 import Xnor from './Xnor/XnorRegister';
 import Xor from './Xor/XorRegister';
@@ -34,6 +35,7 @@ const components = [
   Not,
   Splitter,
   Joiner,
+  Power,
   Mux,
   Demux,
 ];
