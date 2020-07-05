@@ -17,6 +17,7 @@ import Output from './Output/OutputRegister';
 import Power from './Power/PowerRegister';
 import Splitter from './Splitter/SplitterRegister';
 import Ssd from './Ssd/SsdRegister';
+import Switch from './Switch/SwitchRegister';
 import Xnor from './Xnor/XnorRegister';
 import Xor from './Xor/XorRegister';
 
@@ -24,6 +25,7 @@ const components = [
   Input,
   Output,
   Button,
+  Switch,
   Clock,
   Led,
   Ssd,
