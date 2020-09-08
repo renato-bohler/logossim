@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 
 import styled from 'styled-components';
 
-import Edit from '../Icons/Edit';
+import { Edit, Chevrons } from '../Icons';
 
 const Container = styled.div`
   position: absolute;
@@ -20,6 +20,10 @@ const Container = styled.div`
   border-bottom: 1px solid #e5e5e5;
   box-shadow: 0px -10px 20px 0px black;
   padding: 12px;
+
+  transform: ${({ isHidden }) =>
+    isHidden ? 'translateY(-100%)' : 'none'};
+  transition: 0.5s ease-in-out;
 `;
 
 const NameContainer = styled.div`
@@ -147,6 +151,27 @@ const HelpButtonMenuItem = styled.button`
   }
 `;
 
+const HideButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  box-shadow: 0px 0px 12px 0px #6b6b6b;
+
+  svg {
+    transform: ${({ isHidden }) =>
+      isHidden ? 'none' : 'rotate(180deg)'};
+    transition: 0.5s ease-in-out;
+  }
+`;
+
 const Titlebar = ({
   circuitName,
   isCircuitNameFocused,
@@ -165,7 +190,9 @@ const Titlebar = ({
   const nameInputRef = useRef();
   const fileInputRef = useRef();
   const [isHelpMenuOpen, setHelpMenuOpen] = useState(false);
+  const [isHidden, setHidden] = useState(false);
 
+  const handleHideClick = () => setHidden(hidden => !hidden);
   const handleNameConfirm = event => {
     if (!nameInputRef.current) return;
 
@@ -200,7 +227,7 @@ const Titlebar = ({
   });
 
   return (
-    <Container>
+    <Container isHidden={isHidden}>
       <NameContainer
         isFocused={isCircuitNameFocused}
         data-for="tooltip"
@@ -244,6 +271,7 @@ const Titlebar = ({
             </HelpButtonMenuItem>
             <HelpButtonMenuItem
               onClick={() => {
+                setHidden(false);
                 handleClickRedoTour();
                 handleToggleHelpMenu();
               }}
@@ -292,6 +320,16 @@ const Titlebar = ({
           />
         </div>
       </ButtonsContainer>
+
+      <HideButton
+        isHidden={isHidden}
+        onClick={handleHideClick}
+        data-for="tooltip"
+        data-tip={isHidden ? 'Show titlebar' : 'Hide titlebar'}
+        data-place="left"
+      >
+        <Chevrons />
+      </HideButton>
     </Container>
   );
 };
