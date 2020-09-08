@@ -204,7 +204,7 @@ const Titlebar = ({
       <NameContainer
         isFocused={isCircuitNameFocused}
         data-for="tooltip"
-        data-tip="Rename"
+        data-tip="Rename your circuit..."
         data-place="right"
       >
         <NameInput
@@ -227,7 +227,7 @@ const Titlebar = ({
           ref={helpButtonRef}
           onClick={handleToggleHelpMenu}
           data-for="tooltip"
-          data-tip="Get help"
+          data-tip="Get help..."
           data-place="left"
         >
           <span>?</span>
@@ -278,7 +278,7 @@ const Titlebar = ({
             disabled={disabled}
             onClick={handleClickLoad}
             data-for="tooltip"
-            data-tip="Load circuit from file"
+            data-tip="Load circuit from file..."
             data-place="left"
           >
             Load
