@@ -85,6 +85,7 @@ export default class App extends Component {
       isHelpKeyboardOpen,
       isHelpAboutOpen,
       isCircuitNameFocused,
+      isTourRunning,
     } = this.state;
 
     return !(
@@ -92,7 +93,8 @@ export default class App extends Component {
       isComponentEditOpen ||
       isHelpKeyboardOpen ||
       isHelpAboutOpen ||
-      isCircuitNameFocused
+      isCircuitNameFocused ||
+      isTourRunning
     );
   };
 
