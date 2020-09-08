@@ -118,7 +118,7 @@ const HelpButton = styled.button.attrs(({ ...props }) => ({
 
 const HelpButtonMenu = styled.div`
   position: absolute;
-  top: 50px;
+  top: 80px;
   transform: translateX(calc(17px + -50%));
 
   display: flex;
@@ -202,9 +202,10 @@ const Titlebar = ({
   return (
     <Container>
       <NameContainer
+        isFocused={isCircuitNameFocused}
         data-for="tooltip"
         data-tip="Rename"
-        isFocused={isCircuitNameFocused}
+        data-place="right"
       >
         <NameInput
           ref={nameInputRef}
@@ -225,6 +226,9 @@ const Titlebar = ({
           id="help-button"
           ref={helpButtonRef}
           onClick={handleToggleHelpMenu}
+          data-for="tooltip"
+          data-tip="Get help"
+          data-place="left"
         >
           <span>?</span>
         </HelpButton>
@@ -263,6 +267,9 @@ const Titlebar = ({
             color="green"
             onClick={handleClickSave}
             disabled={disabled}
+            data-for="tooltip"
+            data-tip="Save circuit to file"
+            data-place="left"
           >
             Save
           </Button>
@@ -270,6 +277,9 @@ const Titlebar = ({
             color="orange"
             disabled={disabled}
             onClick={handleClickLoad}
+            data-for="tooltip"
+            data-tip="Load circuit from file"
+            data-place="left"
           >
             Load
           </Button>
