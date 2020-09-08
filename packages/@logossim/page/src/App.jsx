@@ -9,7 +9,7 @@ import {
 } from '@logossim/core';
 
 import {
-  DiagramStateButtons,
+  Titlebar,
   SimulationControlButtons,
   ComponentSelectButton,
   ComponentSelect,
@@ -26,6 +26,8 @@ import tourCircuit, {
 
 import './App.css';
 
+const DEFAULT_CIRCUIT_NAME = 'Untitled circuit';
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -38,6 +40,8 @@ export default class App extends Component {
       componentEdit: null,
       isTourAvailable: false,
       isTourRunning: !JSON.parse(localStorage.getItem('tour-done')),
+      circuitName: DEFAULT_CIRCUIT_NAME,
+      isCircuitNameFocused: false,
       snackbar: {
         open: false,
         message: '',
@@ -77,13 +81,15 @@ export default class App extends Component {
       isComponentEditOpen,
       isHelpKeyboardOpen,
       isHelpAboutOpen,
+      isCircuitNameFocused,
     } = this.state;
 
     return !(
       isComponentSelectOpen ||
       isComponentEditOpen ||
       isHelpKeyboardOpen ||
-      isHelpAboutOpen
+      isHelpAboutOpen ||
+      isCircuitNameFocused
     );
   };
 
@@ -226,6 +232,21 @@ export default class App extends Component {
 
     requestAnimationFrame(this.renderSimulation);
   };
+
+  handleCircuitNameChange = event => {
+    event.stopPropagation();
+    event.preventDefault();
+    this.setState({ circuitName: event.target.value });
+  };
+
+  handleCircuitNameFocus = event => {
+    this.setState({ isCircuitNameFocused: true });
+    if (event.target.value === DEFAULT_CIRCUIT_NAME)
+      event.target.select();
+  };
+
+  handleCircuitNameBlur = () =>
+    this.setState({ isCircuitNameFocused: false });
 
   handleClickSave = () => {
     const serialized = JSON.stringify(this.diagram.serialize());
@@ -373,12 +394,19 @@ export default class App extends Component {
       componentEdit,
       isTourAvailable,
       isTourRunning,
+      circuitName,
+      isCircuitNameFocused,
       snackbar,
     } = this.state;
 
     return (
       <>
-        <DiagramStateButtons
+        <Titlebar
+          circuitName={circuitName}
+          isCircuitNameFocused={isCircuitNameFocused}
+          handleChangeCircuitName={this.handleCircuitNameChange}
+          handleFocusCircuitName={this.handleCircuitNameFocus}
+          handleBlurCircuitName={this.handleCircuitNameBlur}
           handleClickSave={this.handleClickSave}
           handleClickLoad={this.handleClickLoad}
           handleClickKeyboardShortcuts={this.showHelpKeyboard}
