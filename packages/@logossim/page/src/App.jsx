@@ -298,10 +298,20 @@ export default class App extends Component {
 
     if (files.length !== 1) return;
 
+    const handleError = () =>
+      this.showSnackbar(
+        `Error loading circuit file:\n${files[0].name}`,
+      );
+
     const fr = new FileReader();
+    fr.onerror = handleError;
     fr.onload = e => {
-      const file = JSON.parse(e.target.result);
-      this.loadFile(file);
+      try {
+        const file = JSON.parse(e.target.result);
+        this.loadFile(file);
+      } catch (exception) {
+        handleError();
+      }
     };
     fr.readAsText(files.item(0));
   };
