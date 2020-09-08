@@ -87,6 +87,10 @@ const Button = styled.button.attrs(({ ...props }) => ({
   }
 `;
 
+const FileInput = styled.input`
+  display: none;
+`;
+
 const HelpButton = styled.button.attrs(({ ...props }) => ({
   ...props,
   type: 'button',
@@ -150,7 +154,7 @@ const Titlebar = ({
   handleFocusCircuitName,
   handleBlurCircuitName,
   handleClickSave,
-  handleClickLoad,
+  handleFileLoad,
   handleClickKeyboardShortcuts,
   handleClickRedoTour,
   handleClickAbout,
@@ -159,6 +163,7 @@ const Titlebar = ({
   const helpButtonRef = useRef();
   const helpMenuRef = useRef();
   const nameInputRef = useRef();
+  const fileInputRef = useRef();
   const [isHelpMenuOpen, setHelpMenuOpen] = useState(false);
 
   const handleNameConfirm = event => {
@@ -173,6 +178,10 @@ const Titlebar = ({
     nameInputRef.current.focus();
   };
   const handleToggleHelpMenu = () => setHelpMenuOpen(!isHelpMenuOpen);
+  const handleClickLoad = () => {
+    if (!fileInputRef.current) return;
+    fileInputRef.current.click();
+  };
   const handleClickAway = event => {
     if (
       helpMenuRef.current &&
@@ -204,6 +213,7 @@ const Titlebar = ({
           onFocus={handleFocusCircuitName}
           onBlur={handleBlurCircuitName}
           onKeyDown={handleNameConfirm}
+          maxLength={50}
         />
         <IconButton onClick={handleNameEditClick}>
           <Edit />
@@ -258,11 +268,17 @@ const Titlebar = ({
           </Button>
           <Button
             color="orange"
-            onClick={handleClickLoad}
             disabled={disabled}
+            onClick={handleClickLoad}
           >
             Load
           </Button>
+          <FileInput
+            ref={fileInputRef}
+            type="file"
+            accept=".lgsim"
+            onChange={handleFileLoad}
+          />
         </div>
       </ButtonsContainer>
     </Container>
