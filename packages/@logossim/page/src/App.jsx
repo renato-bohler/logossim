@@ -8,6 +8,8 @@ import {
   Diagram,
 } from '@logossim/core';
 
+import FileSaver from 'file-saver';
+
 import {
   Titlebar,
   SimulationControlButtons,
@@ -41,6 +43,7 @@ export default class App extends Component {
       isTourAvailable: false,
       isTourRunning: !JSON.parse(localStorage.getItem('tour-done')),
       circuitName: DEFAULT_CIRCUIT_NAME,
+      circuitCreatedAt: null,
       isCircuitNameFocused: false,
       snackbar: {
         open: false,
@@ -143,7 +146,7 @@ export default class App extends Component {
       (ctrlKey && shiftKey && code === 'KeyS')
     ) {
       event.preventDefault();
-      this.handleClickLoad();
+      this.handleFileLoad();
     }
   };
 
@@ -153,19 +156,27 @@ export default class App extends Component {
     return Object.keys(circuit.layers[1].models).length === 0;
   };
 
+  loadFile = file => {
+    this.setState({
+      circuitName: file.name,
+      circuitCreatedAt: file.savedAt,
+    });
+    this.diagram.load(file.circuit);
+  };
+
   loadHandler = () => {
     const lastSaved = JSON.parse(
       localStorage.getItem('circuit-autosave'),
     );
 
-    if (this.isCircuitEmpty(lastSaved)) {
+    if (this.isCircuitEmpty(lastSaved?.circuit)) {
       this.setState({ isTourAvailable: true });
       return;
     }
 
     const reload = window.confirm('Reload last unsaved circuit?');
     if (reload) {
-      this.diagram.load(lastSaved);
+      this.loadFile(lastSaved);
     } else {
       this.setState({ isTourAvailable: true });
       localStorage.removeItem('circuit-autosave');
@@ -182,14 +193,16 @@ export default class App extends Component {
   };
 
   unloadHandler = event => {
-    const lastSaved = JSON.parse(localStorage.getItem('circuit'));
-    const current = this.diagram.serialize();
+    const lastSaved = JSON.parse(
+      localStorage.getItem('last-saved-circuit'),
+    );
+    const file = this.generateFile();
 
-    if (this.shouldWarnUnload(current, lastSaved)) {
+    if (this.shouldWarnUnload(file.circuit, lastSaved.circuit)) {
       if (this.simulation.isStopped()) {
         localStorage.setItem(
           'circuit-autosave',
-          JSON.stringify(current),
+          JSON.stringify(file),
         );
       }
       // eslint-disable-next-line no-param-reassign
@@ -198,14 +211,27 @@ export default class App extends Component {
     }
   };
 
-  autoSave = () => {
+  generateFile = () => {
+    const { circuitName, circuitCreatedAt } = this.state;
     const circuit = this.diagram.serialize();
 
-    if (circuit.id === 'tour-circuit') return;
-    if (this.isCircuitEmpty(circuit)) return;
+    return {
+      id: circuit.id,
+      name: circuitName,
+      createdAt: circuitCreatedAt || new Date(),
+      updatedAt: new Date(),
+      circuit,
+    };
+  };
+
+  autoSave = () => {
+    const file = this.generateFile();
+
+    if (file.circuit.id === 'tour-circuit') return;
+    if (this.isCircuitEmpty(file.circuit)) return;
     if (!this.simulation.isStopped()) return;
 
-    localStorage.setItem('circuit-autosave', JSON.stringify(circuit));
+    localStorage.setItem('circuit-autosave', JSON.stringify(file));
   };
 
   synchronizeSimulation = () => {
@@ -249,19 +275,33 @@ export default class App extends Component {
     this.setState({ isCircuitNameFocused: false });
 
   handleClickSave = () => {
-    const serialized = JSON.stringify(this.diagram.serialize());
-    localStorage.setItem('circuit', serialized);
-    console.log(JSON.parse(serialized));
+    this.setState({ circuitCreatedAt: new Date() });
+
+    const file = JSON.stringify(this.generateFile(), null, 2);
+    const blob = new Blob([file], {
+      type: 'application/json',
+    });
+
+    const { circuitName } = this.state;
+    const filename = circuitName.replace(/[/|\\:*?"<>]/g, '');
+    localStorage.setItem('last-saved-circuit', file);
+
+    FileSaver.saveAs(blob, `${filename}.lgsim`);
   };
 
-  handleClickLoad = () => {
-    const circuit = localStorage.getItem('circuit');
-    if (!circuit) {
-      window.alert('No circuit has been saved yet');
-      return;
-    }
+  handleFileLoad = event => {
+    const {
+      target: { files },
+    } = event;
 
-    this.diagram.load(JSON.parse(circuit));
+    if (files.length !== 1) return;
+
+    const fr = new FileReader();
+    fr.onload = e => {
+      const file = JSON.parse(e.target.result);
+      this.loadFile(file);
+    };
+    fr.readAsText(files.item(0));
   };
 
   handleClickStart = () => {
@@ -362,15 +402,15 @@ export default class App extends Component {
   };
 
   handleLoadTourCircuit = () => {
-    this.circuitBeforeTour = this.diagram.serialize();
-    this.diagram.load(tourCircuit);
+    this.circuitBeforeTour = this.generateFile();
+    this.loadFile(tourCircuit);
     this.handleCenterTourCircuitOffset();
   };
 
   handleUnloadTourCircuit = () => {
     if (!this.circuitBeforeTour) return;
 
-    this.diagram.load(this.circuitBeforeTour);
+    this.loadFile(this.circuitBeforeTour);
     this.circuitBeforeTour = null;
   };
 
@@ -408,7 +448,7 @@ export default class App extends Component {
           handleFocusCircuitName={this.handleCircuitNameFocus}
           handleBlurCircuitName={this.handleCircuitNameBlur}
           handleClickSave={this.handleClickSave}
-          handleClickLoad={this.handleClickLoad}
+          handleFileLoad={this.handleFileLoad}
           handleClickKeyboardShortcuts={this.showHelpKeyboard}
           handleClickRedoTour={this.showHelpTour}
           handleClickAbout={this.showHelpAbout}
