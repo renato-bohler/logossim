@@ -161,7 +161,7 @@ export default class App extends Component {
   loadFile = file => {
     this.setState({
       circuitName: file.name,
-      circuitCreatedAt: file.savedAt,
+      circuitCreatedAt: file.createdAt,
     });
     this.diagram.load(file.circuit);
   };
@@ -277,7 +277,9 @@ export default class App extends Component {
     this.setState({ isCircuitNameFocused: false });
 
   handleClickSave = () => {
-    this.setState({ circuitCreatedAt: new Date() });
+    const { circuitCreatedAt } = this.state;
+    if (!circuitCreatedAt)
+      this.setState({ circuitCreatedAt: new Date() });
 
     const file = JSON.stringify(this.generateFile(), null, 2);
     const blob = new Blob([file], {
