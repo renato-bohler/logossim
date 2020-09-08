@@ -274,6 +274,7 @@ const Titlebar = ({
             Load
           </Button>
           <FileInput
+            id="file-input"
             ref={fileInputRef}
             type="file"
             accept=".lgsim"

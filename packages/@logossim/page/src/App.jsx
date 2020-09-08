@@ -148,7 +148,7 @@ export default class App extends Component {
       (ctrlKey && shiftKey && code === 'KeyS')
     ) {
       event.preventDefault();
-      this.handleFileLoad();
+      this.handleClickLoad();
     }
   };
 
@@ -290,6 +290,9 @@ export default class App extends Component {
 
     FileSaver.saveAs(blob, `${filename}.lgsim`);
   };
+
+  handleClickLoad = () =>
+    document.getElementById('file-input').click();
 
   handleFileLoad = event => {
     const {
