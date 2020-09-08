@@ -167,7 +167,7 @@ const HideButton = styled.button`
 
   svg {
     transform: ${({ isHidden }) =>
-      isHidden ? 'none' : 'rotate(180deg)'};
+      isHidden ? 'rotate(180deg)' : 'none'};
     transition: 0.5s ease-in-out;
   }
 `;
