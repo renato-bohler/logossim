@@ -278,6 +278,8 @@ export default class LinkModel extends RDLinkModel {
   }
 
   getPointRadius() {
-    return `var(--link-${this.bits || 1}-bit-join-radius)`;
+    return getComputedStyle(document.body).getPropertyValue(
+      `--link-${this.bits || 1}-bit-join-radius`,
+    );
   }
 }
