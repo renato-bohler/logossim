@@ -131,7 +131,7 @@ const executeNextEmitted = (first = true) => {
 
   appendComponentDiff(emitter, emitted.value);
   propagate(emitted);
-  executeNextStep();
+  executeNextStep(first);
 
   executeNextEmitted(false);
 
@@ -146,7 +146,7 @@ const executeNextEmitted = (first = true) => {
  * change that is being currently handled. Propagates this component's
  * change forward.
  */
-const executeNextStep = () => {
+const executeNextStep = (first = false) => {
   const component = self.stepQueue.shift();
   if (!component) return;
 
@@ -181,7 +181,7 @@ const executeNextStep = () => {
     ),
   );
 
-  if (component.hasOutputChanged(output)) {
+  if (first || component.hasOutputChanged(output)) {
     component.setOutputValues(output);
     appendComponentDiff(component, output);
     propagate({ from: component, value: output });
