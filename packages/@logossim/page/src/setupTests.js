@@ -4,7 +4,9 @@ import '@testing-library/jest-dom/extend-expect';
 // Mocks `worker-loader`
 jest.mock('../../core/Simulation/simulation.worker.js', () => ({
   __esModule: true,
-  default: class SimulationWorker {},
+  default: class SimulationWorker {
+    postMessage() {}
+  },
 }));
 
 jest.mock('@logossim/core', () => ({
@@ -39,3 +41,19 @@ document.createRange = () => ({
     ownerDocument: document,
   },
 });
+
+// react-diagrams engine stub
+global.engine = {
+  registerListener: () => {},
+  getCanvas: () => {},
+  getPortCoords: () => ({
+    getWidth: () => {},
+    getHeight: () => {},
+    getTopLeft: () => {},
+  }),
+  getModel: () => ({ isLocked: () => false }),
+};
+
+global.addPort = function addPort(portName, dataBits = 1) {
+  this.ports[portName] = { bits: dataBits };
+};
