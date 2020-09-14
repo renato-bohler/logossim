@@ -1,7 +1,17 @@
 {
   "parser": "babel-eslint",
-  "extends": ["airbnb", "prettier"],
-  "plugins": ["prettier", "import-helpers"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "plugin:jest-dom/recommended",
+    "plugin:testing-library/recommended"
+  ],
+  "plugins": [
+    "prettier",
+    "import-helpers",
+    "testing-library",
+    "jest-dom"
+  ],
   "rules": {
     "prettier/prettier": ["error"],
     "no-bitwise": "off",
@@ -32,7 +42,7 @@
           "/^./modules/",
           ["index", "parent", "sibling"]
         ],
-        "alphabetize": { "order": "asc", "ignoreCase": true },
+        "alphabetize": { "order": "asc", "ignoreCase": true }
       }
     ],
     "class-methods-use-this": "off",
