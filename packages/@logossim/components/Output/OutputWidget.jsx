@@ -139,7 +139,7 @@ const OutputWidget = props => {
       format={OUTPUT_FORMAT}
       dataBits={dataBits}
     >
-      <PinContainer>
+      <PinContainer data-testid="pin-container">
         {OUTPUT_FORMAT === 'BITS'
           ? mapBits(model)
           : showAsNumber(model.getInput(), OUTPUT_FORMAT)}
