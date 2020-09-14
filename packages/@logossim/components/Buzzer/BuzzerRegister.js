@@ -28,24 +28,24 @@ export default new Component({
     {
       name: 'WAVEFORM',
       type: 'select',
-      default: 'sine',
+      default: 'SINE',
       label: 'Waveform',
       options: [
         {
           label: 'Sine',
-          value: 'sine',
+          value: 'SINE',
         },
         {
           label: 'Square',
-          value: 'square',
+          value: 'SQUARE',
         },
         {
           label: 'Sawtooth',
-          value: 'sawtooth',
+          value: 'SAWTOOTH',
         },
         {
           label: 'Triangle',
-          value: 'triangle',
+          value: 'TRIANGLE',
         },
       ],
     },
