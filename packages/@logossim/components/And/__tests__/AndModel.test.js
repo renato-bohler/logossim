@@ -56,7 +56,7 @@ it('should return 1 when all inputs are 1', () => {
   ).toEqual({ out: 1 });
 });
 
-it('should return bitwise and for multiple data bits', () => {
+it('should return bitwise AND for multiple data bits', () => {
   const model = new AndModel({
     INPUT_PORTS_NUMBER: 4,
     DATA_BITS: 4,

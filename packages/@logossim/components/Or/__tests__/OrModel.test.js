@@ -89,7 +89,7 @@ it('should return 0 when all inputs are 0', () => {
   ).toEqual({ out: 0 });
 });
 
-it('should return bitwise and for multiple data bits', () => {
+it('should return bitwise OR for multiple data bits', () => {
   const model = new OrModel({
     INPUT_PORTS_NUMBER: 5,
     DATA_BITS: 8,

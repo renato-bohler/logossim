@@ -92,7 +92,7 @@ it('should return 1 when all inputs are 0', () => {
   ).toEqual({ out: 1 });
 });
 
-it('should return bitwise and for multiple data bits', () => {
+it('should return bitwise NOR for multiple data bits', () => {
   const model = new NorModel({
     INPUT_PORTS_NUMBER: 5,
     DATA_BITS: 8,

@@ -56,7 +56,7 @@ it('should return 0 when all inputs are 1', () => {
   ).toEqual({ out: 0 });
 });
 
-it('should return bitwise nand for multiple data bits', () => {
+it('should return bitwise NAND for multiple data bits', () => {
   const model = new NandModel({
     INPUT_PORTS_NUMBER: 4,
     DATA_BITS: 4,
