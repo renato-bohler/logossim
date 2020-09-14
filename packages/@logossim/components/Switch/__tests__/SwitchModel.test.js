@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 import SwitchModel from '../SwitchModel';
 
+const { addPort } = global;
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(SwitchModel.prototype, 'addOutputPort');
-  spy.mockImplementation(() => {});
+  spy.mockImplementation(addPort);
 
   new SwitchModel();
 

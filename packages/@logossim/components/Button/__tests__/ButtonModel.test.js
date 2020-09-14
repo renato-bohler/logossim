@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 import ButtonModel from '../ButtonModel';
 
+const { addPort } = global;
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(ButtonModel.prototype, 'addOutputPort');
-  spy.mockImplementation(() => {});
+  spy.mockImplementation(addPort);
 
   new ButtonModel();
 

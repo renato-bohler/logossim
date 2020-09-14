@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 import SsdModel from '../SsdModel';
 
+const { addPort } = global;
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(SsdModel.prototype, 'addInputPort');
-  spy.mockImplementation(() => {});
+  spy.mockImplementation(addPort);
 
   new SsdModel();
 

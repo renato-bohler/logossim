@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 import BuzzerModel from '../BuzzerModel';
 
+const { addPort } = global;
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(BuzzerModel.prototype, 'addInputPort');
-  spy.mockImplementation(() => {});
+  spy.mockImplementation(addPort);
 
   new BuzzerModel();
 

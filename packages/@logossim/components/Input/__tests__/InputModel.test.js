@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 import InputModel from '../InputModel';
 
+const { addPort } = global;
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(InputModel.prototype, 'addOutputPort');
-  spy.mockImplementation(() => {});
+  spy.mockImplementation(addPort);
 
   new InputModel({ DATA_BITS: 1 });
 

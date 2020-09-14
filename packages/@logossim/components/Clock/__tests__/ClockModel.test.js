@@ -1,9 +1,11 @@
 /* eslint-disable no-new */
 import ClockModel from '../ClockModel';
 
+const { addPort } = global;
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(ClockModel.prototype, 'addOutputPort');
-  spy.mockImplementation(() => {});
+  spy.mockImplementation(addPort);
 
   new ClockModel();
 
