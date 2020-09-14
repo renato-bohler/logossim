@@ -37,8 +37,8 @@ export default class Component extends AbstractReactFactory {
 
   generateModel(event) {
     const { Model } = this;
-    const { type, configurations } = event.initialConfig;
+    const { configurations, type } = event.initialConfig;
 
-    return new Model(type, configurations);
+    return new Model(configurations, type);
   }
 }

@@ -65,7 +65,7 @@ const DraggableComponent = ({
     ) : (
       <Widget
         engine={engineStub}
-        model={new Model(type, configurations)}
+        model={new Model(configurations, type)}
       />
     )}
   </div>
