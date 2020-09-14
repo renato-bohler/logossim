@@ -17,7 +17,11 @@ export default class ClockModel extends BaseModel {
     this.emit({ out: this.output });
 
     this.emitInterval = setInterval(() => {
+      const lastOutput = this.output;
       this.output = this.getNextOutput();
+
+      if (lastOutput === this.output) return;
+
       this.emit({ out: this.output });
     }, this.periodMs / 2);
   }
