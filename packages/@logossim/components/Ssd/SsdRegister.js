@@ -13,16 +13,16 @@ export default new Component({
     {
       name: 'ACTIVE_WHEN',
       type: 'select',
-      default: 'high',
+      default: 'HIGH',
       label: 'Active when',
       options: [
         {
           label: 'High',
-          value: 'high',
+          value: 'HIGH',
         },
         {
           label: 'Low',
-          value: 'low',
+          value: 'LOW',
         },
       ],
     },

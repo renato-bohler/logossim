@@ -66,13 +66,10 @@ const SwitchWidget = props => {
   const { model, engine } = props;
   const {
     options: { selected },
-    configurations: { DATA_BITS },
   } = model;
 
-  const dataBits = Number(DATA_BITS);
-
   return (
-    <Shape selected={selected} dataBits={dataBits}>
+    <Shape selected={selected}>
       <Switch onClick={() => model.onClick()}>
         <SwitchValue value={model.getOutput()} />
       </Switch>

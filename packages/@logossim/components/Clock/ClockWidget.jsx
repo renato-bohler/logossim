@@ -45,6 +45,7 @@ export const Decoration = ({
     strokeWidth="1"
   >
     <path
+      data-testid="decoration"
       stroke={color}
       strokeWidth={0.75}
       fill="none"

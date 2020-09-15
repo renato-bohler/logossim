@@ -41,7 +41,7 @@ const Hole = styled.div`
 `;
 
 export const Shape = ({ selected, isActive, children }) => (
-  <Body selected={selected} isActive={isActive}>
+  <Body selected={selected} isActive={isActive} data-testid="body">
     <Hole />
     {children}
   </Body>

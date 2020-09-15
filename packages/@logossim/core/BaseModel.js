@@ -3,6 +3,7 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';
+import { adjustValueToBits, isValueValid } from './Simulation/utils';
 
 const getPort = port => {
   if (port instanceof PortModel) return port;
@@ -10,7 +11,7 @@ const getPort = port => {
 };
 
 export default class BaseModel extends NodeModel {
-  constructor(type, configurations) {
+  constructor(configurations = {}, type = 'generic') {
     super({ type });
 
     this.initialize(configurations);
@@ -106,5 +107,24 @@ export default class BaseModel extends NodeModel {
 
   emit(value) {
     emit(this.getID(), value);
+  }
+
+  // Methods to facilitate unit testing
+  createAudio() {}
+
+  stepAndMask(input) {
+    const stepResult = this.step(input);
+
+    return Object.fromEntries(
+      Object.entries(stepResult).map(([portName, portValue]) => {
+        const { bits } = this.getPort(portName);
+        const value = adjustValueToBits(portValue, bits);
+
+        return [
+          portName,
+          isValueValid(value, bits) ? value : 'error',
+        ];
+      }),
+    );
   }
 }

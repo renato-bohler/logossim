@@ -155,7 +155,7 @@ export class GenericComponent {
         command: 'create',
         id: AUDIO_ID,
         frequency,
-        waveform,
+        waveform: waveform.toLowerCase(),
       },
     });
 

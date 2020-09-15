@@ -40,6 +40,7 @@ const LedWidget = props => {
       selected={selected}
       color={model.getColor()}
       isActive={model.isActive()}
+      data-testid="shape"
     >
       <PositionedPort
         name="in"

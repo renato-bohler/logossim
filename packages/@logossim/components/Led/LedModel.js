@@ -11,10 +11,14 @@ export default class LedModel extends BaseModel {
     this.addInputPort('in');
   }
 
-  isActive() {
-    const input = this.getPort('in').getValue() || 0;
+  getInput() {
+    return this.getPort('in').getValue() || 0;
+  }
 
-    if (this.activeWhen === 'high') {
+  isActive() {
+    const input = this.getInput();
+
+    if (this.activeWhen === 'HIGH') {
       if (input === 0) return false;
       return true;
     }
