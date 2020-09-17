@@ -60,7 +60,7 @@ self.addEventListener(
         );
 
         // Main workload
-        executeNextEmitted();
+        executeNextEmitted(true, true);
         self.workInterval = setInterval(executeNextEmitted);
         break;
 
@@ -111,7 +111,10 @@ self.addEventListener(
 /**
  * Handles the next emitted event on the emit queue and propagates it.
  */
-const executeNextEmitted = (first = true) => {
+const executeNextEmitted = (
+  firstOfCycle = true,
+  firstOfSimulation = false,
+) => {
   if (!self.circuit) return;
 
   const emitted = self.emitQueue.shift();
@@ -131,11 +134,11 @@ const executeNextEmitted = (first = true) => {
 
   appendComponentDiff(emitter, emitted.value);
   propagate(emitted);
-  executeNextStep(first);
+  executeNextStep(firstOfSimulation);
 
   executeNextEmitted(false);
 
-  if (first) {
+  if (firstOfCycle) {
     postMessage({ type: 'diff', payload: self.diff });
     self.diff = getCleanDiff();
   }
@@ -146,7 +149,7 @@ const executeNextEmitted = (first = true) => {
  * change that is being currently handled. Propagates this component's
  * change forward.
  */
-const executeNextStep = (first = false) => {
+const executeNextStep = (firstOfSimulation = false) => {
   const component = self.stepQueue.shift();
   if (!component) return;
 
@@ -181,7 +184,7 @@ const executeNextStep = (first = false) => {
     ),
   );
 
-  if (first || component.hasOutputChanged(output)) {
+  if (firstOfSimulation || component.hasOutputChanged(output)) {
     component.setOutputValues(output);
     appendComponentDiff(component, output);
     propagate({ from: component, value: output });
