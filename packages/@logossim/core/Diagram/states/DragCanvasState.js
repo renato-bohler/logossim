@@ -1,7 +1,4 @@
-import {
-  State,
-  AbstractDisplacementState,
-} from '@projectstorm/react-canvas-core';
+import { AbstractDisplacementState } from '@projectstorm/react-canvas-core';
 
 export default class DragCanvasState extends AbstractDisplacementState {
   constructor() {
@@ -25,7 +22,7 @@ export default class DragCanvasState extends AbstractDisplacementState {
     this.initialCanvasY = this.engine.getModel().getOffsetY();
   }
 
-  deactivated(next: State) {
+  deactivated(next) {
     super.deactivated(next);
 
     this.engine
