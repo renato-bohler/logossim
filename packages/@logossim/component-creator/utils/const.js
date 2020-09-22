@@ -1,9 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = {
-  COMPONENTS_ROOT_DIR: path.resolve(
-    fs.realpathSync(process.cwd()),
-    '../components',
-  ),
-};
+export const COMPONENTS_ROOT_DIR = path.resolve(
+  fs.realpathSync(process.cwd()),
+  '../components',
+);

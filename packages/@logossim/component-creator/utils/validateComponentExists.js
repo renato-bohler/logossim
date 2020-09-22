@@ -1,9 +1,14 @@
-const fs = require('fs');
+import fs from 'fs';
 
-const fileName = require('../helpers/fileName');
-const { COMPONENTS_ROOT_DIR } = require('./const');
+import fileName from '../helpers/fileName';
+import { COMPONENTS_ROOT_DIR } from './const';
 
-const filesToCheck = ['Model.js', 'Register.js', 'Widget.jsx'];
+const filesToCheck = [
+  'Register.js',
+  'Model.js',
+  'Icon.jsx',
+  'Widget.jsx',
+];
 
 const componentExists = componentName =>
   filesToCheck
@@ -21,4 +26,4 @@ const validateComponentExists = name => {
   return true;
 };
 
-module.exports = validateComponentExists;
+export default validateComponentExists;

@@ -10,4 +10,4 @@ const fileName = text =>
     )
     .join('');
 
-module.exports = fileName;
+export default fileName;

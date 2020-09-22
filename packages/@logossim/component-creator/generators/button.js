@@ -1,5 +1,5 @@
-const basePrompts = require('../utils/basePrompts');
-const { COMPONENTS_ROOT_DIR } = require('../utils/const');
+import basePrompts from '../utils/basePrompts';
+import { COMPONENTS_ROOT_DIR } from '../utils/const';
 
 const buttonGenerator = {
   description: 'A simple click/release component',
@@ -28,4 +28,4 @@ const buttonGenerator = {
   ],
 };
 
-module.exports = buttonGenerator;
+export default buttonGenerator;
