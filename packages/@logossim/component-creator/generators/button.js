@@ -25,6 +25,10 @@ const buttonGenerator = {
       path: `${COMPONENTS_ROOT_DIR}/{{fileName name}}/{{fileName name}}Register.js`,
       templateFile: 'templates/Button/ButtonRegister.hbs',
     },
+    {
+      type: 'eslint',
+      path: `${COMPONENTS_ROOT_DIR}/{{fileName name}}`,
+    },
   ],
 };
 
