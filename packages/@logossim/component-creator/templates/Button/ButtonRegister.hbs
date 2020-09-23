@@ -6,9 +6,9 @@ import widget from './{{fileName name}}Widget';
 
 export default new Component({
   type: '{{fileName name}}',
-  name: '{{name}}',
-  description: '{{description}}',
-  group: '{{group}}',
+  name: '{{{escapeSingleQuote name}}}',
+  description: '{{{escapeSingleQuote description}}}',
+  group: '{{{escapeSingleQuote group}}}',
   configurations: [],
   model,
   widget,

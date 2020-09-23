@@ -1,4 +1,5 @@
 import button from './generators/button';
+import escapeSingleQuote from './helpers/escapeSingleQuote';
 import fileName from './helpers/fileName';
 
 export default plop => {
@@ -7,6 +8,7 @@ export default plop => {
   );
 
   plop.setHelper('fileName', fileName);
+  plop.setHelper('escapeSingleQuote', escapeSingleQuote);
 
   plop.setGenerator('Button', button);
 };

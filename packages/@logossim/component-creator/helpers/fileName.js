@@ -1,6 +1,8 @@
-// TODO: remove/replace special and forbidden characters
 const fileName = text =>
   text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s]|_/gi, '')
     .split(' ')
     .map(word =>
       word.replace(
