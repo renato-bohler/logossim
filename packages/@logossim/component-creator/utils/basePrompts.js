@@ -16,8 +16,7 @@ const basePrompts = [
     type: 'list',
     name: 'group',
     message: 'In which group this component should be added?',
-    // TODO: being generated as "Input &amp; Output"
-    choices: ['Input & Output', 'Logic gates', 'Wiring', 'Plexers'],
+    choices: ['Input & output', 'Logic gates', 'Wiring', 'Plexers'],
   },
 ];
 
