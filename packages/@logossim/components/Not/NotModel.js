@@ -1,6 +1,6 @@
 import { BaseModel } from '@logossim/core';
 
-export default class BufferModel extends BaseModel {
+export default class NotModel extends BaseModel {
   initialize(configurations) {
     const DATA_BITS = Number(configurations.DATA_BITS);
 
