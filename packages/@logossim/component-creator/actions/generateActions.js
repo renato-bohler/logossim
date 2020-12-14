@@ -23,6 +23,16 @@ const generateActions = baseName => [
     templateFile: `templates/${baseName}/${baseName}Register.hbs`,
   },
   {
+    type: 'add',
+    path: `${COMPONENTS_ROOT_DIR}/{{fileName name}}/__tests__/{{fileName name}}Widget.test.jsx`,
+    templateFile: `templates/${baseName}/__tests__/${baseName}Widget.test.hbs`,
+  },
+  {
+    type: 'add',
+    path: `${COMPONENTS_ROOT_DIR}/{{fileName name}}/__tests__/{{fileName name}}Model.test.js`,
+    templateFile: `templates/${baseName}/__tests__/${baseName}Model.test.hbs`,
+  },
+  {
     type: 'modify',
     path: `${COMPONENTS_ROOT_DIR}/index.js`,
     transform: (fileContents, data) => {
