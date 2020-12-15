@@ -1,5 +1,6 @@
 import eslint from './actions/eslint';
 import button from './generators/button';
+import gate from './generators/gate';
 import escapeSingleQuote from './helpers/escapeSingleQuote';
 import fileName from './helpers/fileName';
 
@@ -13,4 +14,5 @@ export default plop => {
   plop.setActionType('eslint', eslint);
 
   plop.setGenerator('Button', button);
+  plop.setGenerator('Gate', gate);
 };
