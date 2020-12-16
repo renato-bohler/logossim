@@ -1,0 +1,89 @@
+import { Component } from '@logossim/core';
+
+import icon from './{{fileName name}}Icon';
+import model from './{{fileName name}}Model';
+import widget from './{{fileName name}}Widget';
+
+export default new Component({
+  type: '{{fileName name}}',
+  name: '{{{escapeSingleQuote name}}}',
+  description: '{{{escapeSingleQuote description}}}',
+  group: '{{{escapeSingleQuote group}}}',
+  configurations: [
+    {
+      name: 'ACTIVE_WHEN',
+      type: 'select',
+      default: 'HIGH',
+      label: 'Active when',
+      options: [
+        {
+          label: 'High',
+          value: 'HIGH',
+        },
+        {
+          label: 'Low',
+          value: 'LOW',
+        },
+      ],
+    },
+    {
+      name: 'ON_COLOR',
+      type: 'select',
+      default: '#00ff00',
+      label: 'On color',
+      options: [
+        {
+          label: 'Red',
+          value: '#ff0000',
+        },
+        {
+          label: 'Green',
+          value: '#00ff00',
+        },
+        {
+          label: 'Blue',
+          value: '#0000ff',
+        },
+        {
+          label: 'White',
+          value: '#ffffff',
+        },
+        {
+          label: 'Black',
+          value: '#000000',
+        },
+      ],
+    },
+    {
+      name: 'OFF_COLOR',
+      type: 'select',
+      default: '#000000',
+      label: 'Off color',
+      options: [
+        {
+          label: 'Red',
+          value: '#ff0000',
+        },
+        {
+          label: 'Green',
+          value: '#00ff00',
+        },
+        {
+          label: 'Blue',
+          value: '#0000ff',
+        },
+        {
+          label: 'White',
+          value: '#ffffff',
+        },
+        {
+          label: 'Black',
+          value: '#000000',
+        },
+      ],
+    },
+  ],
+  model,
+  widget,
+  icon,
+});
