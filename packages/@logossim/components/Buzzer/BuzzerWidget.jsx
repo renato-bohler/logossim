@@ -47,7 +47,7 @@ export const Shape = ({ selected, isActive, children }) => (
   </Body>
 );
 
-export const BuzerWidget = props => {
+export const BuzzerWidget = props => {
   const { model, engine } = props;
   const {
     options: { selected },
@@ -65,4 +65,4 @@ export const BuzerWidget = props => {
   );
 };
 
-export default BuzerWidget;
+export default BuzzerWidget;
