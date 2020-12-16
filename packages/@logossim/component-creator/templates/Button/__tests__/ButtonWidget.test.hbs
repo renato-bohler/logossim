@@ -1,0 +1,45 @@
+import React from 'react';
+
+import { fireEvent } from '@testing-library/dom';
+import { render } from '@testing-library/react';
+
+import {{fileName name}}Model from '../{{fileName name}}Model';
+import {{fileName name}}Widget from '../{{fileName name}}Widget';
+
+const { engine } = global;
+
+it('should have 1 output port', () => {
+  const model = new {{fileName name}}Model();
+
+  const { container } = render(
+    <{{fileName name}}Widget model={model} engine={engine} />,
+  );
+
+  const ports = container.querySelectorAll('[data-name=out]');
+  expect(ports).toHaveLength(1);
+});
+
+it('should call model onClick on mouse down event', () => {
+  const model = new {{fileName name}}Model();
+  const spy = jest.spyOn(model, 'onClick');
+
+  const { getByRole } = render(
+    <{{fileName name}}Widget model={model} engine={engine} />,
+  );
+  const button = getByRole('button');
+
+  fireEvent.mouseDown(button);
+
+  expect(spy).toHaveBeenCalledTimes(1);
+});
+
+it('should call model onRelease on mouse up event', () => {
+  const model = new {{fileName name}}Model();
+  const spy = jest.spyOn(model, 'onRelease');
+
+  render(<{{fileName name}}Widget model={model} engine={engine} />);
+
+  fireEvent.mouseUp(document.body);
+
+  expect(spy).toHaveBeenCalledTimes(1);
+});

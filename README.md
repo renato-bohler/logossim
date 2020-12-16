@@ -14,3 +14,4 @@ The repository is using a monorepo strategy in order to separate constraints int
 - [`@logossim/core`](/packages/@logossim/core/README.md)
 - [`@logossim/components`](/packages/@logossim/components/README.md)
 - [`@logossim/page`](/packages/@logossim/page/README.md)
+- [`@logossim/component-creator`](/packages/@logossim/component-creator/README.md)

@@ -1,0 +1,24 @@
+import React from 'react';
+
+import { render } from '@testing-library/react';
+
+import {{fileName name}}Model from '../{{fileName name}}Model';
+import {{fileName name}}Widget from '../{{fileName name}}Widget';
+
+const { engine } = global;
+
+it('should have 1 input and 1 output port', () => {
+  const model = new {{fileName name}}Model({
+    DATA_BITS: 1,
+  });
+
+  const { container } = render(
+    <{{fileName name}}Widget model={model} engine={engine} />,
+  );
+
+  const input = container.querySelector('[data-name=in]');
+  expect(input).toBeTruthy();
+
+  const output = container.querySelector('[data-name=out]');
+  expect(output).toBeTruthy();
+});

@@ -1,0 +1,13 @@
+/* eslint-disable no-new */
+import {{fileName name}}Model from '../{{fileName name}}Model';
+
+const { addPort } = global;
+
+it('should add ports on initialization', () => {
+  const spy = jest.spyOn({{fileName name}}Model.prototype, 'addInputPort');
+  spy.mockImplementation(addPort);
+
+  new {{fileName name}}Model();
+
+  expect(spy).toHaveBeenCalledWith('in');
+});
