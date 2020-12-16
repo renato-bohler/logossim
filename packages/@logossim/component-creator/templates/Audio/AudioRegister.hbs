@@ -1,0 +1,56 @@
+import { Component } from '@logossim/core';
+
+import icon from './{{fileName name}}Icon';
+import model from './{{fileName name}}Model';
+import widget from './{{fileName name}}Widget';
+
+export default new Component({
+  type: '{{fileName name}}',
+  name: '{{{escapeSingleQuote name}}}',
+  description: '{{{escapeSingleQuote description}}}',
+  group: '{{{escapeSingleQuote group}}}',
+  configurations: [
+    {
+      name: 'FREQUENCY_HZ',
+      type: 'number',
+      default: 300,
+      label: 'Sound frequency (in Hertz)',
+      min: 0,
+      max: 20000,
+      validate(value) {
+        if (value < this.min)
+          return `Minimum frequency is ${this.min} Hz`;
+        if (value > this.max)
+          return `Maximum frequency is ${this.max} Hz`;
+        return null;
+      },
+    },
+    {
+      name: 'WAVEFORM',
+      type: 'select',
+      default: 'SINE',
+      label: 'Waveform',
+      options: [
+        {
+          label: 'Sine',
+          value: 'SINE',
+        },
+        {
+          label: 'Square',
+          value: 'SQUARE',
+        },
+        {
+          label: 'Sawtooth',
+          value: 'SAWTOOTH',
+        },
+        {
+          label: 'Triangle',
+          value: 'TRIANGLE',
+        },
+      ],
+    },
+  ],
+  model,
+  widget,
+  icon,
+});

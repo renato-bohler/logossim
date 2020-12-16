@@ -1,0 +1,58 @@
+/* eslint-disable no-new */
+import {{fileName name}}Model from '../{{fileName name}}Model';
+
+const { addPort } = global;
+
+it('should add ports on initialization', () => {
+  const spy = jest.spyOn({{fileName name}}Model.prototype, 'addInputPort');
+  spy.mockImplementation(addPort);
+
+  new {{fileName name}}Model();
+
+  expect(spy).toHaveBeenCalledWith('in');
+});
+
+it('should instantiate audio on simulation start with correct parameters', () => {
+  const model = new {{fileName name}}Model({
+    FREQUENCY_HZ: 1000,
+    WAVEFORM: 'SAWTOOTH',
+  });
+  const spy = jest.spyOn(model, 'createAudio');
+
+  model.onSimulationStart();
+
+  expect(spy).toHaveBeenCalledWith(1000, 'SAWTOOTH');
+});
+
+it('should pause the audio on simulation pause', () => {
+  const model = new {{fileName name}}Model();
+  model.audio = { pause: () => {} };
+
+  const spy = jest.spyOn(model.audio, 'pause');
+
+  model.onSimulationPause();
+
+  expect(spy).toHaveBeenCalled();
+});
+
+it('should play the audio when input is high', () => {
+  const model = new {{fileName name}}Model();
+  model.audio = { play: () => {} };
+
+  const spy = jest.spyOn(model.audio, 'play');
+
+  model.step({ in: 1 });
+
+  expect(spy).toHaveBeenCalled();
+});
+
+it('should pause the audio when input is low', () => {
+  const model = new {{fileName name}}Model();
+  model.audio = { pause: () => {} };
+
+  const spy = jest.spyOn(model.audio, 'pause');
+
+  model.step({ in: 0 });
+
+  expect(spy).toHaveBeenCalled();
+});

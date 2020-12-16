@@ -1,4 +1,5 @@
 import eslint from './actions/eslint';
+import audio from './generators/audio';
 import button from './generators/button';
 import gate from './generators/gate';
 import output from './generators/output';
@@ -17,4 +18,5 @@ export default plop => {
   plop.setGenerator('Button', button);
   plop.setGenerator('Gate', gate);
   plop.setGenerator('Output', output);
+  plop.setGenerator('Audio', audio);
 };
