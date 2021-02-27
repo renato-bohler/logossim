@@ -1,4 +1,6 @@
 /* eslint-disable no-new */
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import OrModel from '../OrModel';
 
 const { addPort } = global;
@@ -34,7 +36,7 @@ it("should return 1 when there's a 1 input", () => {
       in2: 0,
       in3: 0,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 
   expect(
     model.stepAndMask({
@@ -43,7 +45,7 @@ it("should return 1 when there's a 1 input", () => {
       in2: 0,
       in3: 0,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 
   expect(
     model.stepAndMask({
@@ -52,7 +54,7 @@ it("should return 1 when there's a 1 input", () => {
       in2: 1,
       in3: 0,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 
   expect(
     model.stepAndMask({
@@ -61,7 +63,7 @@ it("should return 1 when there's a 1 input", () => {
       in2: 0,
       in3: 1,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 
   expect(
     model.stepAndMask({
@@ -70,7 +72,7 @@ it("should return 1 when there's a 1 input", () => {
       in2: 1,
       in3: 1,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 });
 
 it('should return 0 when all inputs are 0', () => {
@@ -86,13 +88,15 @@ it('should return 0 when all inputs are 0', () => {
       in2: 0,
       in3: 0,
     }),
-  ).toEqual({ out: 0 });
+  ).toEqual({ out: [0] });
 });
 
 it('should return bitwise OR for multiple data bits', () => {
+  const DATA_BITS = 8;
+
   const model = new OrModel({
     INPUT_PORTS_NUMBER: 5,
-    DATA_BITS: 8,
+    DATA_BITS,
   });
 
   expect(
@@ -102,5 +106,7 @@ it('should return bitwise OR for multiple data bits', () => {
       in2: 0b0110_0110,
       in3: 0b0101_0101,
     }),
-  ).toEqual({ out: 0b0111_1111 });
+  ).toEqual({
+    out: convertNumberValueToArray(0b0111_1111, DATA_BITS),
+  });
 });

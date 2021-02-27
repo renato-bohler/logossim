@@ -1,4 +1,6 @@
 /* eslint-disable no-new */
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import XorModel from '../XorModel';
 
 const { addPort } = global;
@@ -39,7 +41,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0,
         in3: 0,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
 
     expect(
       model.stepAndMask({
@@ -48,7 +50,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0,
         in3: 0,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
 
     expect(
       model.stepAndMask({
@@ -57,7 +59,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 1,
         in3: 0,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
 
     expect(
       model.stepAndMask({
@@ -66,7 +68,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0,
         in3: 1,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
   });
 
   it("should return 0 when there's more than 1 high input", () => {
@@ -83,7 +85,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -92,7 +94,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 1,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -101,7 +103,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 1,
         in3: 1,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -110,7 +112,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0,
         in3: 1,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -119,7 +121,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 1,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -128,7 +130,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 1,
         in3: 1,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
   });
 
   it('should return 0 when all inputs are 0', () => {
@@ -145,14 +147,16 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
   });
 
   it('should return bitwise XOR for multiple data bits', () => {
+    const DATA_BITS = 8;
+
     const model = new XorModel({
       MULTIPLE_INPUT_BEHAVIOR: 'ONE',
       INPUT_PORTS_NUMBER: 5,
-      DATA_BITS: 8,
+      DATA_BITS,
     });
 
     expect(
@@ -162,7 +166,9 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in2: 0b0111_0010,
         in3: 0b0101_0001,
       }),
-    ).toEqual({ out: 0b0000_1111 });
+    ).toEqual({
+      out: convertNumberValueToArray(0b0000_1111, DATA_BITS),
+    });
   });
 });
 
@@ -182,7 +188,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in3: 0,
         in4: 0,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
 
     expect(
       model.stepAndMask({
@@ -192,7 +198,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in3: 0,
         in4: 0,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
 
     expect(
       model.stepAndMask({
@@ -202,7 +208,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in3: 1,
         in4: 1,
       }),
-    ).toEqual({ out: 1 });
+    ).toEqual({ out: [1] });
   });
 
   it("should return 0 when there's an odd number of high inputs", () => {
@@ -219,7 +225,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 0,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -228,7 +234,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 0,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -237,7 +243,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 1,
         in3: 0,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -246,7 +252,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 1,
         in3: 1,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -255,7 +261,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 0,
         in3: 1,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
 
     expect(
       model.stepAndMask({
@@ -264,14 +270,16 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 1,
         in3: 1,
       }),
-    ).toEqual({ out: 0 });
+    ).toEqual({ out: [0] });
   });
 
   it('should return bitwise XOR for multiple data bits', () => {
+    const DATA_BITS = 8;
+
     const model = new XorModel({
       MULTIPLE_INPUT_BEHAVIOR: 'ODD',
       INPUT_PORTS_NUMBER: 5,
-      DATA_BITS: 8,
+      DATA_BITS,
     });
 
     expect(
@@ -281,6 +289,8 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in2: 0b0110_0110,
         in3: 0b0101_0101,
       }),
-    ).toEqual({ out: 0b0100_1011 });
+    ).toEqual({
+      out: convertNumberValueToArray(0b0100_1011, DATA_BITS),
+    });
   });
 });
