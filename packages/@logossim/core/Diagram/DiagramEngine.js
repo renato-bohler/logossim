@@ -147,6 +147,22 @@ export default class DiagramEngine {
       c => c.type === component.type,
     );
 
+    const getSnappedWindowCenter = () => {
+      const zoomFactor = this.model.getZoomLevel() / 100;
+
+      const x =
+        -(this.model.getOffsetX() / zoomFactor) +
+        window.innerWidth / (zoomFactor * 2);
+      const y =
+        -(this.model.getOffsetY() / zoomFactor) +
+        window.innerHeight / (zoomFactor * 2);
+
+      return new Point(
+        Math.round(x / 15) * 15,
+        Math.round(y / 15) * 15,
+      );
+    };
+
     const getSnappedRelativeMousePoint = () => {
       const { x, y } = this.engine.getRelativeMousePoint(event);
       return new Point(
@@ -157,14 +173,13 @@ export default class DiagramEngine {
 
     const point = event
       ? getSnappedRelativeMousePoint(event)
-      : new Point(0, 0);
+      : getSnappedWindowCenter();
 
     const node = new Model(component.configurations, component.type);
-    this.model.addNode(node);
     node.setPosition(point);
+    this.model.addNode(node);
 
     this.engine.fireEvent({ nodes: [node] }, 'componentsAdded');
-
     this.engine.repaintCanvas();
   };
 
