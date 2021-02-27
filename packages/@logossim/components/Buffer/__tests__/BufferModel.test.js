@@ -1,4 +1,6 @@
 /* eslint-disable no-new */
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import BufferModel from '../BufferModel';
 
 const { addPort } = global;
@@ -33,23 +35,27 @@ it('should return the value unmodified', () => {
     model.stepAndMask({
       in: 0,
     }),
-  ).toEqual({ out: 0 });
+  ).toEqual({ out: [0] });
 
   expect(
     model.stepAndMask({
       in: 1,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 });
 
 it('should return the value unmodified for multiple bits', () => {
+  const DATA_BITS = 8;
+
   const model = new BufferModel({
-    DATA_BITS: 8,
+    DATA_BITS,
   });
 
   expect(
     model.stepAndMask({
       in: 0b0101_1010,
     }),
-  ).toEqual({ out: 0b0101_1010 });
+  ).toEqual({
+    out: convertNumberValueToArray(0b0101_1010, DATA_BITS),
+  });
 });

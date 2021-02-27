@@ -1,4 +1,9 @@
 /* eslint-disable no-new */
+import {
+  convertArrayValueToNumber,
+  convertNumberValueToArray,
+} from '@logossim/core/Simulation/utils';
+
 import NotModel from '../NotModel';
 
 const { addPort } = global;
@@ -30,23 +35,27 @@ it('should return the value negated', () => {
     model.stepAndMask({
       in: 0,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 
   expect(
     model.stepAndMask({
-      in: 0,
+      in: 1,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [0] });
 });
 
 it('should return the value negated for multiple bits', () => {
+  const DATA_BITS = 8;
+
   const model = new NotModel({
-    DATA_BITS: 8,
+    DATA_BITS,
   });
 
   expect(
     model.stepAndMask({
       in: 0b0101_1010,
     }),
-  ).toEqual({ out: 0b1010_0101 });
+  ).toEqual({
+    out: convertNumberValueToArray(0b1010_0101, DATA_BITS),
+  });
 });

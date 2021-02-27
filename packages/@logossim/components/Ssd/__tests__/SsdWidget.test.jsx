@@ -41,11 +41,11 @@ it('should turn on the correct display segments when configured with active on h
   });
   const spy = jest.spyOn(model, 'getInput');
   spy.mockImplementation(segment => {
-    if (segment === 'a') return 1;
-    if (segment === 'c') return 1;
-    if (segment === 'e') return 1;
-    if (segment === 'g') return 1;
-    return 0;
+    if (segment === 'a') return [1];
+    if (segment === 'c') return [1];
+    if (segment === 'e') return [1];
+    if (segment === 'g') return [1];
+    return [0];
   });
 
   const { getByTestId } = render(
@@ -79,11 +79,11 @@ it('should turn on the correct display segments when configured with active on h
   });
   const spy = jest.spyOn(model, 'getInput');
   spy.mockImplementation(segment => {
-    if (segment === 'a') return 1;
-    if (segment === 'c') return 1;
-    if (segment === 'e') return 1;
-    if (segment === 'g') return 1;
-    return 0;
+    if (segment === 'a') return [1];
+    if (segment === 'c') return [1];
+    if (segment === 'e') return [1];
+    if (segment === 'g') return [1];
+    return [0];
   });
 
   const { getByTestId } = render(

@@ -1,4 +1,6 @@
 /* eslint-disable no-new */
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import DemuxModel from '../DemuxModel';
 
 const { addPort } = global;
@@ -52,8 +54,10 @@ it('should add ports on initialization (16 outputs)', () => {
 });
 
 it('should correctly forward the input based on selection value', () => {
+  const DATA_BITS = 4;
+
   const model = new DemuxModel({
-    DATA_BITS: 4,
+    DATA_BITS,
     OUTPUT_NUMBER: 16,
   });
 
@@ -64,23 +68,23 @@ it('should correctly forward the input based on selection value', () => {
         in: 0b1010,
       }),
     ).toEqual({
-      out0: 0,
-      out1: 0,
-      out2: 0,
-      out3: 0,
-      out4: 0,
-      out5: 0,
-      out6: 0,
-      out7: 0,
-      out8: 0,
-      out9: 0,
-      out10: 0,
-      out11: 0,
-      out12: 0,
-      out13: 0,
-      out14: 0,
-      out15: 0,
-      [`out${i}`]: 0b1010,
+      out0: [0, 0, 0, 0],
+      out1: [0, 0, 0, 0],
+      out2: [0, 0, 0, 0],
+      out3: [0, 0, 0, 0],
+      out4: [0, 0, 0, 0],
+      out5: [0, 0, 0, 0],
+      out6: [0, 0, 0, 0],
+      out7: [0, 0, 0, 0],
+      out8: [0, 0, 0, 0],
+      out9: [0, 0, 0, 0],
+      out10: [0, 0, 0, 0],
+      out11: [0, 0, 0, 0],
+      out12: [0, 0, 0, 0],
+      out13: [0, 0, 0, 0],
+      out14: [0, 0, 0, 0],
+      out15: [0, 0, 0, 0],
+      [`out${i}`]: convertNumberValueToArray(0b1010, DATA_BITS),
     });
   });
 });

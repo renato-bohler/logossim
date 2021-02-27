@@ -3,7 +3,11 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';
-import { adjustValueToBits, isValueValid } from './Simulation/utils';
+import {
+  adjustValueToBits,
+  convertNumberValueToArray,
+  isValueValid,
+} from './Simulation/utils';
 
 const getPort = port => {
   if (port instanceof PortModel) return port;
@@ -118,11 +122,17 @@ export default class BaseModel extends NodeModel {
     return Object.fromEntries(
       Object.entries(stepResult).map(([portName, portValue]) => {
         const { bits } = this.getPort(portName);
-        const value = adjustValueToBits(portValue, bits);
+        let value = portValue;
+        if (typeof value === 'number') {
+          value = convertNumberValueToArray(
+            adjustValueToBits(portValue, bits),
+            bits,
+          );
+        }
 
         return [
           portName,
-          isValueValid(value, bits) ? value : 'error',
+          isValueValid(value, bits) ? value : Array(bits).fill('e'),
         ];
       }),
     );

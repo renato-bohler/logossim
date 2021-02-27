@@ -24,10 +24,11 @@ export default class BuzzerModel extends BaseModel {
     }
   }
 
-  isActive() {
-    const input = this.getPort('in').getValue() || 0;
+  getInput() {
+    return this.getPort('in').getValue() || [0];
+  }
 
-    if (input === 0) return false;
-    return true;
+  isActive() {
+    return !!this.getInput()[0];
   }
 }

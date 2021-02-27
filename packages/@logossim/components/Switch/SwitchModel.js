@@ -16,6 +16,10 @@ export default class SwitchModel extends BaseModel {
   }
 
   getOutput() {
-    return this.getPort('out').getValue() || 0;
+    return this.getPort('out').getValue() || [0];
+  }
+
+  isActive() {
+    return this.getOutput()[0] === 1;
   }
 }

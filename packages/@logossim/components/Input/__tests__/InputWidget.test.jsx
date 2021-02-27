@@ -76,7 +76,24 @@ it('should have 16 pins when configured with 16-bits', () => {
 it('should display pin values accordingly', () => {
   const model = new InputModel({ DATA_BITS: 16 });
   const spy = jest.spyOn(model, 'getOutput');
-  spy.mockImplementation(() => 0b1010_1010_1010_1010);
+  spy.mockImplementation(() => [
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+  ]);
 
   const { getAllByRole } = render(
     <InputWidget model={model} engine={engine} />,
@@ -84,7 +101,7 @@ it('should display pin values accordingly', () => {
   const pins = getAllByRole('button');
 
   pins.forEach((pin, i) => {
-    expect(pin).toContainHTML(i % 2 ? '1' : '0');
+    expect(pin).toContainHTML(i % 2 ? '0' : '1');
   });
 });
 

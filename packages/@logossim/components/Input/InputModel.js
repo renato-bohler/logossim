@@ -2,9 +2,9 @@ import { BaseModel } from '@logossim/core';
 
 export default class InputModel extends BaseModel {
   initialize(configurations) {
-    const DATA_BITS = Number(configurations.DATA_BITS);
+    this.dataBits = Number(configurations.DATA_BITS);
 
-    this.addOutputPort('out', DATA_BITS);
+    this.addOutputPort('out', this.dataBits);
   }
 
   onSimulationStart() {
@@ -12,19 +12,21 @@ export default class InputModel extends BaseModel {
   }
 
   onClick(index) {
-    const mask = 0b1 << index;
-
-    this.emit({ out: this.getOutput() ^ mask });
+    this.emit({
+      out: this.getOutput().map((v, i) => {
+        if (i === index) return v === 0 ? 1 : 0;
+        return v;
+      }),
+    });
   }
 
   getOutput() {
-    return this.getPort('out').getValue() || 0;
+    return (
+      this.getPort('out').getValue() || Array(this.dataBits).fill(0)
+    );
   }
 
   getBitAt(index) {
-    const mask = 0b1 << index;
-    const result = this.getOutput() & mask;
-
-    return result > 0 ? 1 : 0;
+    return this.getOutput()[index];
   }
 }

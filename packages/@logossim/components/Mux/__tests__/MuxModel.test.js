@@ -1,4 +1,6 @@
 /* eslint-disable no-new */
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import MuxModel from '../MuxModel';
 
 const { addPort } = global;
@@ -49,8 +51,10 @@ it('should add ports on initialization (16 inputs)', () => {
 });
 
 it('should correctly select the input based on selection value', () => {
+  const DATA_BITS = 4;
+
   const model = new MuxModel({
-    DATA_BITS: 4,
+    DATA_BITS,
     INPUT_NUMBER: 16,
   });
 
@@ -76,7 +80,7 @@ it('should correctly select the input based on selection value', () => {
         in15: 0b1111,
       }),
     ).toEqual({
-      out: i,
+      out: convertNumberValueToArray(i, DATA_BITS),
     });
   });
 });

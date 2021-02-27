@@ -25,7 +25,7 @@ it('should display correct color when configured with active on high and value i
     OFF_COLOR: '#000000',
   });
   const spy = jest.spyOn(model, 'getInput');
-  spy.mockImplementation(() => 0);
+  spy.mockImplementation(() => [0]);
 
   const { getByTestId } = render(
     <LedWidget model={model} engine={engine} />,
@@ -42,7 +42,7 @@ it('should display correct color when configured with active on high and value i
     OFF_COLOR: '#000000',
   });
   const spy = jest.spyOn(model, 'getInput');
-  spy.mockImplementation(() => 1);
+  spy.mockImplementation(() => [1]);
 
   const { getByTestId } = render(
     <LedWidget model={model} engine={engine} />,
@@ -59,7 +59,7 @@ it('should display correct color when configured with active on low and value is
     OFF_COLOR: '#000000',
   });
   const spy = jest.spyOn(model, 'getInput');
-  spy.mockImplementation(() => 0);
+  spy.mockImplementation(() => [0]);
 
   const { getByTestId } = render(
     <LedWidget model={model} engine={engine} />,
@@ -76,7 +76,7 @@ it('should display correct color when configured with active on low and value is
     OFF_COLOR: '#000000',
   });
   const spy = jest.spyOn(model, 'getInput');
-  spy.mockImplementation(() => 1);
+  spy.mockImplementation(() => [1]);
 
   const { getByTestId } = render(
     <LedWidget model={model} engine={engine} />,
