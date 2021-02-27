@@ -52,7 +52,7 @@ export const Switch = styled.button`
 
 export const SwitchValue = styled.div`
   transform: ${props =>
-    props.value === 1 ? 'translateX(6px)' : 'translateX(-6px)'};
+    props.isActive ? 'translateX(6px)' : 'translateX(-6px)'};
 
   width: 15px;
   height: 15px;
@@ -71,7 +71,7 @@ const SwitchWidget = props => {
   return (
     <Shape selected={selected}>
       <Switch onClick={() => model.onClick()}>
-        <SwitchValue value={model.getOutput()} />
+        <SwitchValue isActive={model.isActive()} />
       </Switch>
       <PositionedPort
         name="out"

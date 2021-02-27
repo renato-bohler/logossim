@@ -8,6 +8,28 @@ export const MAX_VALUE = {
   16: 0b1111_1111_1111_1111,
 };
 
+export const convertNumberValueToArray = (value, dataBits) => {
+  if (Array.isArray(value)) return value;
+
+  const result = [...value.toString(2)].map(Number);
+
+  return Array(dataBits)
+    .fill(0)
+    .concat(result)
+    .slice(result.length);
+};
+
+export const convertArrayValueToNumber = value => {
+  if (!Array.isArray(value)) return value;
+
+  if (value.includes('e')) return 'e';
+
+  return value
+    .slice()
+    .reverse()
+    .reduce((acc, curr, index) => acc + curr * 2 ** index, 0);
+};
+
 export const adjustValueToBits = (value, dataBits = 1) => {
   const allBitsSet = 0b1111_1111_1111_1111_1111_1111_1111_1111;
   const mask = allBitsSet >>> (32 - dataBits);
@@ -15,9 +37,15 @@ export const adjustValueToBits = (value, dataBits = 1) => {
   return value & mask;
 };
 
-export const isValueValid = (value, dataBits = 1) =>
+export const isValueEqual = (value1, value2) => {
+  return value1
+    .map((v1, index) => v1 === value2[index])
+    .every(Boolean);
+};
+
+export const isValueValid = value =>
   value === null ||
-  (value >= MIN_VALUE && value <= MAX_VALUE[dataBits]);
+  (Array.isArray(value) && value.every(v => typeof v === 'number'));
 
 export const isInputValid = input =>
   input.every(item => isValueValid(item.value, item.bits));
@@ -76,12 +104,9 @@ export const getMeshInputValue = mesh => {
     })
     .filter(value => value !== null);
 
-  // A mesh input is coherent if all of its inputs has the same value
-  const isCoherent = allInputValues.every(
-    (value, i, values) => value === values[0],
-  );
-
-  return isCoherent ? allInputValues[0] : 'error';
+  return [...Array(allInputValues[0].length).keys()]
+    .map(index => allInputValues.map(v => v[index]))
+    .map(arr => (arr.every(item => item === arr[0]) ? arr[0] : 'e'));
 };
 
 /**
@@ -91,12 +116,18 @@ export const initializeDiffAndValues = () => {
   self.circuit.components.forEach(component => {
     component.setInputValues(
       Object.fromEntries(
-        component.ports.input.map(port => [port.id, 0]),
+        component.ports.input.map(port => [
+          port.id,
+          new Array(port.bits || 1).fill(0),
+        ]),
       ),
     );
     component.setOutputValues(
       Object.fromEntries(
-        component.ports.output.map(port => [port.id, 0]),
+        component.ports.output.map(port => [
+          port.id,
+          new Array(port.bits || 1).fill(0),
+        ]),
       ),
     );
   });
@@ -104,7 +135,7 @@ export const initializeDiffAndValues = () => {
   const diffLinks = self.circuit.meshes
     .map(mesh => mesh.links)
     .flat()
-    .reduce((obj, link) => ({ ...obj, [link]: 0 }), {});
+    .reduce((obj, link) => ({ ...obj, [link]: [] }), {});
 
   const diffComponents = Object.fromEntries(
     self.circuit.components.map(component => [
@@ -114,7 +145,10 @@ export const initializeDiffAndValues = () => {
           [
             ...component.ports.input,
             ...component.ports.output,
-          ].map(port => [port.name, 0]),
+          ].map(port => [
+            port.name,
+            new Array(port.bits || 1).fill(0),
+          ]),
         ),
         properties: component.getProperties(),
       },

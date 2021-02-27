@@ -7,7 +7,11 @@ import {
 import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 
 import { sameAxis } from '../Diagram/states/common';
-import { isValueValid, MAX_VALUE } from '../Simulation/utils';
+import {
+  convertArrayValueToNumber,
+  isValueValid,
+  MAX_VALUE,
+} from '../Simulation/utils';
 
 export default class LinkModel extends RDLinkModel {
   constructor(options) {
@@ -269,7 +273,8 @@ export default class LinkModel extends RDLinkModel {
       return `var(--link-${this.bits || 1}-bit-color)`;
 
     return `var(--value-${Math.round(
-      (this.value / MAX_VALUE[this.bits]) * 10,
+      (convertArrayValueToNumber(this.value) / MAX_VALUE[this.bits]) *
+        10,
     )})`;
   }
 

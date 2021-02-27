@@ -6,6 +6,7 @@
 
 /* ---------------------------------------------------------------- */
 import findMeshes from './mesh';
+import { convertNumberValueToArray, isValueEqual } from './utils';
 
 /**
  * This class represents a generic component. It receives deserialized
@@ -39,11 +40,15 @@ export class GenericComponent {
 
       let current = previous;
       let error = false;
+
       if (values[port.name] !== undefined) {
         current = values[port.name];
         if (typeof current === 'number') {
-          current = values[port.name];
-        } else {
+          current = convertNumberValueToArray(
+            values[port.name],
+            port.bits,
+          );
+        } else if (!Array.isArray(current)) {
           error = true;
         }
       }
@@ -72,11 +77,12 @@ export class GenericComponent {
   }
 
   hasOutputChanged(values) {
-    return !Object.keys(values).every(
-      portName =>
-        values[portName] ===
+    return !Object.keys(values).every(portName =>
+      isValueEqual(
+        values[portName],
         this.ports.output.find(output => output.name === portName)
           .value,
+      ),
     );
   }
 
@@ -116,7 +122,10 @@ export class GenericComponent {
 
   stepError() {
     return this.ports.output.reduce(
-      (obj, port) => ({ ...obj, [port.name]: 'error' }),
+      (obj, port) => ({
+        ...obj,
+        [port.name]: Array(port.bits).fill('e'),
+      }),
       {},
     );
   }
@@ -258,13 +267,13 @@ const deserialize = serialized => {
                 .filter(port => port.input)
                 .map(port => ({
                   ...port,
-                  value: 0,
+                  value: new Array(port.bits || 1).fill(0),
                 })),
               output: component.ports
                 .filter(port => !port.input)
                 .map(port => ({
                   ...port,
-                  value: 0,
+                  value: new Array(port.bits || 1).fill(0),
                 })),
             },
           },

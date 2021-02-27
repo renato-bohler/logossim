@@ -43,7 +43,6 @@ export const Shape = styled.div`
 
 export const PinContainer = styled.div`
   display: flex;
-  flex-direction: row-reverse;
   flex-wrap: wrap-reverse;
   justify-content: space-evenly;
   align-items: center;

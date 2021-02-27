@@ -1,4 +1,6 @@
 /* eslint-disable no-new */
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import NandModel from '../NandModel';
 
 const { addPort } = global;
@@ -37,7 +39,7 @@ it("should return 1 when there's a 0 input", () => {
       in2: 0,
       in3: 0,
     }),
-  ).toEqual({ out: 1 });
+  ).toEqual({ out: [1] });
 });
 
 it('should return 0 when all inputs are 1', () => {
@@ -53,13 +55,15 @@ it('should return 0 when all inputs are 1', () => {
       in2: 1,
       in3: 1,
     }),
-  ).toEqual({ out: 0 });
+  ).toEqual({ out: [0] });
 });
 
 it('should return bitwise NAND for multiple data bits', () => {
+  const DATA_BITS = 4;
+
   const model = new NandModel({
     INPUT_PORTS_NUMBER: 4,
-    DATA_BITS: 4,
+    DATA_BITS,
   });
 
   expect(
@@ -69,5 +73,5 @@ it('should return bitwise NAND for multiple data bits', () => {
       in2: 0b0101,
       in3: 0b1001,
     }),
-  ).toEqual({ out: 0b1110 });
+  ).toEqual({ out: convertNumberValueToArray(0b1110, DATA_BITS) });
 });

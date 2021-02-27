@@ -24,11 +24,11 @@ it('should emit toggling value on click', () => {
   const model = new InputModel({ DATA_BITS: 2 });
   const emitSpy = jest.spyOn(model, 'emit');
   const outputSpy = jest.spyOn(model, 'getOutput');
-  outputSpy.mockImplementation(() => 0b01);
+  outputSpy.mockImplementation(() => [0, 1]);
 
   model.onClick(0);
   model.onClick(1);
 
-  expect(emitSpy).toHaveBeenNthCalledWith(1, { out: 0b00 });
-  expect(emitSpy).toHaveBeenNthCalledWith(2, { out: 0b11 });
+  expect(emitSpy).toHaveBeenNthCalledWith(1, { out: [1, 1] });
+  expect(emitSpy).toHaveBeenNthCalledWith(2, { out: [0, 0] });
 });

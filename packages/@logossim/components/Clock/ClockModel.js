@@ -57,4 +57,12 @@ export default class ClockModel extends BaseModel {
   onSimulationStop() {
     clearInterval(this.emitInterval);
   }
+
+  getOutput() {
+    return this.getPort('out').getValue() || [0];
+  }
+
+  isActive() {
+    return this.getOutput()[0] === 1;
+  }
 }

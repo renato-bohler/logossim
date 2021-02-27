@@ -33,7 +33,7 @@ export const Shape = styled.div`
 `;
 
 export const Decoration = ({
-  output,
+  isActive,
   color,
   periodMs,
   animateTransition,
@@ -50,7 +50,7 @@ export const Decoration = ({
       strokeWidth={0.75}
       fill="none"
       style={{
-        transform: output === 0 ? 'rotateX(180deg)' : 'none',
+        transform: isActive ? 'none' : 'rotateX(180deg)',
         transformOrigin: 'center',
         transition: animateTransition
           ? `calc(${periodMs}ms / 2 * 0.4) ease-in-out`
@@ -79,7 +79,7 @@ const ClockWidget = props => {
         engine={engine}
       />
       <Decoration
-        output={out.getValue()}
+        isActive={model.isActive()}
         color={out.getColor()}
         periodMs={periodMs}
         animateTransition={periodMs >= 500}

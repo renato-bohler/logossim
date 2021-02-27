@@ -2,23 +2,19 @@ import { BaseModel } from '@logossim/core';
 
 export default class OutputModel extends BaseModel {
   initialize(configurations) {
-    const DATA_BITS = Number(configurations.DATA_BITS);
+    this.dataBits = Number(configurations.DATA_BITS);
 
-    this.addInputPort('in', DATA_BITS);
+    this.addInputPort('in', this.dataBits);
   }
 
   getInput() {
-    return this.getPort('in').getValue() || 0;
+    return (
+      this.getPort('in').getValue() ||
+      new Array(this.dataBits).fill(0)
+    );
   }
 
   getBitAt(index) {
-    const input = this.getInput();
-
-    if (input === 'error') return input;
-
-    const mask = 0b1 << index;
-    const result = this.getInput() & mask;
-
-    return result > 0 ? 1 : 0;
+    return this.getInput()[index];
   }
 }

@@ -27,6 +27,8 @@ import {
   getMeshInputValue,
   getMeshOutputComponents,
   adjustValueToBits,
+  convertNumberValueToArray,
+  convertArrayValueToNumber,
 } from './utils';
 
 /**
@@ -125,9 +127,18 @@ const executeNextEmitted = (
   emitted.value = Object.fromEntries(
     Object.entries(emitted.value).map(([portName, portValue]) => {
       const { bits } = emitter.getOutputPort(portName);
-      const value = adjustValueToBits(portValue, bits);
+      let value = portValue;
+      if (typeof value === 'number') {
+        value = convertNumberValueToArray(
+          adjustValueToBits(portValue, bits),
+          bits,
+        );
+      }
 
-      return [portName, isValueValid(value, bits) ? value : 'error'];
+      return [
+        portName,
+        isValueValid(value, bits) ? value : Array(bits).fill('e'),
+      ];
     }),
   );
   emitter.setOutputValues(emitted.value);
@@ -164,11 +175,26 @@ const executeNextStep = (firstOfSimulation = false) => {
 
   let result = {};
   if (isInputValid(component.ports.input)) {
-    result = component.step(input, meta);
+    result = component.step(
+      Object.fromEntries(
+        Object.entries(input).map(([key, value]) => [
+          key,
+          convertArrayValueToNumber(value),
+        ]),
+      ),
+      meta,
+    );
+
     result = Object.fromEntries(
       Object.entries(result || {}).map(([portName, portValue]) => {
         const { bits } = component.getOutputPort(portName);
-        const value = adjustValueToBits(portValue, bits);
+        let value = portValue;
+        if (typeof value === 'number') {
+          value = convertNumberValueToArray(
+            adjustValueToBits(portValue, bits),
+            bits,
+          );
+        }
         return [portName, value];
       }),
     );

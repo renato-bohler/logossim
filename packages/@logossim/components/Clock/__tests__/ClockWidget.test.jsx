@@ -28,7 +28,7 @@ it('should display off value', () => {
     HIGH_DURATION: 1,
     LOW_DURATION: 1,
   });
-  model.getPort('out').setValue(0);
+  model.getPort('out').setValue([0]);
 
   const { getByTestId } = render(
     <ClockWidget model={model} engine={engine} />,
@@ -44,7 +44,7 @@ it('should display on value', () => {
     HIGH_DURATION: 1,
     LOW_DURATION: 1,
   });
-  model.getPort('out').setValue(1);
+  model.getPort('out').setValue([1]);
 
   const { getByTestId } = render(
     <ClockWidget model={model} engine={engine} />,

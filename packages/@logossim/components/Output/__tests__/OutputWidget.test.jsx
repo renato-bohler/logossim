@@ -94,7 +94,24 @@ it('should display pin values accordingly', () => {
     OUTPUT_FORMAT: 'BITS',
   });
   const spy = jest.spyOn(model, 'getInput');
-  spy.mockImplementation(() => 0b1010_1010_1010_1010);
+  spy.mockImplementation(() => [
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+  ]);
 
   const { getByTestId } = render(
     <OutputWidget model={model} engine={engine} />,
@@ -102,7 +119,7 @@ it('should display pin values accordingly', () => {
   const pinContainer = getByTestId('pin-container');
 
   Array.from(pinContainer.children).forEach((pin, i) => {
-    expect(pin).toContainHTML(i % 2 ? '1' : '0');
+    expect(pin).toContainHTML(i % 2 ? '0' : '1');
   });
 });
 
@@ -144,12 +161,12 @@ it('should display errored values accordingly', () => {
     OUTPUT_FORMAT: 'DECIMAL',
   });
   const spy = jest.spyOn(model, 'getInput');
-  spy.mockImplementation(() => 'error');
+  spy.mockImplementation(() => Array(16).fill('e'));
 
   const { getByTestId } = render(
     <OutputWidget model={model} engine={engine} />,
   );
   const pinContainer = getByTestId('pin-container');
 
-  expect(pinContainer).toContainHTML('ERROR');
+  expect(pinContainer).toContainHTML('(error)');
 });

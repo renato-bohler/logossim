@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Port } from '@logossim/core';
+import { convertArrayValueToNumber } from '@logossim/core/Simulation/utils';
 
 import styled from 'styled-components';
 
@@ -53,10 +54,10 @@ export const Shape = styled.div`
 
 export const PinContainer = styled.span`
   display: flex;
-  flex-direction: row-reverse;
   flex-wrap: wrap-reverse;
   justify-content: space-evenly;
   align-items: center;
+  font-family: monospace;
 
   max-width: 215px;
 `;
@@ -92,6 +93,7 @@ export const Pin = styled.div`
 const ErrorMessage = styled.span`
   color: var(--value-error);
   font-weight: bold;
+  font-family: monospace;
 `;
 
 const mapBits = model => {
@@ -109,18 +111,19 @@ const mapBits = model => {
         key={index}
         value={value}
       >
-        {value === 0 || value === 1 ? value : 'E'}
+        {value}
       </Pin>
     );
   });
 };
 
 const showAsNumber = (input, format) => {
-  if (input === 'error') return <ErrorMessage>ERROR</ErrorMessage>;
+  const number = convertArrayValueToNumber(input);
+  if (number === 'e') return <ErrorMessage>(error)</ErrorMessage>;
 
-  if (format === 'DECIMAL') return input;
+  if (format === 'DECIMAL') return number;
   if (format === 'HEXADECIMAL')
-    return `0x${input.toString(16).padStart(4, '0')}`;
+    return `0x${number.toString(16).padStart(4, '0')}`;
   return '';
 };
 
