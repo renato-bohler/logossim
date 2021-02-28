@@ -12,6 +12,18 @@ const SHAPE_SIZES = {
   16: { width: 240, height: 60 },
 };
 
+const PIN_BACKGROUND = {
+  0: 'var(--value-off)',
+  1: 'var(--value-on)',
+  x: 'var(--value-floating)',
+};
+
+const PIN_BORDER = {
+  0: 'var(--value-on)',
+  1: 'var(--value-off)',
+  x: 'black',
+};
+
 const PositionedPort = styled(Port)`
   position: absolute;
   right: -7px;
@@ -59,11 +71,8 @@ export const Pin = styled.button`
   height: 20px;
   margin: 2px;
 
-  background: ${props =>
-    props.value === 1 ? 'var(--value-on)' : 'var(--value-off)'};
-  border: 2px solid
-    ${props =>
-      props.value === 1 ? 'var(--value-off)' : 'var(--value-on)'};
+  background: ${props => PIN_BACKGROUND[props.value]};
+  border: 2px solid ${props => PIN_BORDER[props.value]};
   border-radius: 100%;
 
   color: ${props => (props.value === 1 ? 'black' : 'white')};

@@ -38,6 +38,22 @@ export default new Component({
         },
       ],
     },
+    {
+      name: 'THREE_STATE',
+      type: 'select',
+      default: 'false',
+      label: 'Three state',
+      options: [
+        {
+          label: 'Yes',
+          value: 'true',
+        },
+        {
+          label: 'No',
+          value: 'false',
+        },
+      ],
+    },
   ],
   model,
   widget,

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
+
 import { render } from '@testing-library/react';
 
 import InputModel from '../InputModel';
@@ -74,26 +76,13 @@ it('should have 16 pins when configured with 16-bits', () => {
 });
 
 it('should display pin values accordingly', () => {
-  const model = new InputModel({ DATA_BITS: 16 });
+  const DATA_BITS = 16;
+
+  const model = new InputModel({ DATA_BITS });
   const spy = jest.spyOn(model, 'getOutput');
-  spy.mockImplementation(() => [
-    1,
-    0,
-    1,
-    0,
-    1,
-    0,
-    1,
-    0,
-    1,
-    0,
-    1,
-    0,
-    1,
-    0,
-    1,
-    0,
-  ]);
+  spy.mockImplementation(() =>
+    convertNumberValueToArray(0b1010_1010_1010_1010, DATA_BITS),
+  );
 
   const { getAllByRole } = render(
     <InputWidget model={model} engine={engine} />,
@@ -102,6 +91,21 @@ it('should display pin values accordingly', () => {
 
   pins.forEach((pin, i) => {
     expect(pin).toContainHTML(i % 2 ? '0' : '1');
+  });
+});
+
+it('should display floating and errored values correctly', () => {
+  const model = new InputModel({ DATA_BITS: 2 });
+  const spy = jest.spyOn(model, 'getOutput');
+  spy.mockImplementation(() => ['x', 'e']);
+
+  const { getAllByRole } = render(
+    <InputWidget model={model} engine={engine} />,
+  );
+  const pins = getAllByRole('button');
+
+  pins.forEach((pin, i) => {
+    expect(pin).toContainHTML(i % 2 ? 'e' : 'x');
   });
 });
 

@@ -54,3 +54,33 @@ it('should correctly split the input value', () => {
     out15: [1],
   });
 });
+
+it('should correctly split having floating values', () => {
+  const model = new SplitterModel({
+    DATA_BITS: 2,
+  });
+
+  expect(
+    model.stepFloating({
+      in: [0, 'x'],
+    }),
+  ).toEqual({
+    out0: ['x'],
+    out1: [0],
+  });
+});
+
+it('should correctly split having error values', () => {
+  const model = new SplitterModel({
+    DATA_BITS: 2,
+  });
+
+  expect(
+    model.stepFloating({
+      in: [0, 'e'],
+    }),
+  ).toEqual({
+    out0: ['e'],
+    out1: [0],
+  });
+});

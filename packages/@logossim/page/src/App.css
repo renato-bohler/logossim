@@ -66,6 +66,7 @@ body {
   --value-off: var(--value-0);
   --value-on: var(--value-10);
   --value-error: #c80a0a;
+  --value-floating: #4e68db;
 
   --selected-opacity: 95%;
   --unselected-opacity: 50%;

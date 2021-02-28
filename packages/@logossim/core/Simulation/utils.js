@@ -31,6 +31,8 @@ export const convertArrayValueToNumber = value => {
 };
 
 export const adjustValueToBits = (value, dataBits = 1) => {
+  if (typeof value !== 'number') return value;
+
   const allBitsSet = 0b1111_1111_1111_1111_1111_1111_1111_1111;
   const mask = allBitsSet >>> (32 - dataBits);
 
@@ -49,6 +51,20 @@ export const isValueValid = value =>
 
 export const isInputValid = input =>
   input.every(item => isValueValid(item.value, item.bits));
+
+export const isValueError = value =>
+  value === 'e' ||
+  (Array.isArray(value) && value.some(v => v === 'e'));
+
+export const isInputError = input =>
+  input.some(item => isValueError(item.value));
+
+export const isValueFloating = value =>
+  value === 'x' ||
+  (Array.isArray(value) && value.some(v => v === 'x'));
+
+export const isInputFloating = input =>
+  input.some(item => isValueFloating(item.value));
 
 export const getCleanDiff = () => ({
   components: {},
@@ -106,7 +122,20 @@ export const getMeshInputValue = mesh => {
 
   return [...Array(allInputValues[0].length).keys()]
     .map(index => allInputValues.map(v => v[index]))
-    .map(arr => (arr.every(item => item === arr[0]) ? arr[0] : 'e'));
+    .map(arr => {
+      const firstDefinedValue = arr.find(
+        value => typeof value === 'number',
+      );
+
+      const areBitsCompatible = arr.every(
+        item => item === firstDefinedValue || item === 'x',
+      );
+
+      if (!areBitsCompatible) return 'e';
+      if (typeof firstDefinedValue === 'number')
+        return firstDefinedValue;
+      return 'x';
+    });
 };
 
 /**
@@ -118,7 +147,7 @@ export const initializeDiffAndValues = () => {
       Object.fromEntries(
         component.ports.input.map(port => [
           port.id,
-          new Array(port.bits || 1).fill(0),
+          new Array(port.bits || 1).fill('x'),
         ]),
       ),
     );
@@ -126,7 +155,7 @@ export const initializeDiffAndValues = () => {
       Object.fromEntries(
         component.ports.output.map(port => [
           port.id,
-          new Array(port.bits || 1).fill(0),
+          new Array(port.bits || 1).fill('x'),
         ]),
       ),
     );
@@ -135,7 +164,13 @@ export const initializeDiffAndValues = () => {
   const diffLinks = self.circuit.meshes
     .map(mesh => mesh.links)
     .flat()
-    .reduce((obj, link) => ({ ...obj, [link]: [] }), {});
+    .reduce((obj, link) => {
+      const { bits } = self.circuit.meshes.find(mesh =>
+        mesh.links.includes(link),
+      );
+
+      return { ...obj, [link]: Array(bits).fill('x') };
+    }, {});
 
   const diffComponents = Object.fromEntries(
     self.circuit.components.map(component => [
@@ -147,7 +182,7 @@ export const initializeDiffAndValues = () => {
             ...component.ports.output,
           ].map(port => [
             port.name,
-            new Array(port.bits || 1).fill(0),
+            new Array(port.bits || 1).fill('x'),
           ]),
         ),
         properties: component.getProperties(),
