@@ -17,4 +17,16 @@ export default class JoinerModel extends BaseModel {
         .reduce((acc, curr, index) => acc + curr * 2 ** index, 0),
     };
   }
+
+  stepFloating(input) {
+    return {
+      out: [...new Array(this.bits)]
+        .map((_, index) => input[`in${this.bits - index - 1}`])
+        .flat(),
+    };
+  }
+
+  stepError(input) {
+    return this.stepFloating(input);
+  }
 }

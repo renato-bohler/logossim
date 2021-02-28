@@ -58,3 +58,33 @@ it('should correctly join the input value', () => {
     out: convertNumberValueToArray(0b1010_0101_1111_0000, DATA_BITS),
   });
 });
+
+it('should correctly join input having floating values', () => {
+  const model = new JoinerModel({
+    DATA_BITS: 2,
+  });
+
+  expect(
+    model.stepFloating({
+      in0: ['x'],
+      in1: [0],
+    }),
+  ).toEqual({
+    out: [0, 'x'],
+  });
+});
+
+it('should correctly join input having floating values', () => {
+  const model = new JoinerModel({
+    DATA_BITS: 2,
+  });
+
+  expect(
+    model.stepFloating({
+      in0: ['e'],
+      in1: [0],
+    }),
+  ).toEqual({
+    out: [0, 'e'],
+  });
+});

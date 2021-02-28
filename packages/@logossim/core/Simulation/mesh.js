@@ -60,6 +60,7 @@ const findMeshes = allLinks => {
   return meshes
     .map(mesh => Object.keys(mesh))
     .map(meshLinks => ({
+      bits: findLinkById(meshLinks[0]).bits,
       links: meshLinks,
       inputs: findInputs(meshLinks),
       outputs: findOutputs(meshLinks),

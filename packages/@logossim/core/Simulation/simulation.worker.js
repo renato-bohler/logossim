@@ -29,6 +29,9 @@ import {
   adjustValueToBits,
   convertNumberValueToArray,
   convertArrayValueToNumber,
+  isValueFloating,
+  isInputError,
+  isInputFloating,
 } from './utils';
 
 /**
@@ -126,6 +129,8 @@ const executeNextEmitted = (
 
   emitted.value = Object.fromEntries(
     Object.entries(emitted.value).map(([portName, portValue]) => {
+      if (isValueFloating(portValue)) return [portName, portValue];
+
       const { bits } = emitter.getOutputPort(portName);
       let value = portValue;
       if (typeof value === 'number') {
@@ -198,11 +203,18 @@ const executeNextStep = (firstOfSimulation = false) => {
         return [portName, value];
       }),
     );
+  } else if (isInputError(component.ports.input)) {
+    result = component.stepError(input, meta);
+  } else if (isInputFloating(component.ports.input)) {
+    result = component.stepFloating(input, meta);
   } else {
     result = component.stepError(input, meta);
   }
 
-  if (!result) return;
+  if (!result) {
+    executeNextStep();
+    return;
+  }
 
   const output = Object.fromEntries(
     Object.entries(result).filter(([portName]) =>

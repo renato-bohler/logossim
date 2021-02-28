@@ -9,6 +9,7 @@ import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 import { sameAxis } from '../Diagram/states/common';
 import {
   convertArrayValueToNumber,
+  isValueError,
   isValueValid,
   MAX_VALUE,
 } from '../Simulation/utils';
@@ -267,8 +268,10 @@ export default class LinkModel extends RDLinkModel {
   getColor() {
     if (this.isSelected()) return 'var(--link-selected)';
 
-    if (!isValueValid(this.value, this.bits))
-      return 'var(--value-error)';
+    if (!isValueValid(this.value, this.bits)) {
+      if (isValueError(this.value)) return 'var(--value-error)';
+      return 'var(--value-floating)';
+    }
     if (this.value === null)
       return `var(--link-${this.bits || 1}-bit-color)`;
 

@@ -130,6 +130,16 @@ export class GenericComponent {
     );
   }
 
+  stepFloating() {
+    return this.ports.output.reduce(
+      (obj, port) => ({
+        ...obj,
+        [port.name]: Array(port.bits).fill('x'),
+      }),
+      {},
+    );
+  }
+
   emit(value) {
     const event = new MessageEvent('message', {
       data: {
@@ -267,13 +277,13 @@ const deserialize = serialized => {
                 .filter(port => port.input)
                 .map(port => ({
                   ...port,
-                  value: new Array(port.bits || 1).fill(0),
+                  value: new Array(port.bits || 1).fill('x'),
                 })),
               output: component.ports
                 .filter(port => !port.input)
                 .map(port => ({
                   ...port,
-                  value: new Array(port.bits || 1).fill(0),
+                  value: new Array(port.bits || 1).fill('x'),
                 })),
             },
           },

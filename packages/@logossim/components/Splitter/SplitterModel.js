@@ -25,4 +25,17 @@ export default class SplitterModel extends BaseModel {
       ]),
     );
   }
+
+  stepFloating(input) {
+    return Object.fromEntries(
+      [...new Array(this.bits)].map((_, index) => [
+        `out${this.bits - index - 1}`,
+        [input.in[index]],
+      ]),
+    );
+  }
+
+  stepError(input) {
+    return this.stepFloating(input);
+  }
 }
