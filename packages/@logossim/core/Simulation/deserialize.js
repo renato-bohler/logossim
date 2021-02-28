@@ -48,6 +48,8 @@ export class GenericComponent {
             values[port.name],
             port.bits,
           );
+        } else if (current === 'x' || current === 'e') {
+          current = Array(port.bits).fill(current);
         } else if (!Array.isArray(current)) {
           error = true;
         }

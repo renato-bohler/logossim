@@ -138,6 +138,8 @@ const executeNextEmitted = (
           adjustValueToBits(portValue, bits),
           bits,
         );
+      } else if (value === 'x' || value === 'e') {
+        value = Array(bits).fill(value);
       }
 
       return [
@@ -189,20 +191,6 @@ const executeNextStep = (firstOfSimulation = false) => {
       ),
       meta,
     );
-
-    result = Object.fromEntries(
-      Object.entries(result || {}).map(([portName, portValue]) => {
-        const { bits } = component.getOutputPort(portName);
-        let value = portValue;
-        if (typeof value === 'number') {
-          value = convertNumberValueToArray(
-            adjustValueToBits(portValue, bits),
-            bits,
-          );
-        }
-        return [portName, value];
-      }),
-    );
   } else if (isInputError(component.ports.input)) {
     result = component.stepError(input, meta);
   } else if (isInputFloating(component.ports.input)) {
@@ -215,6 +203,22 @@ const executeNextStep = (firstOfSimulation = false) => {
     executeNextStep();
     return;
   }
+
+  result = Object.fromEntries(
+    Object.entries(result || {}).map(([portName, portValue]) => {
+      const { bits } = component.getOutputPort(portName);
+      let value = portValue;
+      if (typeof value === 'number') {
+        value = convertNumberValueToArray(
+          adjustValueToBits(portValue, bits),
+          bits,
+        );
+      } else if (value === 'x' || value === 'e') {
+        value = Array(bits).fill(value);
+      }
+      return [portName, value];
+    }),
+  );
 
   const output = Object.fromEntries(
     Object.entries(result).filter(([portName]) =>

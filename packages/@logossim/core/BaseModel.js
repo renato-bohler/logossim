@@ -128,6 +128,8 @@ export default class BaseModel extends NodeModel {
             adjustValueToBits(portValue, bits),
             bits,
           );
+        } else if (value === 'x' || value === 'e') {
+          value = Array(bits).fill(value);
         }
 
         return [
