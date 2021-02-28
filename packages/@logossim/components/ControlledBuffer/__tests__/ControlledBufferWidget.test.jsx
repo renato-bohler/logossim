@@ -7,7 +7,7 @@ import ControlledBufferWidget from '../ControlledBufferWidget';
 
 const { engine } = global;
 
-it('should have 1 input and 1 output port', () => {
+it('should have 2 input and 1 output port', () => {
   const model = new ControlledBufferModel({
     DATA_BITS: 1,
   });
@@ -15,6 +15,9 @@ it('should have 1 input and 1 output port', () => {
   const { container } = render(
     <ControlledBufferWidget model={model} engine={engine} />,
   );
+
+  const control = container.querySelector('[data-name=control]');
+  expect(control).toBeTruthy();
 
   const input = container.querySelector('[data-name=in]');
   expect(input).toBeTruthy();
