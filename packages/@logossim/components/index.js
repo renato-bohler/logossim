@@ -4,6 +4,7 @@ import Button from './Button/ButtonRegister';
 import Buzzer from './Buzzer/BuzzerRegister';
 import Clock from './Clock/ClockRegister';
 import ControlledBuffer from './ControlledBuffer/ControlledBufferRegister';
+import ControlledInverter from './ControlledInverter/ControlledInverterRegister';
 import Demux from './Demux/DemuxRegister';
 import Ground from './Ground/GroundRegister';
 import Input from './Input/InputRegister';
@@ -38,8 +39,9 @@ const components = [
   Xor,
   Xnor,
   Buffer,
-  ControlledBuffer,
   Not,
+  ControlledBuffer,
+  ControlledInverter,
   Splitter,
   Joiner,
   Power,
