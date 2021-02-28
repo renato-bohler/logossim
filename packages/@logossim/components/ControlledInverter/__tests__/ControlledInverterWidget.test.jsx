@@ -2,18 +2,18 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import ControlledBufferModel from '../ControlledBufferModel';
-import ControlledBufferWidget from '../ControlledBufferWidget';
+import ControlledInverterModel from '../ControlledInverterModel';
+import ControlledInverterWidget from '../ControlledInverterWidget';
 
 const { engine } = global;
 
 it('should have 2 input and 1 output port', () => {
-  const model = new ControlledBufferModel({
+  const model = new ControlledInverterModel({
     DATA_BITS: 1,
   });
 
   const { container } = render(
-    <ControlledBufferWidget model={model} engine={engine} />,
+    <ControlledInverterWidget model={model} engine={engine} />,
   );
 
   const control = container.querySelector('[data-name=control]');
