@@ -20,7 +20,7 @@ const Circle = styled.div`
   }
 `;
 
-export default class Port extends PortWidget {
+class Port extends PortWidget {
   report() {
     if (this.props.port) super.report();
   }
@@ -30,7 +30,7 @@ export default class Port extends PortWidget {
   }
 
   render() {
-    const { name, model, port, className = '' } = this.props;
+    const { name, port, model, className = '' } = this.props;
 
     if (!port) return null;
 
@@ -45,3 +45,16 @@ export default class Port extends PortWidget {
     );
   }
 }
+
+/**
+ * React Diagrams PortWidget implementation needs us to forward some
+ * props in order to function properly.
+ */
+const withProps = WrappedComponent => ({ ...props }) => (
+  <WrappedComponent
+    {...props}
+    port={props.model.getPort(props.name)}
+  />
+);
+
+export default withProps(Port);

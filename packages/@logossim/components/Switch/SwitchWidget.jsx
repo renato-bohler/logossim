@@ -73,12 +73,7 @@ const SwitchWidget = props => {
       <Switch onClick={() => model.onClick()}>
         <SwitchValue isActive={model.isActive()} />
       </Switch>
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" model={model} engine={engine} />
     </Shape>
   );
 };

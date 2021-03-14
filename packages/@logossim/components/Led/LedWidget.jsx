@@ -42,12 +42,7 @@ const LedWidget = props => {
       isActive={model.isActive()}
       data-testid="shape"
     >
-      <PositionedPort
-        name="in"
-        model={model}
-        port={model.getPort('in')}
-        engine={engine}
-      />
+      <PositionedPort name="in" model={model} engine={engine} />
     </Shape>
   );
 };

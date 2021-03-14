@@ -72,12 +72,7 @@ const ClockWidget = props => {
 
   return (
     <Shape selected={selected}>
-      <PositionedPort
-        name="out"
-        model={model}
-        port={out}
-        engine={engine}
-      />
+      <PositionedPort name="out" model={model} engine={engine} />
       <Decoration
         isActive={model.isActive()}
         color={out.getColor()}

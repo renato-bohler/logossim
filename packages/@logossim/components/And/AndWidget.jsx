@@ -77,17 +77,11 @@ const AndWidget = props => {
           key={port.getName()}
           name={port.getName()}
           model={model}
-          port={port}
           engine={engine}
           position={portPositions[i]}
         />
       ))}
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" model={model} engine={engine} />
       <Shape />
     </Wrapper>
   );

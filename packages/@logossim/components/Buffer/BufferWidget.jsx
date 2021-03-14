@@ -58,18 +58,8 @@ const BufferWidget = props => {
 
   return (
     <Wrapper selected={selected}>
-      <PositionedPort
-        name="in"
-        model={model}
-        port={model.getPort('in')}
-        engine={engine}
-      />
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="in" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} engine={engine} />
       <Shape />
     </Wrapper>
   );

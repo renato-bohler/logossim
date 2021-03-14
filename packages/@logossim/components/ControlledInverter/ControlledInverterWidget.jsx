@@ -61,24 +61,9 @@ const ControlledInverterWidget = props => {
 
   return (
     <Wrapper selected={selected}>
-      <PositionedPort
-        name="control"
-        model={model}
-        port={model.getPort('control')}
-        engine={engine}
-      />
-      <PositionedPort
-        name="in"
-        model={model}
-        port={model.getPort('in')}
-        engine={engine}
-      />
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="control" model={model} engine={engine} />
+      <PositionedPort name="in" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} engine={engine} />
       <Shape />
     </Wrapper>
   );

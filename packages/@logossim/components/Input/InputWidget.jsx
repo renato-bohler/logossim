@@ -108,12 +108,7 @@ const InputWidget = props => {
           );
         })}
       </PinContainer>
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" model={model} engine={engine} />
     </Shape>
   );
 };

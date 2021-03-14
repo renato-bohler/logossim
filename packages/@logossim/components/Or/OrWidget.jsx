@@ -111,7 +111,6 @@ const OrWidget = props => {
           <PositionedPort
             name={port.getName()}
             model={model}
-            port={port}
             engine={engine}
             position={portPositions[i]}
           />
@@ -123,12 +122,7 @@ const OrWidget = props => {
           )}
         </Fragment>
       ))}
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" model={model} engine={engine} />
       <Shape portPositions={portPositions} />
     </Wrapper>
   );

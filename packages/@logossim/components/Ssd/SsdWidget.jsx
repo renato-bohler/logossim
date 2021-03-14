@@ -121,7 +121,6 @@ const LedWidget = props => {
           name={segment}
           model={model}
           position={model.getPositionForSegment(segment)}
-          port={model.getPort(segment)}
           engine={engine}
         />
       ))}

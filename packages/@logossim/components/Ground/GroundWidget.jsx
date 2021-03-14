@@ -52,12 +52,7 @@ const GroundWidget = props => {
   return (
     <Wrapper>
       <Shape selected={selected} dataBits={model.dataBits} />
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" model={model} engine={engine} />
     </Wrapper>
   );
 };

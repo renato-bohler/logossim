@@ -63,7 +63,6 @@ const MuxWidget = props => {
           key={port.getName()}
           name={port.getName()}
           model={model}
-          port={port}
           engine={engine}
           position={(i + 1) * 15}
         />
@@ -71,7 +70,6 @@ const MuxWidget = props => {
       <PositionedPort
         name="out"
         model={model}
-        port={model.getPort('out')}
         engine={engine}
         position={((inputNumber + 1) * 15) / 2}
       />

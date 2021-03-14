@@ -61,14 +61,12 @@ const DemuxWidget = props => {
       <PositionedPort
         name="in"
         model={model}
-        port={model.getPort('in')}
         engine={engine}
         position={((outputNumber + 2) * 15) / 2}
       />
       <PositionedPort
         name="selection"
         model={model}
-        port={model.getPort('selection')}
         engine={engine}
       />
       {outputPorts.map((port, i) => (
@@ -76,7 +74,6 @@ const DemuxWidget = props => {
           key={port.getName()}
           name={port.getName()}
           model={model}
-          port={port}
           engine={engine}
           position={(i + 1) * 15}
         />
