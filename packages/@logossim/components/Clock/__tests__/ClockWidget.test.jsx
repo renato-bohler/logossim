@@ -1,11 +1,8 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import ClockModel from '../ClockModel';
 import ClockWidget from '../ClockWidget';
-
-const { engine } = global;
 
 it('should have 1 output port', () => {
   const model = new ClockModel('Clock', {
@@ -14,9 +11,7 @@ it('should have 1 output port', () => {
     LOW_DURATION: 1,
   });
 
-  const { container } = render(
-    <ClockWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<ClockWidget model={model} />);
 
   const ports = container.querySelectorAll('[data-name=out]');
   expect(ports).toHaveLength(1);
@@ -30,9 +25,7 @@ it('should display off value', () => {
   });
   model.getPort('out').setValue([0]);
 
-  const { getByTestId } = render(
-    <ClockWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<ClockWidget model={model} />);
   const decoration = getByTestId('decoration');
 
   expect(decoration).toHaveStyle('transform: rotateX(180deg)');
@@ -46,9 +39,7 @@ it('should display on value', () => {
   });
   model.getPort('out').setValue([1]);
 
-  const { getByTestId } = render(
-    <ClockWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<ClockWidget model={model} />);
   const decoration = getByTestId('decoration');
 
   expect(decoration).toHaveStyle('transform: none');

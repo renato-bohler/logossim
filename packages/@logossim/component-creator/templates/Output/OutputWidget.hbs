@@ -30,7 +30,7 @@ export const Shape = styled.div`
 `;
 
 const {{fileName name}}Widget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -45,7 +45,6 @@ const {{fileName name}}Widget = props => {
       <PositionedPort
         name="in"
         model={model}
-        engine={engine}
       />
     </Shape>
   );

@@ -63,7 +63,7 @@ export const SwitchValue = styled.div`
 `;
 
 const SwitchWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -73,7 +73,7 @@ const SwitchWidget = props => {
       <Switch onClick={() => model.onClick()}>
         <SwitchValue isActive={model.isActive()} />
       </Switch>
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} />
     </Shape>
   );
 };

@@ -1,18 +1,13 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import LedModel from '../LedModel';
 import LedWidget from '../LedWidget';
-
-const { engine } = global;
 
 it('should have 1 input port', () => {
   const model = new LedModel();
 
-  const { container } = render(
-    <LedWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<LedWidget model={model} />);
 
   const ports = container.querySelectorAll('[data-name=in]');
   expect(ports).toHaveLength(1);
@@ -27,9 +22,7 @@ it('should display correct color when configured with active on high and value i
   const spy = jest.spyOn(model, 'getInput');
   spy.mockImplementation(() => [0]);
 
-  const { getByTestId } = render(
-    <LedWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<LedWidget model={model} />);
   const shape = getByTestId('shape');
 
   expect(shape).toHaveAttribute('color', '#000000');
@@ -44,9 +37,7 @@ it('should display correct color when configured with active on high and value i
   const spy = jest.spyOn(model, 'getInput');
   spy.mockImplementation(() => [1]);
 
-  const { getByTestId } = render(
-    <LedWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<LedWidget model={model} />);
   const shape = getByTestId('shape');
 
   expect(shape).toHaveAttribute('color', '#ff0000');
@@ -61,9 +52,7 @@ it('should display correct color when configured with active on low and value is
   const spy = jest.spyOn(model, 'getInput');
   spy.mockImplementation(() => [0]);
 
-  const { getByTestId } = render(
-    <LedWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<LedWidget model={model} />);
   const shape = getByTestId('shape');
 
   expect(shape).toHaveAttribute('color', '#ff0000');
@@ -78,9 +67,7 @@ it('should display correct color when configured with active on low and value is
   const spy = jest.spyOn(model, 'getInput');
   spy.mockImplementation(() => [1]);
 
-  const { getByTestId } = render(
-    <LedWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<LedWidget model={model} />);
   const shape = getByTestId('shape');
 
   expect(shape).toHaveAttribute('color', '#000000');

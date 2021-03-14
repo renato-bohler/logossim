@@ -48,7 +48,7 @@ export const Shape = ({ selected, isActive, children }) => (
 );
 
 export const {{fileName name}}Widget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -58,7 +58,6 @@ export const {{fileName name}}Widget = props => {
       <PositionedPort
         name="in"
         model={model}
-        engine={engine}
       />
     </Shape>
   );

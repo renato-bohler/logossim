@@ -1,20 +1,15 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import SplitterModel from '../SplitterModel';
 import SplitterWidget from '../SplitterWidget';
-
-const { engine } = global;
 
 it('should have 1 input port', () => {
   const model = new SplitterModel({
     DATA_BITS: 16,
   });
 
-  const { container } = render(
-    <SplitterWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<SplitterWidget model={model} />);
 
   const ports = container.querySelectorAll('[data-name=in]');
   expect(ports).toHaveLength(1);
@@ -25,9 +20,7 @@ it('should have the amount of output ports determined by configuration', () => {
     DATA_BITS: 16,
   });
 
-  const { container } = render(
-    <SplitterWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<SplitterWidget model={model} />);
 
   const ports = container.querySelectorAll('[data-name^=out]');
   expect(ports).toHaveLength(16);

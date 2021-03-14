@@ -53,7 +53,7 @@ export const Shape = ({ selected, dataBits }) => {
 };
 
 const JoinerWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     configurations: { DATA_BITS },
@@ -69,11 +69,10 @@ const JoinerWidget = props => {
           key={port.getName()}
           name={port.getName()}
           model={model}
-          engine={engine}
           position={i * 15}
         />
       ))}
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} />
       <Shape selected={selected} dataBits={dataBits} />
     </Wrapper>
   );

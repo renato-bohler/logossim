@@ -44,7 +44,7 @@ export const Shape = ({ selected, dataBits = 1 }) => {
 };
 
 const GroundWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -52,7 +52,7 @@ const GroundWidget = props => {
   return (
     <Wrapper>
       <Shape selected={selected} dataBits={model.dataBits} />
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} />
     </Wrapper>
   );
 };

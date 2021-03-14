@@ -47,15 +47,15 @@ export const Shape = ({ selected, isActive, children }) => (
   </Body>
 );
 
-export const BuzzerWidget = props => {
-  const { model, engine } = props;
+const BuzzerWidget = props => {
+  const { model } = props;
   const {
     options: { selected },
   } = model;
 
   return (
     <Shape selected={selected} isActive={model.isActive()}>
-      <PositionedPort name="in" model={model} engine={engine} />
+      <PositionedPort name="in" model={model} />
     </Shape>
   );
 };

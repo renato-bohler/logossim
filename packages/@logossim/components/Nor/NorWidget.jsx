@@ -92,7 +92,7 @@ export const Shape = ({ size = 90, portPositions = [] }) => (
 );
 
 const NorWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
 
   const inputPorts = Object.values(model.getInputPorts());
   const portPositions = distributePorts(inputPorts.length);
@@ -109,7 +109,6 @@ const NorWidget = props => {
           <PositionedPort
             name={port.getName()}
             model={model}
-            engine={engine}
             position={portPositions[i]}
           />
           {(portPositions[i] < 1 || portPositions[i] > 5) && (
@@ -120,7 +119,7 @@ const NorWidget = props => {
           )}
         </Fragment>
       ))}
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} />
       <Shape portPositions={portPositions} />
     </Wrapper>
   );

@@ -1,17 +1,15 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render } from '../../testUtils';
 
 import {{fileName name}}Model from '../{{fileName name}}Model';
 import {{fileName name}}Widget from '../{{fileName name}}Widget';
-
-const { engine } = global;
 
 it('should have 1 input port', () => {
   const model = new {{fileName name}}Model();
 
   const { container } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
 
   const ports = container.querySelectorAll('[data-name=in]');
@@ -28,7 +26,7 @@ it('should display correct color when configured with active on high and value i
   spy.mockImplementation(() => 0);
 
   const { getByTestId } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
   const shape = getByTestId('shape');
 
@@ -45,7 +43,7 @@ it('should display correct color when configured with active on high and value i
   spy.mockImplementation(() => 1);
 
   const { getByTestId } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
   const shape = getByTestId('shape');
 
@@ -62,7 +60,7 @@ it('should display correct color when configured with active on low and value is
   spy.mockImplementation(() => 0);
 
   const { getByTestId } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
   const shape = getByTestId('shape');
 
@@ -79,7 +77,7 @@ it('should display correct color when configured with active on low and value is
   spy.mockImplementation(() => 1);
 
   const { getByTestId } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
   const shape = getByTestId('shape');
 

@@ -30,7 +30,7 @@ export const Shape = styled.div`
 `;
 
 const LedWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -42,7 +42,7 @@ const LedWidget = props => {
       isActive={model.isActive()}
       data-testid="shape"
     >
-      <PositionedPort name="in" model={model} engine={engine} />
+      <PositionedPort name="in" model={model} />
     </Shape>
   );
 };

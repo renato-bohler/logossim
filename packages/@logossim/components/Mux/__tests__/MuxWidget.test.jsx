@@ -1,11 +1,8 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import MuxModel from '../MuxModel';
 import MuxWidget from '../MuxWidget';
-
-const { engine } = global;
 
 it('should have 1 selection and 1 output port', () => {
   const model = new MuxModel({
@@ -13,9 +10,7 @@ it('should have 1 selection and 1 output port', () => {
     INPUT_NUMBER: 16,
   });
 
-  const { container } = render(
-    <MuxWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<MuxWidget model={model} />);
 
   const selection = container.querySelector('[data-name=selection]');
   const output = container.querySelector('[data-name=out]');
@@ -30,9 +25,7 @@ it('should have the amount of input ports determined by configuration', () => {
     INPUT_NUMBER: 4,
   });
 
-  const { container } = render(
-    <MuxWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<MuxWidget model={model} />);
 
   const ports = container.querySelectorAll('[data-name^=in]');
   expect(ports).toHaveLength(4);

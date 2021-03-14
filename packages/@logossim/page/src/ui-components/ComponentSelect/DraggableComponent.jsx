@@ -1,17 +1,21 @@
 import React from 'react';
 import Tooltip from 'react-tooltip';
 
+import DiagramContext from '@logossim/core/Diagram/DiagramContext';
+
 import styled from 'styled-components';
 
-const engineStub = {
-  registerListener: () => {},
-  getCanvas: () => {},
-  getPortCoords: () => ({
-    getWidth: () => {},
-    getHeight: () => {},
-    getTopLeft: () => {},
+const diagramEngineStub = {
+  getEngine: () => ({
+    registerListener: () => {},
+    getCanvas: () => {},
+    getPortCoords: () => ({
+      getWidth: () => {},
+      getHeight: () => {},
+      getTopLeft: () => {},
+    }),
+    getModel: () => ({ isLocked: () => false }),
   }),
-  getModel: () => ({ isLocked: () => false }),
 };
 
 const getTooltip = (error, disabled) => {
@@ -63,10 +67,9 @@ const DraggableComponent = ({
     {error ? (
       <ErrorWidget />
     ) : (
-      <Widget
-        engine={engineStub}
-        model={new Model(configurations, type)}
-      />
+      <DiagramContext.Provider value={diagramEngineStub}>
+        <Widget model={new Model(configurations, type)} />
+      </DiagramContext.Provider>
     )}
   </div>
 );

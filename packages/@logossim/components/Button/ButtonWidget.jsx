@@ -57,7 +57,7 @@ const PositionedPort = styled(Port)`
 `;
 
 const ButtonWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -81,7 +81,7 @@ const ButtonWidget = props => {
 
   return (
     <Shape selected={selected}>
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} />
       <Button
         ref={buttonRef}
         onMouseDown={() => model.onClick()}

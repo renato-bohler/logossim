@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { PortWidget } from '@projectstorm/react-diagrams';
 
 import styled from 'styled-components';
+
+import DiagramContext from '../Diagram/DiagramContext';
 
 const Circle = styled.div`
   width: 10px;
@@ -48,13 +50,19 @@ class Port extends PortWidget {
 
 /**
  * React Diagrams PortWidget implementation needs us to forward some
- * props in order to function properly.
+ * props in order to function properly. We have this HOC so that
+ * component widgets don't need to pass them every time.
  */
-const withProps = WrappedComponent => ({ ...props }) => (
-  <WrappedComponent
-    {...props}
-    port={props.model.getPort(props.name)}
-  />
-);
+const withProps = WrappedComponent => ({ ...props }) => {
+  const diagram = useContext(DiagramContext);
+
+  return (
+    <WrappedComponent
+      {...props}
+      port={props.model.getPort(props.name)}
+      engine={diagram.getEngine()}
+    />
+  );
+};
 
 export default withProps(Port);

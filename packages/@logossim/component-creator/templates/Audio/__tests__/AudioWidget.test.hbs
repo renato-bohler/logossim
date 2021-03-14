@@ -1,17 +1,15 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render } from '../../testUtils';
 
 import {{fileName name}}Model from '../{{fileName name}}Model';
 import {{fileName name}}Widget from '../{{fileName name}}Widget';
-
-const { engine } = global;
 
 it('should have 1 input port', () => {
   const model = new {{fileName name}}Model();
 
   const { container } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
 
   const ports = container.querySelectorAll('[data-name=in]');
@@ -24,7 +22,7 @@ it('should display a shadow when active', () => {
   spy.mockImplementation(() => true);
 
   const { getByTestId } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
   const body = getByTestId('body');
 
@@ -37,7 +35,7 @@ it('should not display a shadow when inactive', () => {
   spy.mockImplementation(() => false);
 
   const { getByTestId } = render(
-    <{{fileName name}}Widget model={model} engine={engine} />,
+    <{{fileName name}}Widget model={model} />,
   );
   const body = getByTestId('body');
 

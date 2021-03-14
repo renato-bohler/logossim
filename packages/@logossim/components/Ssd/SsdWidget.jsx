@@ -98,7 +98,7 @@ export const Shape = ({ segments, selected, icon }) => (
 );
 
 const LedWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -121,7 +121,6 @@ const LedWidget = props => {
           name={segment}
           model={model}
           position={model.getPositionForSegment(segment)}
-          engine={engine}
         />
       ))}
     </Wrapper>

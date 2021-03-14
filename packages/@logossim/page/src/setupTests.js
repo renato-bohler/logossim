@@ -43,18 +43,6 @@ document.createRange = () => ({
   },
 });
 
-// react-diagrams engine stub
-global.engine = {
-  registerListener: () => {},
-  getCanvas: () => {},
-  getPortCoords: () => ({
-    getWidth: () => {},
-    getHeight: () => {},
-    getTopLeft: () => {},
-  }),
-  getModel: () => ({ isLocked: () => false }),
-};
-
 global.addPort = function addPort(
   portName,
   { bits = 1 } = DEFAULT_PORT_CONFIGURATION,

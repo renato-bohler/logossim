@@ -51,15 +51,15 @@ export const Shape = ({ size = 30 }) => (
 );
 
 const BufferWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
 
   return (
     <Wrapper selected={selected}>
-      <PositionedPort name="in" model={model} engine={engine} />
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="in" model={model} />
+      <PositionedPort name="out" model={model} />
       <Shape />
     </Wrapper>
   );

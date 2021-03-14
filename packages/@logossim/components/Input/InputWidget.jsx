@@ -82,7 +82,7 @@ export const Pin = styled.button`
 `;
 
 const InputWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     configurations: { DATA_BITS },
@@ -108,7 +108,7 @@ const InputWidget = props => {
           );
         })}
       </PinContainer>
-      <PositionedPort name="out" model={model} engine={engine} />
+      <PositionedPort name="out" model={model} />
     </Shape>
   );
 };

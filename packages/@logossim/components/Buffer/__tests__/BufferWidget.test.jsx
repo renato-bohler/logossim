@@ -1,20 +1,16 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render } from '../../testUtils';
 
 import BufferModel from '../BufferModel';
 import BufferWidget from '../BufferWidget';
-
-const { engine } = global;
 
 it('should have 1 input and 1 output port', () => {
   const model = new BufferModel({
     DATA_BITS: 1,
   });
 
-  const { container } = render(
-    <BufferWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<BufferWidget model={model} />);
 
   const input = container.querySelector('[data-name=in]');
   expect(input).toBeTruthy();

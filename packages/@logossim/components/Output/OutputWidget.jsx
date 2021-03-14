@@ -133,7 +133,7 @@ const showAsNumber = (input, format) => {
 };
 
 const OutputWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     configurations: { OUTPUT_FORMAT, DATA_BITS },
@@ -152,7 +152,7 @@ const OutputWidget = props => {
           ? mapBits(model)
           : showAsNumber(model.getInput(), OUTPUT_FORMAT)}
       </PinContainer>
-      <PositionedPort name="in" model={model} engine={engine} />
+      <PositionedPort name="in" model={model} />
     </Shape>
   );
 };

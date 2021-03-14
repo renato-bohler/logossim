@@ -1,11 +1,9 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
+import { render } from '../../testUtils';
 
 import ControlledBufferModel from '../ControlledBufferModel';
 import ControlledBufferWidget from '../ControlledBufferWidget';
-
-const { engine } = global;
 
 it('should have 2 input and 1 output port', () => {
   const model = new ControlledBufferModel({
@@ -13,7 +11,7 @@ it('should have 2 input and 1 output port', () => {
   });
 
   const { container } = render(
-    <ControlledBufferWidget model={model} engine={engine} />,
+    <ControlledBufferWidget model={model} />,
   );
 
   const control = container.querySelector('[data-name=control]');

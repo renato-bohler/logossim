@@ -1,20 +1,15 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import NotModel from '../NotModel';
 import NotWidget from '../NotWidget';
-
-const { engine } = global;
 
 it('should have 1 input and 1 output port', () => {
   const model = new NotModel({
     DATA_BITS: 1,
   });
 
-  const { container } = render(
-    <NotWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<NotWidget model={model} />);
 
   const input = container.querySelector('[data-name=in]');
   expect(input).toBeTruthy();

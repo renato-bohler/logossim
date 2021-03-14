@@ -1,18 +1,13 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import SsdModel from '../SsdModel';
 import SsdWidget from '../SsdWidget';
-
-const { engine } = global;
 
 it('should have all input ports', () => {
   const model = new SsdModel();
 
-  const { container } = render(
-    <SsdWidget model={model} engine={engine} />,
-  );
+  const { container } = render(<SsdWidget model={model} />);
 
   const portA = container.querySelector('[data-name=a]');
   const portB = container.querySelector('[data-name=b]');
@@ -48,9 +43,7 @@ it('should turn on the correct display segments when configured with active on h
     return [0];
   });
 
-  const { getByTestId } = render(
-    <SsdWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<SsdWidget model={model} />);
 
   const a = getByTestId('a');
   const b = getByTestId('b');
@@ -86,9 +79,7 @@ it('should turn on the correct display segments when configured with active on h
     return [0];
   });
 
-  const { getByTestId } = render(
-    <SsdWidget model={model} engine={engine} />,
-  );
+  const { getByTestId } = render(<SsdWidget model={model} />);
 
   const a = getByTestId('a');
   const b = getByTestId('b');
