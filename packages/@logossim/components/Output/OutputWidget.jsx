@@ -68,7 +68,7 @@ export const Shape = styled.div`
 
 export const PinContainer = styled.span`
   display: flex;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
   font-family: monospace;
