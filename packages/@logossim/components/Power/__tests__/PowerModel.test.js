@@ -14,7 +14,7 @@ it('should add output port on initialization', () => {
     DATA_BITS: 16,
   });
 
-  expect(addOutputSpy).toHaveBeenCalledWith('out', 16);
+  expect(addOutputSpy).toHaveBeenCalledWith('out', { bits: 16 });
 });
 
 it('should always return high values', () => {

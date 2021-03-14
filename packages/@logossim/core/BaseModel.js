@@ -2,6 +2,7 @@ import { Point } from '@projectstorm/geometry';
 import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
+import { DEFAULT_PORT_CONFIGURATION } from './Simulation/const';
 import { emit } from './Simulation/SimulationEngine';
 import {
   adjustValueToBits,
@@ -30,22 +31,22 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addInputPort(arg, bits = 1) {
-    const port = getPort(arg);
+  addInputPort(name, { bits = 1 } = DEFAULT_PORT_CONFIGURATION) {
+    const port = getPort(name);
     port.setAsInput();
-    if (typeof arg === 'string') port.setBits(bits);
+    if (typeof name === 'string') port.setBits(bits);
     super.addPort(port);
   }
 
-  addOutputPort(arg, bits = 1) {
-    const port = getPort(arg);
+  addOutputPort(name, { bits = 1 } = DEFAULT_PORT_CONFIGURATION) {
+    const port = getPort(name);
     port.setAsOutput();
-    if (typeof arg === 'string') port.setBits(bits);
+    if (typeof name === 'string') port.setBits(bits);
     super.addPort(port);
   }
 
-  addPort(arg, bits = 1) {
-    const port = getPort(arg);
+  addPort(name, { bits = 1 } = DEFAULT_PORT_CONFIGURATION) {
+    const port = getPort(name);
 
     if (port.isInput()) {
       this.addInputPort(port, bits);
@@ -62,8 +63,8 @@ export default class BaseModel extends NodeModel {
     );
   }
 
-  removePort(arg) {
-    const port = getPort(arg);
+  removePort(name) {
+    const port = getPort(name);
     super.removePort(port);
   }
 

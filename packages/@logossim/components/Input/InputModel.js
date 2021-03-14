@@ -5,7 +5,7 @@ export default class InputModel extends BaseModel {
     this.dataBits = Number(configurations.DATA_BITS);
     this.threeState = configurations.THREE_STATE === 'true';
 
-    this.addOutputPort('out', this.dataBits);
+    this.addOutputPort('out', { bits: this.dataBits });
   }
 
   onSimulationStart() {

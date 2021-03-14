@@ -20,7 +20,7 @@ it('should add ports on initialization', () => {
     DATA_BITS: 16,
   });
 
-  expect(addInputSpy).toHaveBeenCalledWith('in', 16);
+  expect(addInputSpy).toHaveBeenCalledWith('in', { bits: 16 });
   [...Array(16).keys()].forEach(i => {
     expect(addOutputSpy).toHaveBeenNthCalledWith(i + 1, `out${i}`);
   });

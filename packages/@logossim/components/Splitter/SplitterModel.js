@@ -4,7 +4,7 @@ export default class SplitterModel extends BaseModel {
   initialize(configurations) {
     this.bits = Number(configurations.DATA_BITS);
 
-    this.addInputPort('in', this.bits);
+    this.addInputPort('in', { bits: this.bits });
     for (let i = 0; i < this.bits; i += 1) {
       this.addOutputPort(`out${i}`);
     }

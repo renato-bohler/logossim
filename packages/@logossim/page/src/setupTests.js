@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { DEFAULT_PORT_CONFIGURATION } from '@logossim/core/Simulation/const';
 import '@testing-library/jest-dom/extend-expect';
 
 // Mocks `worker-loader`
@@ -54,6 +55,9 @@ global.engine = {
   getModel: () => ({ isLocked: () => false }),
 };
 
-global.addPort = function addPort(portName, dataBits = 1) {
-  this.ports[portName] = { bits: dataBits };
+global.addPort = function addPort(
+  portName,
+  { bits = 1 } = DEFAULT_PORT_CONFIGURATION,
+) {
+  this.ports[portName] = { bits };
 };

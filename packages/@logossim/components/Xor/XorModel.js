@@ -10,9 +10,9 @@ export default class XorModel extends BaseModel {
     );
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
-      this.addInputPort(`in${i}`, this.bits);
+      this.addInputPort(`in${i}`, { bits: this.bits });
     }
-    this.addOutputPort('out', this.bits);
+    this.addOutputPort('out', { bits: this.bits });
   }
 
   exclusiveOrAt(values, index) {

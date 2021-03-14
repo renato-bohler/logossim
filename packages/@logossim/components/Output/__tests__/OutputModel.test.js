@@ -9,5 +9,5 @@ it('should add ports on initialization', () => {
 
   new OutputModel({ DATA_BITS: 1 });
 
-  expect(spy).toHaveBeenCalledWith('in', 1);
+  expect(spy).toHaveBeenCalledWith('in', { bits: 1 });
 });

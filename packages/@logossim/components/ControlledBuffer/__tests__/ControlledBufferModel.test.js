@@ -21,8 +21,8 @@ it('should add ports on initialization', () => {
   });
 
   expect(addInputSpy).toHaveBeenCalledWith('control');
-  expect(addInputSpy).toHaveBeenCalledWith('in', 4);
-  expect(addOutputSpy).toHaveBeenCalledWith('out', 4);
+  expect(addInputSpy).toHaveBeenCalledWith('in', { bits: 4 });
+  expect(addOutputSpy).toHaveBeenCalledWith('out', { bits: 4 });
 });
 
 it('should output floating values when control is not set', () => {

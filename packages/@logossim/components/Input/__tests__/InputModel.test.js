@@ -9,7 +9,7 @@ it('should add ports on initialization', () => {
 
   new InputModel({ DATA_BITS: 1 });
 
-  expect(spy).toHaveBeenCalledWith('out', 1);
+  expect(spy).toHaveBeenCalledWith('out', { bits: 1 });
 });
 
 it('should emit on simulation start', () => {

@@ -20,10 +20,12 @@ it('should add ports on initialization (2 outputs)', () => {
     OUTPUT_NUMBER: 2,
   });
 
-  expect(addInputSpy).toHaveBeenCalledWith('in', 16);
-  expect(addInputSpy).toHaveBeenCalledWith('selection', 1);
+  expect(addInputSpy).toHaveBeenCalledWith('in', { bits: 16 });
+  expect(addInputSpy).toHaveBeenCalledWith('selection', { bits: 1 });
   [...Array(2).keys()].forEach(i => {
-    expect(addOutputSpy).toHaveBeenCalledWith(`out${i}`, 16);
+    expect(addOutputSpy).toHaveBeenCalledWith(`out${i}`, {
+      bits: 16,
+    });
   });
 });
 
@@ -33,10 +35,10 @@ it('should add ports on initialization (4 outputs)', () => {
     OUTPUT_NUMBER: 4,
   });
 
-  expect(addInputSpy).toHaveBeenCalledWith('in', 4);
-  expect(addInputSpy).toHaveBeenCalledWith('selection', 2);
+  expect(addInputSpy).toHaveBeenCalledWith('in', { bits: 4 });
+  expect(addInputSpy).toHaveBeenCalledWith('selection', { bits: 2 });
   [...Array(4).keys()].forEach(i => {
-    expect(addOutputSpy).toHaveBeenCalledWith(`out${i}`, 4);
+    expect(addOutputSpy).toHaveBeenCalledWith(`out${i}`, { bits: 4 });
   });
 });
 
@@ -46,10 +48,10 @@ it('should add ports on initialization (16 outputs)', () => {
     OUTPUT_NUMBER: 16,
   });
 
-  expect(addInputSpy).toHaveBeenCalledWith('in', 1);
-  expect(addInputSpy).toHaveBeenCalledWith('selection', 4);
+  expect(addInputSpy).toHaveBeenCalledWith('in', { bits: 1 });
+  expect(addInputSpy).toHaveBeenCalledWith('selection', { bits: 4 });
   [...Array(16).keys()].forEach(i => {
-    expect(addOutputSpy).toHaveBeenCalledWith(`out${i}`, 1);
+    expect(addOutputSpy).toHaveBeenCalledWith(`out${i}`, { bits: 1 });
   });
 });
 

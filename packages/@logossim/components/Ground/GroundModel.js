@@ -4,7 +4,7 @@ export default class GroundModel extends BaseModel {
   initialize(configurations) {
     this.dataBits = Number(configurations.DATA_BITS);
 
-    this.addOutputPort('out', this.dataBits);
+    this.addOutputPort('out', { bits: this.dataBits });
   }
 
   onSimulationStart() {

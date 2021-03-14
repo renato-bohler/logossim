@@ -4,7 +4,7 @@ export default class OutputModel extends BaseModel {
   initialize(configurations) {
     this.dataBits = Number(configurations.DATA_BITS);
 
-    this.addInputPort('in', this.dataBits);
+    this.addInputPort('in', { bits: this.dataBits });
   }
 
   getInput() {
