@@ -44,6 +44,7 @@ class Port extends PortWidget {
         data-nodeid={model.getID()}
         port={port}
         link={port.getMainLink()}
+        title={name}
       />
     );
   }
