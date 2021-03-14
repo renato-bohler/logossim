@@ -64,12 +64,11 @@ const SplitterWidget = props => {
 
   return (
     <Wrapper dataBits={dataBits}>
-      <PositionedPort name="in" model={model} />
+      <PositionedPort name="in" />
       {outputPorts.map((port, i) => (
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
           position={(i + 1) * 15}
         />
       ))}

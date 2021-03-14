@@ -81,7 +81,7 @@ const ButtonWidget = props => {
 
   return (
     <Shape selected={selected}>
-      <PositionedPort name="out" model={model} />
+      <PositionedPort name="out" />
       <Button
         ref={buttonRef}
         onMouseDown={() => model.onClick()}

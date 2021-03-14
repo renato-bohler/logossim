@@ -4,6 +4,7 @@ import { PortWidget } from '@projectstorm/react-diagrams';
 
 import styled from 'styled-components';
 
+import ComponentContext from '../ComponentContext';
 import DiagramContext from '../Diagram/DiagramContext';
 
 const Circle = styled.div`
@@ -55,12 +56,14 @@ class Port extends PortWidget {
  */
 const withProps = WrappedComponent => ({ ...props }) => {
   const diagram = useContext(DiagramContext);
+  const model = useContext(ComponentContext);
 
   return (
     <WrappedComponent
       {...props}
-      port={props.model.getPort(props.name)}
+      port={model.getPort(props.name)}
       engine={diagram.getEngine()}
+      model={model}
     />
   );
 };

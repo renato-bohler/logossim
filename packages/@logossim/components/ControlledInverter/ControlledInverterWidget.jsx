@@ -61,9 +61,9 @@ const ControlledInverterWidget = props => {
 
   return (
     <Wrapper selected={selected}>
-      <PositionedPort name="control" model={model} />
-      <PositionedPort name="in" model={model} />
-      <PositionedPort name="out" model={model} />
+      <PositionedPort name="control" />
+      <PositionedPort name="in" />
+      <PositionedPort name="out" />
       <Shape />
     </Wrapper>
   );

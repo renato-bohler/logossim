@@ -55,7 +55,7 @@ const BuzzerWidget = props => {
 
   return (
     <Shape selected={selected} isActive={model.isActive()}>
-      <PositionedPort name="in" model={model} />
+      <PositionedPort name="in" />
     </Shape>
   );
 };

@@ -68,11 +68,10 @@ const JoinerWidget = props => {
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
           position={i * 15}
         />
       ))}
-      <PositionedPort name="out" model={model} />
+      <PositionedPort name="out" />
       <Shape selected={selected} dataBits={dataBits} />
     </Wrapper>
   );

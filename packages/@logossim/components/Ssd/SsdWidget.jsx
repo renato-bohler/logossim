@@ -119,7 +119,6 @@ const LedWidget = props => {
         <PositionedPort
           key={segment}
           name={segment}
-          model={model}
           position={model.getPositionForSegment(segment)}
         />
       ))}

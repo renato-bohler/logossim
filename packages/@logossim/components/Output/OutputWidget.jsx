@@ -152,7 +152,7 @@ const OutputWidget = props => {
           ? mapBits(model)
           : showAsNumber(model.getInput(), OUTPUT_FORMAT)}
       </PinContainer>
-      <PositionedPort name="in" model={model} />
+      <PositionedPort name="in" />
     </Shape>
   );
 };

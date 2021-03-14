@@ -1,6 +1,7 @@
 import React from 'react';
 import Tooltip from 'react-tooltip';
 
+import ComponentContext from '@logossim/core/ComponentContext';
 import DiagramContext from '@logossim/core/Diagram/DiagramContext';
 
 import styled from 'styled-components';
@@ -37,41 +38,47 @@ const DraggableComponent = ({
   handleClose,
   error,
   disabled,
-}) => (
-  <div
-    draggable={!error && !disabled}
-    onDragStart={event => {
-      event.dataTransfer.setDragImage(
-        event.currentTarget.children[0],
-        0,
-        0,
-      );
+}) => {
+  const model = new Model(configurations, type);
 
-      event.dataTransfer.setData(
-        'component',
-        JSON.stringify({
-          type,
-          configurations,
-        }),
-      );
+  return (
+    <div
+      draggable={!error && !disabled}
+      onDragStart={event => {
+        event.dataTransfer.setDragImage(
+          event.currentTarget.children[0],
+          0,
+          0,
+        );
 
-      requestAnimationFrame(() => {
-        Tooltip.hide();
-        handleClose();
-      });
-    }}
-    data-for="tooltip"
-    data-tip={getTooltip(error, disabled)}
-    data-place="bottom"
-  >
-    {error ? (
-      <ErrorWidget />
-    ) : (
-      <DiagramContext.Provider value={diagramEngineStub}>
-        <Widget model={new Model(configurations, type)} />
-      </DiagramContext.Provider>
-    )}
-  </div>
-);
+        event.dataTransfer.setData(
+          'component',
+          JSON.stringify({
+            type,
+            configurations,
+          }),
+        );
+
+        requestAnimationFrame(() => {
+          Tooltip.hide();
+          handleClose();
+        });
+      }}
+      data-for="tooltip"
+      data-tip={getTooltip(error, disabled)}
+      data-place="bottom"
+    >
+      {error ? (
+        <ErrorWidget />
+      ) : (
+        <DiagramContext.Provider value={diagramEngineStub}>
+          <ComponentContext.Provider value={model}>
+            <Widget model={model} />
+          </ComponentContext.Provider>
+        </DiagramContext.Provider>
+      )}
+    </div>
+  );
+};
 
 export default DraggableComponent;

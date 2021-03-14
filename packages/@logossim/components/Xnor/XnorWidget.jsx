@@ -121,7 +121,6 @@ const XnorWidget = props => {
         <Fragment key={port.getName()}>
           <PositionedPort
             name={port.getName()}
-            model={model}
             position={portPositions[i]}
           />
           {(portPositions[i] < 1 || portPositions[i] > 5) && (
@@ -132,7 +131,7 @@ const XnorWidget = props => {
           )}
         </Fragment>
       ))}
-      <PositionedPort name="out" model={model} />
+      <PositionedPort name="out" />
       <Shape portPositions={portPositions} />
     </Wrapper>
   );

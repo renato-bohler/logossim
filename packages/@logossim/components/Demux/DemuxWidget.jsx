@@ -60,15 +60,13 @@ const DemuxWidget = props => {
     <Wrapper outputNumber={outputNumber}>
       <PositionedPort
         name="in"
-        model={model}
         position={((outputNumber + 2) * 15) / 2}
       />
-      <PositionedPort name="selection" model={model} />
+      <PositionedPort name="selection" />
       {outputPorts.map((port, i) => (
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
           position={(i + 1) * 15}
         />
       ))}

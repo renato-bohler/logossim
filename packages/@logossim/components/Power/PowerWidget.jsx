@@ -57,7 +57,7 @@ const PowerWidget = props => {
   return (
     <Wrapper>
       <Shape selected={selected} dataBits={model.dataBits} />
-      <PositionedPort name="out" model={model} />
+      <PositionedPort name="out" />
     </Wrapper>
   );
 };
