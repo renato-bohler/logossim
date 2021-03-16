@@ -39,7 +39,7 @@ export class GenericComponent {
       const previous = port.value;
 
       let current = previous;
-      let error = false;
+      let errorOrFloating = false;
 
       if (values[port.name] !== undefined) {
         current = values[port.name];
@@ -50,13 +50,20 @@ export class GenericComponent {
           );
         } else if (current === 'x' || current === 'e') {
           current = Array(port.bits).fill(current);
+          errorOrFloating = true;
         } else if (!Array.isArray(current)) {
-          error = true;
+          errorOrFloating = true;
         }
       }
 
-      const risingEdge = !error && previous < current;
-      const fallingEdge = !error && previous > current;
+      current = current.map(bit => {
+        if (bit === 'x') return port.defaultFloatingValue;
+        if (bit === 'e') return port.defaultErrorValue;
+        return bit;
+      });
+
+      const risingEdge = !errorOrFloating && previous < current;
+      const fallingEdge = !errorOrFloating && previous > current;
 
       return {
         ...port,
@@ -279,13 +286,17 @@ const deserialize = serialized => {
                 .filter(port => port.input)
                 .map(port => ({
                   ...port,
-                  value: new Array(port.bits || 1).fill('x'),
+                  value: new Array(port.bits || 1).fill(
+                    port.defaultFloatingValue,
+                  ),
                 })),
               output: component.ports
                 .filter(port => !port.input)
                 .map(port => ({
                   ...port,
-                  value: new Array(port.bits || 1).fill('x'),
+                  value: new Array(port.bits || 1).fill(
+                    port.defaultFloatingValue,
+                  ),
                 })),
             },
           },

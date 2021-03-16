@@ -56,6 +56,8 @@ const serializePorts = ports =>
     name: port.getName(),
     input: port.isInput(),
     bits: port.getBits(),
+    defaultFloatingValue: port.getDefaultFloatingValue(),
+    defaultErrorValue: port.getDefaultErrorValue(),
   }));
 
 /**

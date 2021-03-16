@@ -2,7 +2,6 @@ import { Point } from '@projectstorm/geometry';
 import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
-import { DEFAULT_PORT_CONFIGURATION } from './Simulation/const';
 import { emit } from './Simulation/SimulationEngine';
 import {
   adjustValueToBits,
@@ -31,30 +30,38 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addInputPort(name, { bits = 1 } = DEFAULT_PORT_CONFIGURATION) {
+  addInputPort(name, { bits, floating, error } = {}) {
     const port = getPort(name);
     port.setAsInput();
-    if (typeof name === 'string') port.setBits(bits);
+    if (typeof name === 'string') {
+      port.setBits(bits || 1);
+      port.setDefaultFloatingValue(floating || 'x');
+      port.setDefaultErrorValue(error || 'e');
+    }
     super.addPort(port);
   }
 
-  addOutputPort(name, { bits = 1 } = DEFAULT_PORT_CONFIGURATION) {
+  addOutputPort(name, { bits } = {}) {
     const port = getPort(name);
     port.setAsOutput();
-    if (typeof name === 'string') port.setBits(bits);
+    if (typeof name === 'string') {
+      port.setBits(bits || 1);
+      port.setDefaultFloatingValue('x');
+      port.setDefaultErrorValue('e');
+    }
     super.addPort(port);
   }
 
-  addPort(name, { bits = 1 } = DEFAULT_PORT_CONFIGURATION) {
+  addPort(name, configuration) {
     const port = getPort(name);
 
     if (port.isInput()) {
-      this.addInputPort(port, bits);
+      this.addInputPort(port, configuration);
       return;
     }
 
     if (port.isOutput()) {
-      this.addOutputPort(port, bits);
+      this.addOutputPort(port, configuration);
       return;
     }
 

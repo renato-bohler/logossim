@@ -84,8 +84,9 @@ const Snackbar = ({ open, handleClose, message, type, timeout }) => {
       onClick={handleClose}
     >
       <Message>
-        {message.split(`\n`).map(string => (
-          <div key={string}>{string}</div>
+        {message.split(`\n`).map((string, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={index}>{string}</div>
         ))}
       </Message>
 
