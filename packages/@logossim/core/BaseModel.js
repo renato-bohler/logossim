@@ -35,8 +35,8 @@ export default class BaseModel extends NodeModel {
     port.setAsInput();
     if (typeof name === 'string') {
       port.setBits(bits || 1);
-      port.setDefaultFloatingValue(floating || 'x');
-      port.setDefaultErrorValue(error || 'e');
+      port.setDefaultFloatingValue(floating ?? 'x');
+      port.setDefaultErrorValue(error ?? 'e');
     }
     super.addPort(port);
   }
