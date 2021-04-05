@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import BufferModel from '../BufferModel';
 
 const { addPort } = global;
@@ -56,6 +53,6 @@ it('should return the value unmodified for multiple bits', () => {
       in: 0b0101_1010,
     }),
   ).toEqual({
-    out: convertNumberValueToArray(0b0101_1010, DATA_BITS),
+    out: (0b0101_1010).asArray(DATA_BITS),
   });
 });

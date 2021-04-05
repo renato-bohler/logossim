@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import ClockModel from '../ClockModel';
 
 const { addPort } = global;

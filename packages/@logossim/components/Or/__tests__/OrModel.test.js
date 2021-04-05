@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import OrModel from '../OrModel';
 
 const { addPort } = global;
@@ -109,6 +106,6 @@ it('should return bitwise OR for multiple data bits', () => {
       in3: 0b0101_0101,
     }),
   ).toEqual({
-    out: convertNumberValueToArray(0b0111_1111, DATA_BITS),
+    out: (0b0111_1111).asArray(DATA_BITS),
   });
 });

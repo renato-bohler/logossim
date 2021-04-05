@@ -6,7 +6,7 @@
 
 /* ---------------------------------------------------------------- */
 import findMeshes from './mesh';
-import { convertNumberValueToArray, isValueEqual } from './utils';
+import { isValueEqual } from './utils';
 
 /**
  * This class represents a generic component. It receives deserialized
@@ -24,6 +24,12 @@ export class GenericComponent {
     });
 
     this.initialize(properties.configurations);
+  }
+
+  getPort(name) {
+    return [...this.ports.input, ...this.ports.output].find(
+      port => port.name === name,
+    );
   }
 
   getInputPort(name) {
@@ -44,10 +50,7 @@ export class GenericComponent {
       if (values[port.name] !== undefined) {
         current = values[port.name];
         if (typeof current === 'number') {
-          current = convertNumberValueToArray(
-            values[port.name],
-            port.bits,
-          );
+          current = values[port.name].asArray(port.bits);
         } else if (current === 'x' || current === 'e') {
           current = Array(port.bits).fill(current);
           errorOrFloating = true;
@@ -57,10 +60,14 @@ export class GenericComponent {
       }
 
       current = current.map(bit => {
-        if (bit === 'x') return port.defaultFloatingValue;
-        if (bit === 'e') return port.defaultErrorValue;
+        if (bit === 'x') return port.defaultFloatingValue ?? 'x';
+        if (bit === 'e') return port.defaultErrorValue ?? 'e';
         return bit;
       });
+
+      if (previous.some(bit => bit === 'x' || bit === 'e')) {
+        errorOrFloating = true;
+      }
 
       const risingEdge = !errorOrFloating && previous < current;
       const fallingEdge = !errorOrFloating && previous > current;
@@ -83,6 +90,17 @@ export class GenericComponent {
 
   setOutputValues(values) {
     this.setValues(values, 'output');
+  }
+
+  setWireValues(values) {
+    this.ports.output = this.ports.output.map(port => {
+      if (!values[port.name]) return port;
+
+      return {
+        ...port,
+        linkValue: values[port.name],
+      };
+    });
   }
 
   hasOutputChanged(values) {
@@ -266,6 +284,20 @@ const deserializeModels = models =>
       {},
     );
 
+const deserializePort = port => ({
+  ...port,
+  value: new Array(port.bits || 1).fill(port.defaultFloatingValue),
+  linkValue: new Array(port.bits || 1).fill(
+    port.defaultFloatingValue,
+  ),
+  getValue() {
+    return this.value;
+  },
+  getWireValue() {
+    return this.linkValue;
+  },
+});
+
 /**
  * Deserialize a given diagram (serialized), generating
  * `GenericComponent` instances with its given methods and properties.
@@ -284,20 +316,10 @@ const deserialize = serialized => {
             ports: {
               input: component.ports
                 .filter(port => port.input)
-                .map(port => ({
-                  ...port,
-                  value: new Array(port.bits || 1).fill(
-                    port.defaultFloatingValue,
-                  ),
-                })),
+                .map(deserializePort),
               output: component.ports
                 .filter(port => !port.input)
-                .map(port => ({
-                  ...port,
-                  value: new Array(port.bits || 1).fill(
-                    port.defaultFloatingValue,
-                  ),
-                })),
+                .map(deserializePort),
             },
           },
           models[component.type],

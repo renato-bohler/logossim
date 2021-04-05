@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import NandModel from '../NandModel';
 
 const { addPort } = global;
@@ -75,5 +72,5 @@ it('should return bitwise NAND for multiple data bits', () => {
       in2: 0b0101,
       in3: 0b1001,
     }),
-  ).toEqual({ out: convertNumberValueToArray(0b1110, DATA_BITS) });
+  ).toEqual({ out: (0b1110).asArray(DATA_BITS) });
 });

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Port } from '@logossim/core';
-import { convertArrayValueToNumber } from '@logossim/core/Simulation/utils';
 
 import styled from 'styled-components';
 
@@ -101,6 +100,12 @@ const ErrorMessage = styled.span`
   font-family: monospace;
 `;
 
+const FloatingMessage = styled.span`
+  color: var(--value-floating);
+  font-weight: bold;
+  font-family: monospace;
+`;
+
 const mapBits = model => {
   const {
     configurations: { DATA_BITS },
@@ -123,8 +128,10 @@ const mapBits = model => {
 };
 
 const showAsNumber = (input, format) => {
-  const number = convertArrayValueToNumber(input);
+  const number = input.asNumber();
   if (number === 'e') return <ErrorMessage>(error)</ErrorMessage>;
+  if (number === 'x')
+    return <FloatingMessage>(floating)</FloatingMessage>;
 
   if (format === 'DECIMAL') return number;
   if (format === 'HEXADECIMAL')

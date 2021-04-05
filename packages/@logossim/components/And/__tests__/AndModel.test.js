@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import AndModel from '../AndModel';
 
 const { addPort } = global;
@@ -75,5 +72,5 @@ it('should return bitwise AND for multiple data bits', () => {
       in2: 0b0101,
       in3: 0b1001,
     }),
-  ).toEqual({ out: convertNumberValueToArray(0b0001, DATA_BITS) });
+  ).toEqual({ out: (0b0001).asArray(DATA_BITS) });
 });

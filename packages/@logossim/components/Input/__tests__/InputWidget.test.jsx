@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import { render } from '../../testUtils';
 import InputModel from '../InputModel';
 import InputWidget from '../InputWidget';
@@ -66,7 +64,7 @@ it('should display pin values accordingly', () => {
   const model = new InputModel({ DATA_BITS });
   const spy = jest.spyOn(model, 'getOutput');
   spy.mockImplementation(() =>
-    convertNumberValueToArray(0b1010_1010_1010_1010, DATA_BITS),
+    (0b1010_1010_1010_1010).asArray(DATA_BITS),
   );
 
   const { getAllByRole } = render(<InputWidget model={model} />);

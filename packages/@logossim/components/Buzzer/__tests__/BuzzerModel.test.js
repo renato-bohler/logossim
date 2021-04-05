@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import BuzzerModel from '../BuzzerModel';
 
 const { addPort } = global;

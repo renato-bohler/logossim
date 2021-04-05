@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import GroundModel from '../GroundModel';
 
 const { addPort } = global;

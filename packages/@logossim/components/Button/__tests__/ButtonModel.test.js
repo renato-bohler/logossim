@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import ButtonModel from '../ButtonModel';
 
 const { addPort } = global;

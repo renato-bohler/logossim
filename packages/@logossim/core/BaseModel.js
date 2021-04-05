@@ -3,15 +3,11 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';
-import {
-  adjustValueToBits,
-  convertNumberValueToArray,
-  isValueValid,
-} from './Simulation/utils';
+import { adjustValueToBits, isValueValid } from './Simulation/utils';
 
-const getPort = port => {
-  if (port instanceof PortModel) return port;
-  return new PortModel({ name: port });
+const getPort = nameOrInstance => {
+  if (nameOrInstance instanceof PortModel) return nameOrInstance;
+  return new PortModel({ name: nameOrInstance });
 };
 
 export default class BaseModel extends NodeModel {
@@ -30,10 +26,10 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addInputPort(name, { bits, floating, error } = {}) {
-    const port = getPort(name);
+  addInputPort(nameOrInstance, { bits, floating, error } = {}) {
+    const port = getPort(nameOrInstance);
     port.setAsInput();
-    if (typeof name === 'string') {
+    if (typeof nameOrInstance === 'string') {
       port.setBits(bits || 1);
       port.setDefaultFloatingValue(floating ?? 'x');
       port.setDefaultErrorValue(error ?? 'e');
@@ -41,10 +37,10 @@ export default class BaseModel extends NodeModel {
     super.addPort(port);
   }
 
-  addOutputPort(name, { bits } = {}) {
-    const port = getPort(name);
+  addOutputPort(nameOrInstance, { bits } = {}) {
+    const port = getPort(nameOrInstance);
     port.setAsOutput();
-    if (typeof name === 'string') {
+    if (typeof nameOrInstance === 'string') {
       port.setBits(bits || 1);
       port.setDefaultFloatingValue('x');
       port.setDefaultErrorValue('e');
@@ -52,8 +48,8 @@ export default class BaseModel extends NodeModel {
     super.addPort(port);
   }
 
-  addPort(name, configuration) {
-    const port = getPort(name);
+  addPort(nameOrInstance, configuration) {
+    const port = getPort(nameOrInstance);
 
     if (port.isInput()) {
       this.addInputPort(port, configuration);
@@ -132,10 +128,7 @@ export default class BaseModel extends NodeModel {
         const { bits } = this.getPort(portName);
         let value = portValue;
         if (typeof value === 'number') {
-          value = convertNumberValueToArray(
-            adjustValueToBits(portValue, bits),
-            bits,
-          );
+          value = adjustValueToBits(portValue, bits).asArray(bits);
         } else if (value === 'x' || value === 'e') {
           value = Array(bits).fill(value);
         }

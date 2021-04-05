@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import PowerModel from '../PowerModel';
 
 const { addPort } = global;

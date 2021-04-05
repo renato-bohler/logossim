@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import MuxModel from '../MuxModel';
 
 const { addPort } = global;
@@ -80,7 +77,7 @@ it('should correctly select the input based on selection value', () => {
         in15: 0b1111,
       }),
     ).toEqual({
-      out: convertNumberValueToArray(i, DATA_BITS),
+      out: i.asArray(DATA_BITS),
     });
   });
 });

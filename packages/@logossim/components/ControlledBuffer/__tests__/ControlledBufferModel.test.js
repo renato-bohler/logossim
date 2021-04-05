@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import ControlledBufferModel from '../ControlledBufferModel';
 
 const { addPort } = global;

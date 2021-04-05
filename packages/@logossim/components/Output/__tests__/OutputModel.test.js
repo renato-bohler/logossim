@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import OutputModel from '../OutputModel';
 
 const { addPort } = global;

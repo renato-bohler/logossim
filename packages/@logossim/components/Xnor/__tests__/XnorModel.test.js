@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import XnorModel from '../XnorModel';
 
 const { addPort } = global;
@@ -169,7 +166,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
         in3: 0b0101_0001,
       }),
     ).toEqual({
-      out: convertNumberValueToArray(0b1111_0000, DATA_BITS),
+      out: (0b1111_0000).asArray(DATA_BITS),
     });
   });
 });
@@ -292,7 +289,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
         in3: 0b0101_0101,
       }),
     ).toEqual({
-      out: convertNumberValueToArray(0b1011_0100, DATA_BITS),
+      out: (0b1011_0100).asArray(DATA_BITS),
     });
   });
 });

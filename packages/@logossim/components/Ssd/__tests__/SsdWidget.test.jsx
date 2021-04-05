@@ -54,14 +54,14 @@ it('should turn on the correct display segments when configured with active on h
   const g = getByTestId('g');
   const dp = getByTestId('dp');
 
-  expect(a).toHaveAttribute('fill', '#000000ff');
-  expect(b).toHaveAttribute('fill', '#ff0000ff');
-  expect(c).toHaveAttribute('fill', '#000000ff');
-  expect(d).toHaveAttribute('fill', '#ff0000ff');
-  expect(e).toHaveAttribute('fill', '#000000ff');
-  expect(f).toHaveAttribute('fill', '#ff0000ff');
-  expect(g).toHaveAttribute('fill', '#000000ff');
-  expect(dp).toHaveAttribute('fill', '#ff0000ff');
+  expect(a).toHaveAttribute('fill', '#000000');
+  expect(b).toHaveAttribute('fill', '#ff0000');
+  expect(c).toHaveAttribute('fill', '#000000');
+  expect(d).toHaveAttribute('fill', '#ff0000');
+  expect(e).toHaveAttribute('fill', '#000000');
+  expect(f).toHaveAttribute('fill', '#ff0000');
+  expect(g).toHaveAttribute('fill', '#000000');
+  expect(dp).toHaveAttribute('fill', '#ff0000');
 });
 
 it('should turn on the correct display segments when configured with active on high', () => {
@@ -90,12 +90,12 @@ it('should turn on the correct display segments when configured with active on h
   const g = getByTestId('g');
   const dp = getByTestId('dp');
 
-  expect(a).toHaveAttribute('fill', '#ff0000ff');
-  expect(b).toHaveAttribute('fill', '#000000ff');
-  expect(c).toHaveAttribute('fill', '#ff0000ff');
-  expect(d).toHaveAttribute('fill', '#000000ff');
-  expect(e).toHaveAttribute('fill', '#ff0000ff');
-  expect(f).toHaveAttribute('fill', '#000000ff');
-  expect(g).toHaveAttribute('fill', '#ff0000ff');
-  expect(dp).toHaveAttribute('fill', '#000000ff');
+  expect(a).toHaveAttribute('fill', '#ff0000');
+  expect(b).toHaveAttribute('fill', '#000000');
+  expect(c).toHaveAttribute('fill', '#ff0000');
+  expect(d).toHaveAttribute('fill', '#000000');
+  expect(e).toHaveAttribute('fill', '#ff0000');
+  expect(f).toHaveAttribute('fill', '#000000');
+  expect(g).toHaveAttribute('fill', '#ff0000');
+  expect(dp).toHaveAttribute('fill', '#000000');
 });

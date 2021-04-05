@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import NorModel from '../NorModel';
 
 const { addPort } = global;
@@ -112,6 +109,6 @@ it('should return bitwise NOR for multiple data bits', () => {
       in3: 0b0101_0101,
     }),
   ).toEqual({
-    out: convertNumberValueToArray(0b1000_0000, DATA_BITS),
+    out: (0b1000_0000).asArray(DATA_BITS),
   });
 });

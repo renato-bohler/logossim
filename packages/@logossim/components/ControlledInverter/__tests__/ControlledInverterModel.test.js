@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import ControlledInverterModel from '../ControlledInverterModel';
 
 const { addPort } = global;

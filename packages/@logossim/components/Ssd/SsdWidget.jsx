@@ -43,47 +43,51 @@ export const Shape = ({ segments, selected, icon }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    style={{
+      opacity: selected ? '80' : 'ff',
+      fillOpacity: selected ? '80' : 'ff',
+    }}
   >
     {/* A */}
     <polyline
       points="5 18 11 20 32 20 35 14 9 14"
-      fill={`${segments.a}${selected ? '80' : 'ff'}`}
+      fill={segments.a}
       data-testid="a"
     />
     {/* B */}
     <polyline
       points="37 14 41 20 39 42 37 44 33 39 34 20"
-      fill={`${segments.b}${selected ? '80' : 'ff'}`}
+      fill={segments.b}
       data-testid="b"
     />
     {/* C */}
     <polyline
       points="37 46 38 47 36 71 31 76 29 69 31 51"
-      fill={`${segments.c}${selected ? '80' : 'ff'}`}
+      fill={segments.c}
       data-testid="c"
     />
     {/* D */}
     <polyline
       points="0 72 7 69 27 69 29 76 4 76"
-      fill={`${segments.d}${selected ? '80' : 'ff'}`}
+      fill={segments.d}
       data-testid="d"
     />
     {/* E */}
     <polyline
       points="4 46 8 51 7 67 0 70 2 47"
-      fill={`${segments.e}${selected ? '80' : 'ff'}`}
+      fill={segments.e}
       data-testid="e"
     />
     {/* F */}
     <polyline
       points="5 20 11 22 10 39 4 44 3 42"
-      fill={`${segments.f}${selected ? '80' : 'ff'}`}
+      fill={segments.f}
       data-testid="f"
     />
     {/* G */}
     <polyline
       points="6 45 9 48 31 48 35 45 32 41 11 41"
-      fill={`${segments.g}${selected ? '80' : 'ff'}`}
+      fill={segments.g}
       data-testid="g"
     />
     {/* DP */}
@@ -91,7 +95,7 @@ export const Shape = ({ segments, selected, icon }) => (
       r="5"
       cx="45"
       cy="71"
-      fill={`${segments.dp}${selected ? '80' : 'ff'}`}
+      fill={segments.dp}
       data-testid="dp"
     />
   </svg>

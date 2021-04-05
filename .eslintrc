@@ -15,6 +15,7 @@
   "rules": {
     "prettier/prettier": ["error"],
     "no-bitwise": "off",
+    "consistent-return": "off",
     "react/prop-types": "off",
     "react/sort-comp": "off",
     "react/jsx-props-no-spreading": "off",
@@ -54,5 +55,13 @@
   "env": {
     "browser": true,
     "jest": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "rules": {
+        "no-new": "off"
+      }
+    }
+  ]
 }

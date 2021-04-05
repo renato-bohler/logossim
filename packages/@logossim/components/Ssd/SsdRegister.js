@@ -57,28 +57,28 @@ export default new Component({
     {
       name: 'OFF_COLOR',
       type: 'select',
-      default: '#000000',
+      default: '#00000040',
       label: 'Off color',
       options: [
         {
           label: 'Red',
-          value: '#ff0000',
+          value: '#ff000040',
         },
         {
           label: 'Green',
-          value: '#00ff00',
+          value: '#00ff0040',
         },
         {
           label: 'Blue',
-          value: '#0000ff',
+          value: '#0000ff40',
         },
         {
           label: 'White',
-          value: '#ffffff',
+          value: '#ffffff40',
         },
         {
           label: 'Black',
-          value: '#000000',
+          value: '#00000040',
         },
       ],
     },

@@ -1,5 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import '@testing-library/jest-dom/extend-expect';
+import '@logossim/core/common/prototype';
 
 // Mocks `worker-loader`
 jest.mock('../../core/Simulation/simulation.worker.js', () => ({

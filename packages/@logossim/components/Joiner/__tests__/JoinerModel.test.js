@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import JoinerModel from '../JoinerModel';
 
 const { addPort } = global;
@@ -55,7 +52,7 @@ it('should correctly join the input value', () => {
       in15: 1,
     }),
   ).toEqual({
-    out: convertNumberValueToArray(0b1010_0101_1111_0000, DATA_BITS),
+    out: (0b1010_0101_1111_0000).asArray(DATA_BITS),
   });
 });
 

@@ -1,6 +1,3 @@
-/* eslint-disable no-new */
-import { convertNumberValueToArray } from '@logossim/core/Simulation/utils';
-
 import DemuxModel from '../DemuxModel';
 
 const { addPort } = global;
@@ -86,7 +83,7 @@ it('should correctly forward the input based on selection value', () => {
       out13: [0, 0, 0, 0],
       out14: [0, 0, 0, 0],
       out15: [0, 0, 0, 0],
-      [`out${i}`]: convertNumberValueToArray(0b1010, DATA_BITS),
+      [`out${i}`]: (0b1010).asArray(DATA_BITS),
     });
   });
 });

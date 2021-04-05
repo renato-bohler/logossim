@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import SplitterModel from '../SplitterModel';
 
 const { addPort } = global;

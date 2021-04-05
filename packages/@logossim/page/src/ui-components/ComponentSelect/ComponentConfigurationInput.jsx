@@ -35,10 +35,16 @@ const Container = styled.div`
 
     padding: 10px 0 5px 16px;
   }
+
+  input[type='file'] {
+    font-size: 1em;
+    margin-top: 2px;
+  }
 `;
 
 const Input = ({
   // Formik
+  form,
   field,
   // General
   name,
@@ -53,12 +59,37 @@ const Input = ({
   min,
   max,
 }) => {
+  const handleBinaryLoad = event => {
+    const {
+      target: { files },
+    } = event;
+
+    if (files.length !== 1) return;
+
+    const handleError = () =>
+      this.showSnackbar(
+        `Error loading binary file:\n${files[0].name}`,
+      );
+
+    const fr = new FileReader();
+    fr.onerror = handleError;
+    fr.onload = e => {
+      try {
+        const file = e.target.result;
+        form.setFieldValue(field.name, file);
+      } catch (exception) {
+        handleError();
+      }
+    };
+    fr.readAsText(files.item(0));
+  };
+
   switch (type) {
     case 'select':
       return (
         <>
           <label htmlFor={name}>{label}</label>
-          <select id={field.name} ref={innerRef} {...field}>
+          <select id={name} ref={innerRef} {...field}>
             {options.map(option => (
               <option value={option.value} key={option.value}>
                 {option.label}
@@ -72,7 +103,7 @@ const Input = ({
         <>
           <label htmlFor={name}>{label}</label>
           <input
-            id={field.name}
+            id={name}
             ref={innerRef}
             {...field}
             step={step}
@@ -86,11 +117,18 @@ const Input = ({
       return (
         <>
           <label htmlFor={name}>{label}</label>
+          <input id={name} ref={innerRef} {...field} type="text" />
+        </>
+      );
+    case 'binary':
+      return (
+        <>
+          <label htmlFor={name}>{label}</label>
           <input
-            id={field.name}
-            ref={innerRef}
-            {...field}
-            type="text"
+            id={name}
+            accept=".lgbin"
+            type="file"
+            onChange={handleBinaryLoad}
           />
         </>
       );

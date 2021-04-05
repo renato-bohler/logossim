@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import LedModel from '../LedModel';
 
 const { addPort } = global;

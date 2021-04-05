@@ -1,4 +1,3 @@
-/* eslint-disable no-new */
 import SwitchModel from '../SwitchModel';
 
 const { addPort } = global;

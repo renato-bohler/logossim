@@ -102,7 +102,13 @@ export default class PortModel extends RDPortModel {
   }
 
   getValue() {
-    return this.value;
+    if (this.value === null) return Array(this.bits).fill(0);
+
+    return this.value.map(bit => {
+      if (bit === 'x') return this.getDefaultFloatingValue();
+      if (bit === 'e') return this.getDefaultErrorValue();
+      return bit;
+    });
   }
 
   setValue(value) {
