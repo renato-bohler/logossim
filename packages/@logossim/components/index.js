@@ -5,6 +5,7 @@ import Buzzer from './Buzzer/BuzzerRegister';
 import Clock from './Clock/ClockRegister';
 import ControlledBuffer from './ControlledBuffer/ControlledBufferRegister';
 import ControlledInverter from './ControlledInverter/ControlledInverterRegister';
+import Counter from './Counter/CounterRegister';
 import Demux from './Demux/DemuxRegister';
 import Ground from './Ground/GroundRegister';
 import Input from './Input/InputRegister';
@@ -49,6 +50,8 @@ const components = [
   Ground,
   Mux,
   Demux,
+  Ram,
+  Counter,
 ];
 
 export default components;
