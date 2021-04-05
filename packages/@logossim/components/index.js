@@ -17,6 +17,7 @@ import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
 import Output from './Output/OutputRegister';
 import Power from './Power/PowerRegister';
+import Ram from './Ram/RamRegister';
 import Splitter from './Splitter/SplitterRegister';
 import Ssd from './Ssd/SsdRegister';
 import Switch from './Switch/SwitchRegister';
