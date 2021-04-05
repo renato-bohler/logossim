@@ -38,27 +38,6 @@ it('should have the correct input ports', () => {
   expect(select).toBeTruthy();
 });
 
-it('should have the correct input ports', () => {
-  const model = new RamModel({
-    DATA_WIDTH: 1,
-    ADDRESS_WIDTH: 8,
-  });
-
-  const { container } = render(<RamWidget model={model} />);
-
-  const address = container.querySelector('[data-name=address]');
-  const clock = container.querySelector('[data-name=clock]');
-  const load = container.querySelector('[data-name=load]');
-  const clear = container.querySelector('[data-name=clear]');
-  const select = container.querySelector('[data-name=select]');
-
-  expect(address).toBeTruthy();
-  expect(clock).toBeTruthy();
-  expect(load).toBeTruthy();
-  expect(clear).toBeTruthy();
-  expect(select).toBeTruthy();
-});
-
 it('should display the first 5 values for the first 3 addresses', () => {
   const model = new RamModel({
     DATA_WIDTH: 4,
