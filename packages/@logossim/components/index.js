@@ -19,6 +19,7 @@ import Or from './Or/OrRegister';
 import Output from './Output/OutputRegister';
 import Power from './Power/PowerRegister';
 import Ram from './Ram/RamRegister';
+import Rom from './Rom/RomRegister';
 import Splitter from './Splitter/SplitterRegister';
 import Ssd from './Ssd/SsdRegister';
 import Switch from './Switch/SwitchRegister';
@@ -51,6 +52,7 @@ const components = [
   Mux,
   Demux,
   Ram,
+  Rom,
   Counter,
 ];
 
