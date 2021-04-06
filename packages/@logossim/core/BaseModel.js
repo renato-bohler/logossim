@@ -3,7 +3,6 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';
-import { adjustValueToBits, isValueValid } from './Simulation/utils';
 
 const getPort = nameOrInstance => {
   if (nameOrInstance instanceof PortModel) return nameOrInstance;
