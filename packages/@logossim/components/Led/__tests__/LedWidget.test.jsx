@@ -21,7 +21,7 @@ describe('LedWidget', () => {
       OFF_COLOR: '#000000',
     });
     const spy = jest.spyOn(model, 'getInput');
-    spy.mockImplementation(() => [0]);
+    spy.mockImplementation(() => 0);
 
     const { getByTestId } = render(<LedWidget model={model} />);
     const shape = getByTestId('shape');
@@ -36,7 +36,7 @@ describe('LedWidget', () => {
       OFF_COLOR: '#000000',
     });
     const spy = jest.spyOn(model, 'getInput');
-    spy.mockImplementation(() => [1]);
+    spy.mockImplementation(() => 1);
 
     const { getByTestId } = render(<LedWidget model={model} />);
     const shape = getByTestId('shape');
@@ -51,7 +51,7 @@ describe('LedWidget', () => {
       OFF_COLOR: '#000000',
     });
     const spy = jest.spyOn(model, 'getInput');
-    spy.mockImplementation(() => [0]);
+    spy.mockImplementation(() => 0);
 
     const { getByTestId } = render(<LedWidget model={model} />);
     const shape = getByTestId('shape');
@@ -66,7 +66,7 @@ describe('LedWidget', () => {
       OFF_COLOR: '#000000',
     });
     const spy = jest.spyOn(model, 'getInput');
-    spy.mockImplementation(() => [1]);
+    spy.mockImplementation(() => 1);
 
     const { getByTestId } = render(<LedWidget model={model} />);
     const shape = getByTestId('shape');
