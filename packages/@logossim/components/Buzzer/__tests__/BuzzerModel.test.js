@@ -2,6 +2,13 @@ import BuzzerModel from '../BuzzerModel';
 
 const { addPort } = global;
 
+beforeEach(() => {
+  const getPortSpy = jest.spyOn(BuzzerModel.prototype, 'getPort');
+  getPortSpy.mockImplementation(() => ({
+    getValue: () => [0],
+  }));
+});
+
 it('should add ports on initialization', () => {
   const spy = jest.spyOn(BuzzerModel.prototype, 'addInputPort');
   spy.mockImplementation(addPort);

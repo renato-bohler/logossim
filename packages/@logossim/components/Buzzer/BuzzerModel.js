@@ -10,6 +10,8 @@ export default class BuzzerModel extends BaseModel {
 
   onSimulationStart() {
     this.audio = this.createAudio(this.frequencyHz, this.waveform);
+
+    if (this.getInput() === 1) this.audio.play();
   }
 
   onSimulationPause() {
@@ -25,7 +27,10 @@ export default class BuzzerModel extends BaseModel {
   }
 
   getInput() {
-    return this.getPort('in').getValue() || [0];
+    const value = this.getPort('in').getValue();
+
+    if (!value) return 0;
+    return value[0];
   }
 
   isActive() {
