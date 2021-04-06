@@ -17,6 +17,10 @@ Array.prototype.asNumber = function arrayAsNumber() {
     .reduce((acc, curr, index) => acc + curr * 2 ** index, 0);
 };
 
+Array.prototype.transpose = function transpose() {
+  return this[0].map((x1, i) => this.map(x2 => x2[i]));
+};
+
 Number.prototype.asNumber = function numberAsNumber() {
   return Number(this);
 };
@@ -26,12 +30,26 @@ Number.prototype.asArray = function numberAsArray(dataBits) {
     throw new Error(
       '[logossim] To transform a number to array, you need to pass as argument the length of the array',
     );
+
   const result = [...this.toString(2)].map(Number);
 
   return Array(dataBits)
     .fill(0)
     .concat(result)
     .slice(result.length);
+};
+
+String.prototype.asArray = function stringAsArray(dataBits) {
+  if (!dataBits)
+    throw new Error(
+      '[logossim] To transform a number to array, you need to pass as argument the length of the array',
+    );
+
+  return [...this.padStart(dataBits, 0)].map(char => {
+    if (char === '0') return 0;
+    if (char === '1') return 1;
+    return char;
+  });
 };
 
 String.prototype.parseBinary = function parseBinary(
