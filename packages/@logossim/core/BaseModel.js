@@ -117,27 +117,5 @@ export default class BaseModel extends NodeModel {
     emit(this.getID(), value);
   }
 
-  // Methods to facilitate unit testing
   createAudio() {}
-
-  stepAndMask(input) {
-    const stepResult = this.step(input);
-
-    return Object.fromEntries(
-      Object.entries(stepResult).map(([portName, portValue]) => {
-        const { bits } = this.getPort(portName);
-        let value = portValue;
-        if (typeof value === 'number') {
-          value = adjustValueToBits(portValue, bits).asArray(bits);
-        } else if (value === 'x' || value === 'e') {
-          value = Array(bits).fill(value);
-        }
-
-        return [
-          portName,
-          isValueValid(value, bits) ? value : Array(bits).fill('e'),
-        ];
-      }),
-    );
-  }
 }

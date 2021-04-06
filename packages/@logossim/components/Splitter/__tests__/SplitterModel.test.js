@@ -31,26 +31,26 @@ it('should correctly split the input value', () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 0b1010_0101_1111_0000,
     }),
   ).toEqual({
-    out0: [0],
-    out1: [0],
-    out2: [0],
-    out3: [0],
-    out4: [1],
-    out5: [1],
-    out6: [1],
-    out7: [1],
-    out8: [1],
-    out9: [0],
-    out10: [1],
-    out11: [0],
-    out12: [0],
-    out13: [1],
-    out14: [0],
-    out15: [1],
+    out0: 0,
+    out1: 0,
+    out2: 0,
+    out3: 0,
+    out4: 1,
+    out5: 1,
+    out6: 1,
+    out7: 1,
+    out8: 1,
+    out9: 0,
+    out10: 1,
+    out11: 0,
+    out12: 0,
+    out13: 1,
+    out14: 0,
+    out15: 1,
   });
 });
 

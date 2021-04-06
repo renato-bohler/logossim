@@ -26,13 +26,13 @@ it('should return the value negated', () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 0,
     }),
   ).toEqual({ out: [1] });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 1,
     }),
   ).toEqual({ out: [0] });
@@ -46,7 +46,7 @@ it('should return the value negated for multiple bits', () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 0b0101_1010,
     }),
   ).toEqual({

@@ -48,16 +48,14 @@ it('should add ports on initialization (16 inputs)', () => {
 });
 
 it('should correctly select the input based on selection value', () => {
-  const DATA_BITS = 4;
-
   const model = new MuxModel({
-    DATA_BITS,
+    DATA_BITS: 4,
     INPUT_NUMBER: 16,
   });
 
   [...Array(16).keys()].forEach(i => {
     expect(
-      model.stepAndMask({
+      model.step({
         selection: i,
         in0: 0b0000,
         in1: 0b0001,
@@ -77,7 +75,7 @@ it('should correctly select the input based on selection value', () => {
         in15: 0b1111,
       }),
     ).toEqual({
-      out: i.asArray(DATA_BITS),
+      out: i,
     });
   });
 });

@@ -53,37 +53,35 @@ it('should add ports on initialization (16 outputs)', () => {
 });
 
 it('should correctly forward the input based on selection value', () => {
-  const DATA_BITS = 4;
-
   const model = new DemuxModel({
-    DATA_BITS,
+    DATA_BITS: 4,
     OUTPUT_NUMBER: 16,
   });
 
   [...Array(16).keys()].forEach(i => {
     expect(
-      model.stepAndMask({
+      model.step({
         selection: i,
         in: 0b1010,
       }),
     ).toEqual({
-      out0: [0, 0, 0, 0],
-      out1: [0, 0, 0, 0],
-      out2: [0, 0, 0, 0],
-      out3: [0, 0, 0, 0],
-      out4: [0, 0, 0, 0],
-      out5: [0, 0, 0, 0],
-      out6: [0, 0, 0, 0],
-      out7: [0, 0, 0, 0],
-      out8: [0, 0, 0, 0],
-      out9: [0, 0, 0, 0],
-      out10: [0, 0, 0, 0],
-      out11: [0, 0, 0, 0],
-      out12: [0, 0, 0, 0],
-      out13: [0, 0, 0, 0],
-      out14: [0, 0, 0, 0],
-      out15: [0, 0, 0, 0],
-      [`out${i}`]: (0b1010).asArray(DATA_BITS),
+      out0: 0,
+      out1: 0,
+      out2: 0,
+      out3: 0,
+      out4: 0,
+      out5: 0,
+      out6: 0,
+      out7: 0,
+      out8: 0,
+      out9: 0,
+      out10: 0,
+      out11: 0,
+      out12: 0,
+      out13: 0,
+      out14: 0,
+      out15: 0,
+      [`out${i}`]: 0b1010,
     });
   });
 });

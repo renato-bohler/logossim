@@ -29,30 +29,28 @@ it('should return the value unmodified', () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 0,
     }),
-  ).toEqual({ out: [0] });
+  ).toEqual({ out: 0 });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 1,
     }),
-  ).toEqual({ out: [1] });
+  ).toEqual({ out: 1 });
 });
 
 it('should return the value unmodified for multiple bits', () => {
-  const DATA_BITS = 8;
-
   const model = new BufferModel({
-    DATA_BITS,
+    DATA_BITS: 8,
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in: 0b0101_1010,
     }),
   ).toEqual({
-    out: (0b0101_1010).asArray(DATA_BITS),
+    out: 0b0101_1010,
   });
 });
