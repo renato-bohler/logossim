@@ -32,7 +32,7 @@ it("should return 0 when there's a 1 input", () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 1,
       in1: 0,
       in2: 0,
@@ -41,7 +41,7 @@ it("should return 0 when there's a 1 input", () => {
   ).toEqual({ out: [0] });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 0,
       in1: 1,
       in2: 0,
@@ -50,7 +50,7 @@ it("should return 0 when there's a 1 input", () => {
   ).toEqual({ out: [0] });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 0,
       in1: 0,
       in2: 1,
@@ -59,7 +59,7 @@ it("should return 0 when there's a 1 input", () => {
   ).toEqual({ out: [0] });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 0,
       in1: 0,
       in2: 0,
@@ -68,7 +68,7 @@ it("should return 0 when there's a 1 input", () => {
   ).toEqual({ out: [0] });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 1,
       in1: 1,
       in2: 1,
@@ -84,13 +84,41 @@ it('should return 1 when all inputs are 0', () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 0,
       in1: 0,
       in2: 0,
       in3: 0,
     }),
   ).toEqual({ out: [1] });
+});
+
+it("should return error when there's no 1 and there's one floating input", () => {
+  const model = new NorModel({
+    INPUT_PORTS_NUMBER: 2,
+    DATA_BITS: 1,
+  });
+
+  expect(
+    model.stepFloating({
+      in0: [0],
+      in1: ['x'],
+    }),
+  ).toEqual({ out: ['e'] });
+});
+
+it("should return error when there's no 1 and there's one error input", () => {
+  const model = new NorModel({
+    INPUT_PORTS_NUMBER: 2,
+    DATA_BITS: 1,
+  });
+
+  expect(
+    model.stepError({
+      in0: [0],
+      in1: ['e'],
+    }),
+  ).toEqual({ out: ['e'] });
 });
 
 it('should return bitwise NOR for multiple data bits', () => {
@@ -102,7 +130,7 @@ it('should return bitwise NOR for multiple data bits', () => {
   });
 
   expect(
-    model.stepAndMask({
+    model.step({
       in0: 0b0000_0000,
       in1: 0b0111_1000,
       in2: 0b0110_0110,
