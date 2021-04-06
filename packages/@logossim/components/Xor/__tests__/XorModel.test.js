@@ -34,7 +34,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 0,
         in2: 0,
@@ -43,7 +43,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [1] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 1,
         in2: 0,
@@ -52,7 +52,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [1] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 0,
         in2: 1,
@@ -61,11 +61,20 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [1] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 0,
         in2: 0,
         in3: 1,
+      }),
+    ).toEqual({ out: [1] });
+
+    expect(
+      model.stepFloating({
+        in0: ['x'],
+        in1: [0],
+        in2: [0],
+        in3: [1],
       }),
     ).toEqual({ out: [1] });
   });
@@ -78,7 +87,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 0,
@@ -87,7 +96,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 1,
         in2: 1,
@@ -96,7 +105,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 0,
         in2: 1,
@@ -105,7 +114,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 0,
         in2: 0,
@@ -114,7 +123,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 1,
@@ -123,11 +132,20 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 1,
         in3: 1,
+      }),
+    ).toEqual({ out: [0] });
+
+    expect(
+      model.stepFloating({
+        in0: [1],
+        in1: [1],
+        in2: [1],
+        in3: ['x'],
       }),
     ).toEqual({ out: [0] });
   });
@@ -140,7 +158,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 0,
         in2: 0,
@@ -159,7 +177,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ONE', () => {
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0b0110_1000,
         in1: 0b0100_0100,
         in2: 0b0111_0010,
@@ -180,7 +198,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 0,
         in2: 0,
@@ -190,7 +208,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [1] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 1,
@@ -200,12 +218,30 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [1] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 1,
         in3: 1,
         in4: 1,
+      }),
+    ).toEqual({ out: [1] });
+
+    expect(
+      model.stepFloating({
+        in0: [0],
+        in1: [1],
+        in2: ['x'],
+        in3: [0],
+      }),
+    ).toEqual({ out: [1] });
+
+    expect(
+      model.stepFloating({
+        in0: [1],
+        in1: [1],
+        in2: ['x'],
+        in3: [1],
       }),
     ).toEqual({ out: [1] });
   });
@@ -218,7 +254,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 0,
         in2: 0,
@@ -227,7 +263,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 0,
@@ -236,7 +272,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 1,
         in2: 1,
@@ -245,7 +281,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0,
         in1: 0,
         in2: 1,
@@ -254,7 +290,7 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 0,
         in2: 0,
@@ -263,11 +299,29 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
     ).toEqual({ out: [0] });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 1,
         in1: 1,
         in2: 1,
         in3: 1,
+      }),
+    ).toEqual({ out: [0] });
+
+    expect(
+      model.stepFloating({
+        in0: [0],
+        in1: [0],
+        in2: ['x'],
+        in3: [0],
+      }),
+    ).toEqual({ out: [0] });
+
+    expect(
+      model.stepFloating({
+        in0: [0],
+        in1: [1],
+        in2: ['x'],
+        in3: [1],
       }),
     ).toEqual({ out: [0] });
   });
@@ -277,12 +331,12 @@ describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
 
     const model = new XorModel({
       MULTIPLE_INPUT_BEHAVIOR: 'ODD',
-      INPUT_PORTS_NUMBER: 5,
+      INPUT_PORTS_NUMBER: 4,
       DATA_BITS,
     });
 
     expect(
-      model.stepAndMask({
+      model.step({
         in0: 0b0000_0000,
         in1: 0b0111_1000,
         in2: 0b0110_0110,
