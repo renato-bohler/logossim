@@ -1,22 +1,23 @@
 import React from 'react';
 
 import { render } from '../../testUtils';
-
 import {{fileName name}}Model from '../{{fileName name}}Model';
 import {{fileName name}}Widget from '../{{fileName name}}Widget';
 
-it('should have 1 input and 1 output port', () => {
-  const model = new {{fileName name}}Model({
-    DATA_BITS: 1,
+describe('{{fileName name}}Model', () => {
+  it('should have 1 input and 1 output port', () => {
+    const model = new {{fileName name}}Model({
+      DATA_BITS: 1,
+    });
+
+    const { container } = render(
+      <{{fileName name}}Widget model={model} />,
+    );
+
+    const input = container.querySelector('[data-name=in]');
+    expect(input).toBeTruthy();
+
+    const output = container.querySelector('[data-name=out]');
+    expect(output).toBeTruthy();
   });
-
-  const { container } = render(
-    <{{fileName name}}Widget model={model} />,
-  );
-
-  const input = container.querySelector('[data-name=in]');
-  expect(input).toBeTruthy();
-
-  const output = container.querySelector('[data-name=out]');
-  expect(output).toBeTruthy();
 });

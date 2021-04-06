@@ -1,43 +1,45 @@
 import React from 'react';
 
 import { fireEvent } from '@testing-library/dom';
-import { render } from '../../testUtils';
 
+import { render } from '../../testUtils';
 import {{fileName name}}Model from '../{{fileName name}}Model';
 import {{fileName name}}Widget from '../{{fileName name}}Widget';
 
-it('should have 1 output port', () => {
-  const model = new {{fileName name}}Model();
+describe('{{fileName name}}Widget', () => {
+  it('should have 1 output port', () => {
+    const model = new {{fileName name}}Model();
 
-  const { container } = render(
-    <{{fileName name}}Widget model={model} />,
-  );
+    const { container } = render(
+      <{{fileName name}}Widget model={model} />,
+    );
 
-  const ports = container.querySelectorAll('[data-name=out]');
-  expect(ports).toHaveLength(1);
-});
+    const ports = container.querySelectorAll('[data-name=out]');
+    expect(ports).toHaveLength(1);
+  });
 
-it('should call model onClick on mouse down event', () => {
-  const model = new {{fileName name}}Model();
-  const spy = jest.spyOn(model, 'onClick');
+  it('should call model onClick on mouse down event', () => {
+    const model = new {{fileName name}}Model();
+    const spy = jest.spyOn(model, 'onClick');
 
-  const { getByRole } = render(
-    <{{fileName name}}Widget model={model} />,
-  );
-  const button = getByRole('button');
+    const { getByRole } = render(
+      <{{fileName name}}Widget model={model} />,
+    );
+    const button = getByRole('button');
 
-  fireEvent.mouseDown(button);
+    fireEvent.mouseDown(button);
 
-  expect(spy).toHaveBeenCalledTimes(1);
-});
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 
-it('should call model onRelease on mouse up event', () => {
-  const model = new {{fileName name}}Model();
-  const spy = jest.spyOn(model, 'onRelease');
+  it('should call model onRelease on mouse up event', () => {
+    const model = new {{fileName name}}Model();
+    const spy = jest.spyOn(model, 'onRelease');
 
-  render(<{{fileName name}}Widget model={model} />);
+    render(<{{fileName name}}Widget model={model} />);
 
-  fireEvent.mouseUp(document.body);
+    fireEvent.mouseUp(document.body);
 
-  expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 });

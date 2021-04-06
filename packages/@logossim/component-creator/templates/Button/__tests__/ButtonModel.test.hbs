@@ -2,37 +2,39 @@ import {{fileName name}}Model from '../{{fileName name}}Model';
 
 const { addPort } = global;
 
-it('should add ports on initialization', () => {
-  const spy = jest.spyOn({{fileName name}}Model.prototype, 'addOutputPort');
-  spy.mockImplementation(addPort);
+describe('{{fileName name}}Model', () => {
+  it('should add ports on initialization', () => {
+    const spy = jest.spyOn({{fileName name}}Model.prototype, 'addOutputPort');
+    spy.mockImplementation(addPort);
 
-  new {{fileName name}}Model();
+    new {{fileName name}}Model();
 
-  expect(spy).toHaveBeenCalledWith('out');
-});
+    expect(spy).toHaveBeenCalledWith('out');
+  });
 
-it('should emit on simulation start', () => {
-  const model = new {{fileName name}}Model();
-  const spy = jest.spyOn(model, 'emit');
-  model.onSimulationStart();
+  it('should emit on simulation start', () => {
+    const model = new {{fileName name}}Model();
+    const spy = jest.spyOn(model, 'emit');
+    model.onSimulationStart();
 
-  expect(spy).toHaveBeenCalledWith({ out: 0 });
-});
+    expect(spy).toHaveBeenCalledWith({ out: 0 });
+  });
 
-it('should emit correctly on click', () => {
-  const model = new {{fileName name}}Model();
-  const emitSpy = jest.spyOn(model, 'emit');
+  it('should emit correctly on click', () => {
+    const model = new {{fileName name}}Model();
+    const emitSpy = jest.spyOn(model, 'emit');
 
-  model.onClick();
+    model.onClick();
 
-  expect(emitSpy).toHaveBeenCalledWith({ out: 1 });
-});
+    expect(emitSpy).toHaveBeenCalledWith({ out: 1 });
+  });
 
-it('should emit correctly on release', () => {
-  const model = new {{fileName name}}Model();
-  const emitSpy = jest.spyOn(model, 'emit');
+  it('should emit correctly on release', () => {
+    const model = new {{fileName name}}Model();
+    const emitSpy = jest.spyOn(model, 'emit');
 
-  model.onRelease();
+    model.onRelease();
 
-  expect(emitSpy).toHaveBeenCalledWith({ out: 0 });
+    expect(emitSpy).toHaveBeenCalledWith({ out: 0 });
+  });
 });
