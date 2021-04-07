@@ -1,17 +1,22 @@
 import React from 'react';
 import Tooltip from 'react-tooltip';
 
+import ComponentContext from '@logossim/core/ComponentContext';
+import DiagramContext from '@logossim/core/Diagram/DiagramContext';
+
 import styled from 'styled-components';
 
-const engineStub = {
-  registerListener: () => {},
-  getCanvas: () => {},
-  getPortCoords: () => ({
-    getWidth: () => {},
-    getHeight: () => {},
-    getTopLeft: () => {},
+const diagramEngineStub = {
+  getEngine: () => ({
+    registerListener: () => {},
+    getCanvas: () => {},
+    getPortCoords: () => ({
+      getWidth: () => {},
+      getHeight: () => {},
+      getTopLeft: () => {},
+    }),
+    getModel: () => ({ isLocked: () => false }),
   }),
-  getModel: () => ({ isLocked: () => false }),
 };
 
 const getTooltip = (error, disabled) => {
@@ -33,42 +38,47 @@ const DraggableComponent = ({
   handleClose,
   error,
   disabled,
-}) => (
-  <div
-    draggable={!error && !disabled}
-    onDragStart={event => {
-      event.dataTransfer.setDragImage(
-        event.currentTarget.children[0],
-        0,
-        0,
-      );
+}) => {
+  const model = new Model(configurations, type);
 
-      event.dataTransfer.setData(
-        'component',
-        JSON.stringify({
-          type,
-          configurations,
-        }),
-      );
+  return (
+    <div
+      draggable={!error && !disabled}
+      onDragStart={event => {
+        event.dataTransfer.setDragImage(
+          event.currentTarget.children[0],
+          0,
+          0,
+        );
 
-      requestAnimationFrame(() => {
-        Tooltip.hide();
-        handleClose();
-      });
-    }}
-    data-for="tooltip"
-    data-tip={getTooltip(error, disabled)}
-    data-place="bottom"
-  >
-    {error ? (
-      <ErrorWidget />
-    ) : (
-      <Widget
-        engine={engineStub}
-        model={new Model(configurations, type)}
-      />
-    )}
-  </div>
-);
+        event.dataTransfer.setData(
+          'component',
+          JSON.stringify({
+            type,
+            configurations,
+          }),
+        );
+
+        requestAnimationFrame(() => {
+          Tooltip.hide();
+          handleClose();
+        });
+      }}
+      data-for="tooltip"
+      data-tip={getTooltip(error, disabled)}
+      data-place="bottom"
+    >
+      {error ? (
+        <ErrorWidget />
+      ) : (
+        <DiagramContext.Provider value={diagramEngineStub}>
+          <ComponentContext.Provider value={model}>
+            <Widget model={model} />
+          </ComponentContext.Provider>
+        </DiagramContext.Provider>
+      )}
+    </div>
+  );
+};
 
 export default DraggableComponent;

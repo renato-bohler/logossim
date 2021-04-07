@@ -3,6 +3,8 @@ import { MenuProvider } from 'react-contexify';
 
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 
+import ComponentContext from './ComponentContext';
+
 export default class Component extends AbstractReactFactory {
   constructor({
     type,
@@ -30,7 +32,9 @@ export default class Component extends AbstractReactFactory {
 
     return (
       <MenuProvider id="component" storeRef={false} data={model}>
-        <Widget engine={this.engine} model={model} />
+        <ComponentContext.Provider value={model}>
+          <Widget model={model} />
+        </ComponentContext.Provider>
       </MenuProvider>
     );
   }

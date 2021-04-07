@@ -55,7 +55,7 @@ export const Shape = styled.div`
 
 export const PinContainer = styled.div`
   display: flex;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
 
@@ -82,7 +82,7 @@ export const Pin = styled.button`
 `;
 
 const InputWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     configurations: { DATA_BITS },
@@ -108,12 +108,7 @@ const InputWidget = props => {
           );
         })}
       </PinContainer>
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" />
     </Shape>
   );
 };

@@ -1,21 +1,18 @@
 import React from 'react';
 
-import { render } from '@testing-library/react';
-
+import { render } from '../../testUtils';
 import GroundModel from '../GroundModel';
 import GroundWidget from '../GroundWidget';
 
-const { engine } = global;
+describe('GroundWidget', () => {
+  it('should have 1 output port', () => {
+    const model = new GroundModel({
+      DATA_BITS: 1,
+    });
 
-it('should have 1 output port', () => {
-  const model = new GroundModel({
-    DATA_BITS: 1,
+    const { container } = render(<GroundWidget model={model} />);
+
+    const port = container.querySelector('[data-name=out]');
+    expect(port).toBeTruthy();
   });
-
-  const { container } = render(
-    <GroundWidget model={model} engine={engine} />,
-  );
-
-  const port = container.querySelector('[data-name=out]');
-  expect(port).toBeTruthy();
 });

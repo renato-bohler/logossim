@@ -62,7 +62,7 @@ export const Decoration = ({
 );
 
 const ClockWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     periodMs,
@@ -72,12 +72,7 @@ const ClockWidget = props => {
 
   return (
     <Shape selected={selected}>
-      <PositionedPort
-        name="out"
-        model={model}
-        port={out}
-        engine={engine}
-      />
+      <PositionedPort name="out" />
       <Decoration
         isActive={model.isActive()}
         color={out.getColor()}

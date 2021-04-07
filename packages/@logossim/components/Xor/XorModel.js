@@ -3,48 +3,42 @@ import { BaseModel } from '@logossim/core';
 export default class XorModel extends BaseModel {
   initialize(configurations) {
     this.behavior = configurations.MULTIPLE_INPUT_BEHAVIOR;
-    this.bits = Number(configurations.DATA_BITS);
+    this.dataBits = Number(configurations.DATA_BITS);
 
     const INPUT_PORTS_NUMBER = Number(
       configurations.INPUT_PORTS_NUMBER,
     );
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
-      this.addInputPort(`in${i}`, this.bits);
+      this.addInputPort(`in${i}`, { bits: this.dataBits });
     }
-    this.addOutputPort('out', this.bits);
+    this.addOutputPort('out', { bits: this.dataBits });
   }
 
-  exclusiveOrAt(values, index) {
-    const mask = 0b1 << index;
+  executeBit(bits) {
+    if (this.behavior === 'ONE') return this.executeOne(bits);
+    if (this.behavior === 'ODD') return this.executeOdd(bits);
+    return {};
+  }
 
-    const sum = values
-      .map(value => ((value & mask) > 0 ? 1 : 0))
-      .reduce((acc, curr) => acc + curr);
+  executeOne(bits) {
+    return bits.filter(bit => bit === 1).length === 1 ? 1 : 0;
+  }
 
-    return sum === 1 ? 1 : 0;
+  executeOdd(bits) {
+    return bits.filter(bit => bit === 1).length % 2 ? 1 : 0;
   }
 
   step(input) {
-    const values = Object.values(input);
+    return {
+      out: Object.values(input)
+        .map(value => value.asArray(this.dataBits))
+        .transpose()
+        .map(this.executeBit.bind(this)),
+    };
+  }
 
-    switch (this.behavior) {
-      case 'ONE':
-        return {
-          out: parseInt(
-            [...new Array(this.bits)]
-              .map((_, index) => this.exclusiveOrAt(values, index))
-              .reverse()
-              .join(''),
-            2,
-          ),
-        };
-      case 'ODD':
-        return {
-          out: values.reduce((acc, curr) => curr ^ acc),
-        };
-      default:
-        return {};
-    }
+  stepFloating(input) {
+    return this.step(input);
   }
 }

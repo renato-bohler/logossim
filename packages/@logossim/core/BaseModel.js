@@ -3,15 +3,10 @@ import { NodeModel } from '@projectstorm/react-diagrams';
 
 import PortModel from './Port/PortModel';
 import { emit } from './Simulation/SimulationEngine';
-import {
-  adjustValueToBits,
-  convertNumberValueToArray,
-  isValueValid,
-} from './Simulation/utils';
 
-const getPort = port => {
-  if (port instanceof PortModel) return port;
-  return new PortModel({ name: port });
+const getPort = nameOrInstance => {
+  if (nameOrInstance instanceof PortModel) return nameOrInstance;
+  return new PortModel({ name: nameOrInstance });
 };
 
 export default class BaseModel extends NodeModel {
@@ -30,30 +25,38 @@ export default class BaseModel extends NodeModel {
     };
   }
 
-  addInputPort(arg, bits = 1) {
-    const port = getPort(arg);
+  addInputPort(nameOrInstance, { bits, floating, error } = {}) {
+    const port = getPort(nameOrInstance);
     port.setAsInput();
-    if (typeof arg === 'string') port.setBits(bits);
+    if (typeof nameOrInstance === 'string') {
+      port.setBits(bits || 1);
+      port.setDefaultFloatingValue(floating ?? 'x');
+      port.setDefaultErrorValue(error ?? 'e');
+    }
     super.addPort(port);
   }
 
-  addOutputPort(arg, bits = 1) {
-    const port = getPort(arg);
+  addOutputPort(nameOrInstance, { bits } = {}) {
+    const port = getPort(nameOrInstance);
     port.setAsOutput();
-    if (typeof arg === 'string') port.setBits(bits);
+    if (typeof nameOrInstance === 'string') {
+      port.setBits(bits || 1);
+      port.setDefaultFloatingValue('x');
+      port.setDefaultErrorValue('e');
+    }
     super.addPort(port);
   }
 
-  addPort(arg, bits = 1) {
-    const port = getPort(arg);
+  addPort(nameOrInstance, configuration) {
+    const port = getPort(nameOrInstance);
 
     if (port.isInput()) {
-      this.addInputPort(port, bits);
+      this.addInputPort(port, configuration);
       return;
     }
 
     if (port.isOutput()) {
-      this.addOutputPort(port, bits);
+      this.addOutputPort(port, configuration);
       return;
     }
 
@@ -62,8 +65,8 @@ export default class BaseModel extends NodeModel {
     );
   }
 
-  removePort(arg) {
-    const port = getPort(arg);
+  removePort(name) {
+    const port = getPort(name);
     super.removePort(port);
   }
 
@@ -113,30 +116,5 @@ export default class BaseModel extends NodeModel {
     emit(this.getID(), value);
   }
 
-  // Methods to facilitate unit testing
   createAudio() {}
-
-  stepAndMask(input) {
-    const stepResult = this.step(input);
-
-    return Object.fromEntries(
-      Object.entries(stepResult).map(([portName, portValue]) => {
-        const { bits } = this.getPort(portName);
-        let value = portValue;
-        if (typeof value === 'number') {
-          value = convertNumberValueToArray(
-            adjustValueToBits(portValue, bits),
-            bits,
-          );
-        } else if (value === 'x' || value === 'e') {
-          value = Array(bits).fill(value);
-        }
-
-        return [
-          portName,
-          isValueValid(value, bits) ? value : Array(bits).fill('e'),
-        ];
-      }),
-    );
-  }
 }

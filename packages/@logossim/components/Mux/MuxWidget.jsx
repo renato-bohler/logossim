@@ -48,7 +48,7 @@ export const Shape = ({ selected, inputNumber, icon }) => {
 };
 
 const MuxWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -62,17 +62,11 @@ const MuxWidget = props => {
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
-          port={port}
-          engine={engine}
           position={(i + 1) * 15}
         />
       ))}
       <PositionedPort
         name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
         position={((inputNumber + 1) * 15) / 2}
       />
       <Shape selected={selected} inputNumber={inputNumber} />

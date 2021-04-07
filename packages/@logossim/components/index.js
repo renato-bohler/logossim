@@ -5,6 +5,7 @@ import Buzzer from './Buzzer/BuzzerRegister';
 import Clock from './Clock/ClockRegister';
 import ControlledBuffer from './ControlledBuffer/ControlledBufferRegister';
 import ControlledInverter from './ControlledInverter/ControlledInverterRegister';
+import Counter from './Counter/CounterRegister';
 import Demux from './Demux/DemuxRegister';
 import Ground from './Ground/GroundRegister';
 import Input from './Input/InputRegister';
@@ -17,6 +18,8 @@ import Not from './Not/NotRegister';
 import Or from './Or/OrRegister';
 import Output from './Output/OutputRegister';
 import Power from './Power/PowerRegister';
+import Ram from './Ram/RamRegister';
+import Rom from './Rom/RomRegister';
 import Splitter from './Splitter/SplitterRegister';
 import Ssd from './Ssd/SsdRegister';
 import Switch from './Switch/SwitchRegister';
@@ -48,6 +51,9 @@ const components = [
   Ground,
   Mux,
   Demux,
+  Ram,
+  Rom,
+  Counter,
 ];
 
 export default components;

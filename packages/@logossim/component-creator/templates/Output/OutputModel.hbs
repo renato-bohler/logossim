@@ -12,7 +12,10 @@ export default class {{fileName name}}Model extends BaseModel {
   }
 
   getInput() {
-    return this.getPort('in').getValue() || 0;
+    const value = this.getPort('in').getValue();
+
+    if (!value) return 0;
+    return value[0];
   }
 
   isActive() {

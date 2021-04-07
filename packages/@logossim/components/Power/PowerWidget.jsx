@@ -49,7 +49,7 @@ export const Shape = ({ selected, dataBits = 1 }) => {
 };
 
 const PowerWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -57,12 +57,7 @@ const PowerWidget = props => {
   return (
     <Wrapper>
       <Shape selected={selected} dataBits={model.dataBits} />
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" />
     </Wrapper>
   );
 };

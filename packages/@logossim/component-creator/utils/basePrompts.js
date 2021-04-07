@@ -16,7 +16,14 @@ const basePrompts = [
     type: 'list',
     name: 'group',
     message: 'In which group this component should be added?',
-    choices: ['Input & output', 'Logic gates', 'Wiring', 'Plexers'],
+    choices: [
+      'Input & output',
+      'Logic gates',
+      'Wiring',
+      'Plexers',
+      'Memory',
+      'Miscellaneous',
+    ],
   },
 ];
 

@@ -10,6 +10,8 @@ export default class {{fileName name}}Model extends BaseModel {
 
   onSimulationStart() {
     this.audio = this.createAudio(this.frequencyHz, this.waveform);
+
+    if (this.getInput() === 1) this.audio.play();
   }
 
   onSimulationPause() {
@@ -24,10 +26,14 @@ export default class {{fileName name}}Model extends BaseModel {
     }
   }
 
-  isActive() {
-    const input = this.getPort('in').getValue() || 0;
+  getInput() {
+    const value = this.getPort('in').getValue();
 
-    if (input === 0) return false;
-    return true;
+    if (!value) return 0;
+    return value[0];
+  }
+
+  isActive() {
+    return !!this.getInput()[0];
   }
 }

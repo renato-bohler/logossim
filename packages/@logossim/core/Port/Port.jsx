@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { PortWidget } from '@projectstorm/react-diagrams';
 
 import styled from 'styled-components';
+
+import ComponentContext from '../ComponentContext';
+import DiagramContext from '../Diagram/DiagramContext';
 
 const Circle = styled.div`
   width: 10px;
@@ -20,7 +23,7 @@ const Circle = styled.div`
   }
 `;
 
-export default class Port extends PortWidget {
+class Port extends PortWidget {
   report() {
     if (this.props.port) super.report();
   }
@@ -30,7 +33,7 @@ export default class Port extends PortWidget {
   }
 
   render() {
-    const { name, model, port, className = '' } = this.props;
+    const { name, port, model, className = '' } = this.props;
 
     if (!port) return null;
 
@@ -41,7 +44,29 @@ export default class Port extends PortWidget {
         data-nodeid={model.getID()}
         port={port}
         link={port.getMainLink()}
+        title={name}
       />
     );
   }
 }
+
+/**
+ * React Diagrams PortWidget implementation needs us to forward some
+ * props in order to function properly. We have this HOC so that
+ * component widgets don't need to pass them every time.
+ */
+const withProps = WrappedComponent => ({ ...props }) => {
+  const diagram = useContext(DiagramContext);
+  const model = useContext(ComponentContext);
+
+  return (
+    <WrappedComponent
+      {...props}
+      port={model.getPort(props.name)}
+      engine={diagram.getEngine()}
+      model={model}
+    />
+  );
+};
+
+export default withProps(Port);

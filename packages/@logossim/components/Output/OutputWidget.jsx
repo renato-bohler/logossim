@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Port } from '@logossim/core';
-import { convertArrayValueToNumber } from '@logossim/core/Simulation/utils';
 
 import styled from 'styled-components';
 
@@ -68,7 +67,7 @@ export const Shape = styled.div`
 
 export const PinContainer = styled.span`
   display: flex;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
   font-family: monospace;
@@ -101,6 +100,12 @@ const ErrorMessage = styled.span`
   font-family: monospace;
 `;
 
+const FloatingMessage = styled.span`
+  color: var(--value-floating);
+  font-weight: bold;
+  font-family: monospace;
+`;
+
 const mapBits = model => {
   const {
     configurations: { DATA_BITS },
@@ -123,8 +128,10 @@ const mapBits = model => {
 };
 
 const showAsNumber = (input, format) => {
-  const number = convertArrayValueToNumber(input);
+  const number = input.asNumber();
   if (number === 'e') return <ErrorMessage>(error)</ErrorMessage>;
+  if (number === 'x')
+    return <FloatingMessage>(floating)</FloatingMessage>;
 
   if (format === 'DECIMAL') return number;
   if (format === 'HEXADECIMAL')
@@ -133,7 +140,7 @@ const showAsNumber = (input, format) => {
 };
 
 const OutputWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     configurations: { OUTPUT_FORMAT, DATA_BITS },
@@ -152,12 +159,7 @@ const OutputWidget = props => {
           ? mapBits(model)
           : showAsNumber(model.getInput(), OUTPUT_FORMAT)}
       </PinContainer>
-      <PositionedPort
-        name="in"
-        model={model}
-        port={model.getPort('in')}
-        engine={engine}
-      />
+      <PositionedPort name="in" />
     </Shape>
   );
 };

@@ -25,14 +25,15 @@ import {
   getComponent,
   getAffectedMeshes,
   getMeshInputValue,
+  getMeshInputComponents,
   getMeshOutputComponents,
   adjustValueToBits,
-  convertNumberValueToArray,
-  convertArrayValueToNumber,
   isValueFloating,
   isInputError,
   isInputFloating,
 } from './utils';
+
+import '../common/prototype';
 
 /**
  * Worker states
@@ -134,10 +135,7 @@ const executeNextEmitted = (
       const { bits } = emitter.getOutputPort(portName);
       let value = portValue;
       if (typeof value === 'number') {
-        value = convertNumberValueToArray(
-          adjustValueToBits(portValue, bits),
-          bits,
-        );
+        value = adjustValueToBits(portValue, bits).asArray(bits);
       } else if (value === 'x' || value === 'e') {
         value = Array(bits).fill(value);
       }
@@ -186,7 +184,7 @@ const executeNextStep = (firstOfSimulation = false) => {
       Object.fromEntries(
         Object.entries(input).map(([key, value]) => [
           key,
-          convertArrayValueToNumber(value),
+          value.asNumber(),
         ]),
       ),
       meta,
@@ -200,6 +198,7 @@ const executeNextStep = (firstOfSimulation = false) => {
   }
 
   if (!result) {
+    appendComponentDiff(component);
     executeNextStep();
     return;
   }
@@ -209,10 +208,7 @@ const executeNextStep = (firstOfSimulation = false) => {
       const { bits } = component.getOutputPort(portName);
       let value = portValue;
       if (typeof value === 'number') {
-        value = convertNumberValueToArray(
-          adjustValueToBits(portValue, bits),
-          bits,
-        );
+        value = adjustValueToBits(portValue, bits).asArray(bits);
       } else if (value === 'x' || value === 'e') {
         value = Array(bits).fill(value);
       }
@@ -230,6 +226,8 @@ const executeNextStep = (firstOfSimulation = false) => {
     component.setOutputValues(output);
     appendComponentDiff(component, output);
     propagate({ from: component, value: output });
+  } else {
+    appendComponentDiff(component);
   }
 
   executeNextStep();
@@ -247,8 +245,8 @@ const propagate = emitted => {
       self.diff.links[link] = meshValue;
     });
 
-    const connectedComponents = getMeshOutputComponents(mesh);
-    connectedComponents.forEach(component => {
+    const componentsOutput = getMeshOutputComponents(mesh);
+    componentsOutput.forEach(component => {
       const portsConnectedToMesh = mesh.outputs
         .filter(meshOutput => meshOutput.componentId === component.id)
         .map(meshOutput => meshOutput.name);
@@ -263,6 +261,20 @@ const propagate = emitted => {
       appendComponentDiff(component, portsWithNewValue);
 
       self.stepQueue.push(component);
+    });
+
+    const componentsInput = getMeshInputComponents(mesh);
+    componentsInput.forEach(component => {
+      const portsConnectedToMesh = mesh.inputs
+        .filter(meshInput => meshInput.componentId === component.id)
+        .map(meshInput => meshInput.name);
+
+      const portsWithNewValue = portsConnectedToMesh.reduce(
+        (obj, portName) => ({ ...obj, [portName]: meshValue }),
+        {},
+      );
+
+      component.setWireValues(portsWithNewValue);
     });
   });
 };

@@ -59,7 +59,7 @@ export const Shape = ({ size = 90 }) => (
 );
 
 const NandWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
 
   const inputPorts = Object.values(model.getInputPorts());
   const portPositions = distributePorts(inputPorts.length);
@@ -74,18 +74,10 @@ const NandWidget = props => {
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
-          port={port}
-          engine={engine}
           position={portPositions[i]}
         />
       ))}
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" />
       <Shape />
     </Wrapper>
   );

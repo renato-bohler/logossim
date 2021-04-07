@@ -176,6 +176,7 @@ export default class App extends Component {
       return;
     }
 
+    // eslint-disable-next-line no-alert
     const reload = window.confirm('Reload last unsaved circuit?');
     if (reload) {
       this.loadFile(lastSaved);

@@ -53,7 +53,7 @@ export const Shape = ({ selected, dataBits }) => {
 };
 
 const SplitterWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
     configurations: { DATA_BITS },
@@ -64,19 +64,11 @@ const SplitterWidget = props => {
 
   return (
     <Wrapper dataBits={dataBits}>
-      <PositionedPort
-        name="in"
-        model={model}
-        port={model.getPort('in')}
-        engine={engine}
-      />
+      <PositionedPort name="in" />
       {outputPorts.map((port, i) => (
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
-          port={port}
-          engine={engine}
           position={(i + 1) * 15}
         />
       ))}

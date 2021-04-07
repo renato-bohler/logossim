@@ -104,7 +104,7 @@ export const Shape = ({ size = 90, portPositions = [] }) => (
 );
 
 const XorWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
 
   const inputPorts = Object.values(model.getInputPorts());
   const portPositions = distributePorts(inputPorts.length);
@@ -120,9 +120,6 @@ const XorWidget = props => {
         <Fragment key={port.getName()}>
           <PositionedPort
             name={port.getName()}
-            model={model}
-            port={port}
-            engine={engine}
             position={portPositions[i]}
           />
           {(portPositions[i] < 1 || portPositions[i] > 5) && (
@@ -133,12 +130,7 @@ const XorWidget = props => {
           )}
         </Fragment>
       ))}
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" />
       <Shape portPositions={portPositions} />
     </Wrapper>
   );

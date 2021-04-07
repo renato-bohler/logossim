@@ -8,28 +8,6 @@ export const MAX_VALUE = {
   16: 0b1111_1111_1111_1111,
 };
 
-export const convertNumberValueToArray = (value, dataBits) => {
-  if (Array.isArray(value)) return value;
-
-  const result = [...value.toString(2)].map(Number);
-
-  return Array(dataBits)
-    .fill(0)
-    .concat(result)
-    .slice(result.length);
-};
-
-export const convertArrayValueToNumber = value => {
-  if (!Array.isArray(value)) return value;
-
-  if (value.includes('e')) return 'e';
-
-  return value
-    .slice()
-    .reverse()
-    .reduce((acc, curr, index) => acc + curr * 2 ** index, 0);
-};
-
 export const adjustValueToBits = (value, dataBits = 1) => {
   if (typeof value !== 'number') return value;
 
@@ -93,6 +71,14 @@ export const getAffectedMeshes = emitted =>
   );
 
 /**
+ * Finds all components that are connected on a given mesh's Input.
+ */
+export const getMeshInputComponents = mesh =>
+  [
+    ...new Set(mesh.inputs.map(meshInput => meshInput.componentId)),
+  ].map(componentId => getComponent(componentId));
+
+/**
  * Finds all components that are connected on a given mesh's output.
  */
 export const getMeshOutputComponents = mesh =>
@@ -139,7 +125,7 @@ export const getMeshInputValue = mesh => {
 };
 
 /**
- * Initialize all links and ports with the value 0.
+ * Initialize all links and ports with the floating value.
  */
 export const initializeDiffAndValues = () => {
   self.circuit.components.forEach(component => {
@@ -205,7 +191,7 @@ export const appendComponentDiff = (component, output) => {
   }
   self.diff.components[component.id] = {
     ...self.diff.components[component.id],
-    output,
+    output: output || self.diff.components[component.id].output,
     properties: component.getProperties(),
   };
 };

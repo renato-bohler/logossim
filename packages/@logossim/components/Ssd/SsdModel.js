@@ -8,14 +8,14 @@ export default class LedModel extends BaseModel {
       off: configurations.OFF_COLOR,
     };
 
-    this.addInputPort('a');
-    this.addInputPort('b');
-    this.addInputPort('c');
-    this.addInputPort('d');
-    this.addInputPort('e');
-    this.addInputPort('f');
-    this.addInputPort('g');
-    this.addInputPort('dp');
+    this.addInputPort('a', { floating: 0, error: 0 });
+    this.addInputPort('b', { floating: 0, error: 0 });
+    this.addInputPort('c', { floating: 0, error: 0 });
+    this.addInputPort('d', { floating: 0, error: 0 });
+    this.addInputPort('e', { floating: 0, error: 0 });
+    this.addInputPort('f', { floating: 0, error: 0 });
+    this.addInputPort('g', { floating: 0, error: 0 });
+    this.addInputPort('dp', { floating: 0, error: 0 });
   }
 
   getInput(segment) {

@@ -7,7 +7,7 @@ export default class JoinerModel extends BaseModel {
     for (let i = 0; i < this.bits; i += 1) {
       this.addInputPort(`in${i}`);
     }
-    this.addOutputPort('out', this.bits);
+    this.addOutputPort('out', { bits: this.bits });
   }
 
   step(input) {

@@ -48,7 +48,7 @@ export const Shape = ({ selected, outputNumber, icon }) => {
 };
 
 const DemuxWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
   const {
     options: { selected },
   } = model;
@@ -60,24 +60,13 @@ const DemuxWidget = props => {
     <Wrapper outputNumber={outputNumber}>
       <PositionedPort
         name="in"
-        model={model}
-        port={model.getPort('in')}
-        engine={engine}
         position={((outputNumber + 2) * 15) / 2}
       />
-      <PositionedPort
-        name="selection"
-        model={model}
-        port={model.getPort('selection')}
-        engine={engine}
-      />
+      <PositionedPort name="selection" />
       {outputPorts.map((port, i) => (
         <PositionedPort
           key={port.getName()}
           name={port.getName()}
-          model={model}
-          port={port}
-          engine={engine}
           position={(i + 1) * 15}
         />
       ))}

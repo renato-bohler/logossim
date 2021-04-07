@@ -5,8 +5,8 @@ export default class ControlledBufferModel extends BaseModel {
     const DATA_BITS = Number(configurations.DATA_BITS);
 
     this.addInputPort('control');
-    this.addInputPort('in', DATA_BITS);
-    this.addOutputPort('out', DATA_BITS);
+    this.addInputPort('in', { bits: DATA_BITS });
+    this.addOutputPort('out', { bits: DATA_BITS });
   }
 
   step(input) {

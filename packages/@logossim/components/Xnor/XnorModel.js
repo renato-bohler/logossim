@@ -3,53 +3,42 @@ import { BaseModel } from '@logossim/core';
 export default class XnorModel extends BaseModel {
   initialize(configurations) {
     this.behavior = configurations.MULTIPLE_INPUT_BEHAVIOR;
-    this.bits = Number(configurations.DATA_BITS);
+    this.dataBits = Number(configurations.DATA_BITS);
 
     const INPUT_PORTS_NUMBER = Number(
       configurations.INPUT_PORTS_NUMBER,
     );
 
     for (let i = 0; i < INPUT_PORTS_NUMBER; i += 1) {
-      this.addInputPort(`in${i}`, this.bits);
+      this.addInputPort(`in${i}`, { bits: this.dataBits });
     }
-    this.addOutputPort('out', this.bits);
+    this.addOutputPort('out', { bits: this.dataBits });
   }
 
-  notExclusiveOrAt(values, index) {
-    const mask = 0b1 << index;
+  executeBit(bits) {
+    if (this.behavior === 'ONE') return this.executeOne(bits);
+    if (this.behavior === 'ODD') return this.executeOdd(bits);
+    return {};
+  }
 
-    const sum = values
-      .map(value => ((value & mask) > 0 ? 1 : 0))
-      .reduce((acc, curr) => acc + curr);
+  executeOne(bits) {
+    return bits.filter(bit => bit === 1).length === 1 ? 0 : 1;
+  }
 
-    return sum === 1 ? 0 : 1;
+  executeOdd(bits) {
+    return bits.filter(bit => bit === 1).length % 2 ? 0 : 1;
   }
 
   step(input) {
-    const MAX_VALUE = 0b1111_1111_1111_1111_1111_1111_1111_1111;
-    const mask = MAX_VALUE >>> (32 - this.bits);
+    return {
+      out: Object.values(input)
+        .map(value => value.asArray(this.dataBits))
+        .transpose()
+        .map(this.executeBit.bind(this)),
+    };
+  }
 
-    const values = Object.values(input);
-
-    switch (this.behavior) {
-      case 'ONE':
-        return {
-          out: parseInt(
-            [...new Array(this.bits)]
-              .map((_, index) => this.notExclusiveOrAt(values, index))
-              .reverse()
-              .join(''),
-            2,
-          ),
-        };
-      case 'ODD': {
-        const xor = values.reduce((acc, curr) => curr ^ acc);
-        return {
-          out: ~xor & mask,
-        };
-      }
-      default:
-        return {};
-    }
+  stepFloating(input) {
+    return this.step(input);
   }
 }

@@ -5,6 +5,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 
 import styled from 'styled-components';
 
+import DiagramContext from './DiagramContext';
 import DroppableLayer from './DroppableLayer';
 
 const FullscreenCanvas = styled(CanvasWidget)`
@@ -20,7 +21,9 @@ const Diagram = ({ engine }) => (
       }
       disabled={engine.isLocked()}
     >
-      <FullscreenCanvas engine={engine.getEngine()} />
+      <DiagramContext.Provider value={engine}>
+        <FullscreenCanvas engine={engine.getEngine()} />
+      </DiagramContext.Provider>
     </DroppableLayer>
   </MenuProvider>
 );

@@ -94,7 +94,7 @@ export const Shape = ({ size = 90, portPositions = [] }) => (
 );
 
 const OrWidget = props => {
-  const { model, engine } = props;
+  const { model } = props;
 
   const inputPorts = Object.values(model.getInputPorts());
   const portPositions = distributePorts(inputPorts.length);
@@ -110,9 +110,6 @@ const OrWidget = props => {
         <Fragment key={port.getName()}>
           <PositionedPort
             name={port.getName()}
-            model={model}
-            port={port}
-            engine={engine}
             position={portPositions[i]}
           />
           {(portPositions[i] < 1 || portPositions[i] > 5) && (
@@ -123,12 +120,7 @@ const OrWidget = props => {
           )}
         </Fragment>
       ))}
-      <PositionedPort
-        name="out"
-        model={model}
-        port={model.getPort('out')}
-        engine={engine}
-      />
+      <PositionedPort name="out" />
       <Shape portPositions={portPositions} />
     </Wrapper>
   );
