@@ -10,7 +10,24 @@ const resolveApp = relativePath =>
 
 module.exports = {
   webpack: config => {
-    config.module.rules.push({
+    /**
+     * The `core` and `components` packages from logossim has to be
+     * handled by `babel-loader` when building.
+     */
+    config = rewireBabelLoader.include(config, [
+      resolveApp('../core'),
+      resolveApp('../components'),
+    ]);
+
+    const { oneOf } = config.module.rules[
+      config.module.rules.length - 1
+    ];
+
+    /**
+     * The `simulation.worker.js` file has to be loaded by
+     * `worker-loader` in order to be executed on a Web Worker thread.
+     */
+    oneOf.unshift({
       test: /simulation\.worker\.js$/,
       use: {
         loader: 'worker-loader',
@@ -18,10 +35,24 @@ module.exports = {
       },
     });
 
-    return rewireBabelLoader.include(config, [
-      resolveApp('../core'),
-      resolveApp('../components'),
-    ]);
+    /**
+     * Custom babel-loader settings for component model files.
+     *
+     * This is needed because some of the default Babel
+     * transformations that react-script performs ends up breaking the
+     * serialization/deserialization process.
+     */
+    oneOf.unshift({
+      test: /.*components\/(.*)\/\1Model.js/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          plugins: ['@babel/plugin-proposal-numeric-separator'],
+        },
+      },
+    });
+
+    return config;
   },
   jest: config => {
     config.rootDir = resolveApp('..');

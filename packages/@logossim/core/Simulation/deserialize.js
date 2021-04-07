@@ -255,19 +255,13 @@ export class GenericComponent {
  */
 const deserializeMethod = model =>
   Object.fromEntries(
-    Object.entries(model.methods).map(([key, stringFn]) => [
-      key,
-      // eslint-disable-next-line no-new-func
-      new Function(
-        `return ${
-          /**
-           * We need to add the `function` token when on development
-           * environment.
-           */
-          process.env.NODE_ENV === 'development' ? 'function ' : ''
-        }${stringFn}`,
-      )(),
-    ]),
+    Object.entries(model.methods).map(([key, stringFn]) => {
+      return [
+        key,
+        // eslint-disable-next-line no-new-func
+        new Function(`return function ${stringFn}`)(),
+      ];
+    }),
   );
 
 const deserializeModels = models =>
