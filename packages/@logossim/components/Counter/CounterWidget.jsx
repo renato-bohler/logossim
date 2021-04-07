@@ -32,8 +32,8 @@ export const Wrapper = styled.div`
 const PositionedPort = styled(Port)`
   position: absolute;
   ${props => {
-    if (props.name === 'in') return 'left: -5px;';
-    if (props.name === 'out') return 'right: -5px;';
+    if (props.name === 'in') return 'left: -7px;';
+    if (props.name === 'out') return 'right: -7px;';
     return '';
   }}
 `;
