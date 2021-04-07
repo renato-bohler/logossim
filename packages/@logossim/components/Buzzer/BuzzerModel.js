@@ -34,6 +34,6 @@ export default class BuzzerModel extends BaseModel {
   }
 
   isActive() {
-    return !!this.getInput()[0];
+    return !!this.getInput();
   }
 }
