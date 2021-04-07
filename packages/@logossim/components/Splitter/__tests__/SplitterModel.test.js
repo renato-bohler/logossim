@@ -65,8 +65,8 @@ describe('SplitterModel', () => {
         in: [0, 'x'],
       }),
     ).toEqual({
-      out0: ['x'],
-      out1: [0],
+      out0: 'x',
+      out1: 0,
     });
   });
 
@@ -80,8 +80,8 @@ describe('SplitterModel', () => {
         in: [0, 'e'],
       }),
     ).toEqual({
-      out0: ['e'],
-      out1: [0],
+      out0: 'e',
+      out1: 0,
     });
   });
 });
