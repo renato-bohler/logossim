@@ -6,7 +6,7 @@ import {
 } from '@projectstorm/react-diagrams';
 import { DefaultLabelModel } from '@projectstorm/react-diagrams-defaults';
 
-import { sameAxis } from '../Diagram/states/common';
+import { snap, sameAxis } from '../Diagram/states/common';
 import {
   isValueError,
   isValueValid,
@@ -26,6 +26,12 @@ export default class LinkModel extends RDLinkModel {
 
     this.value = null;
     this.bits = null;
+  }
+
+  getGridSize() {
+    return this.getParent()
+      .getParent()
+      .getOptions().gridSize;
   }
 
   addLabel(label) {
@@ -190,6 +196,16 @@ export default class LinkModel extends RDLinkModel {
     return pointModel;
   }
 
+  generatePoint(x, y) {
+    const point = super.generatePoint(x, y);
+    point.setPosition(
+      snap(x, this.getGridSize()),
+      snap(y, this.getGridSize()),
+    );
+
+    return point;
+  }
+
   getMiddlePoint() {
     if (!this.hasMiddlePoint()) return null;
 
@@ -206,25 +222,40 @@ export default class LinkModel extends RDLinkModel {
   }
 
   getFirstPosition() {
-    return this.getFirstPoint().getPosition();
+    return snap(
+      this.getFirstPoint().getPosition(),
+      this.getGridSize(),
+    );
   }
 
   getSecondPosition() {
-    return this.getSecondPoint().getPosition();
+    return snap(
+      this.getSecondPoint().getPosition(),
+      this.getGridSize(),
+    );
   }
 
   getMiddlePosition() {
     if (!this.hasMiddlePoint()) return null;
 
-    return this.getMiddlePoint().getPosition();
+    return snap(
+      this.getMiddlePoint().getPosition(),
+      this.getGridSize(),
+    );
   }
 
   getSecondLastPosition() {
-    return this.getSecondLastPoint().getPosition();
+    return snap(
+      this.getSecondLastPoint().getPosition(),
+      this.getGridSize(),
+    );
   }
 
   getLastPosition() {
-    return this.getLastPoint().getPosition();
+    return snap(
+      this.getLastPoint().getPosition(),
+      this.getGridSize(),
+    );
   }
 
   hasMiddlePoint() {
