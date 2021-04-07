@@ -47,6 +47,8 @@
     "styled-components": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-numeric-separator": "7.8.3",
+    "babel-loader": "8.1.0",
     "eslint": "^6.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.1.0",

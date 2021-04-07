@@ -27,8 +27,10 @@ describe('JoinerModel', () => {
   });
 
   it('should correctly join the input value', () => {
+    const DATA_BITS = 16;
+
     const model = new JoinerModel({
-      DATA_BITS: 16,
+      DATA_BITS,
     });
 
     expect(
@@ -51,7 +53,7 @@ describe('JoinerModel', () => {
         in15: 1,
       }),
     ).toEqual({
-      out: 0b1010_0101_1111_0000,
+      out: (0b1010_0101_1111_0000).asArray(DATA_BITS),
     });
   });
 

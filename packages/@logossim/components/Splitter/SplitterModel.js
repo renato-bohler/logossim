@@ -10,32 +10,22 @@ export default class SplitterModel extends BaseModel {
     }
   }
 
-  getBitAt(input, index) {
-    const mask = 0b1 << index;
-    const result = input & mask;
-
-    return result > 0 ? 1 : 0;
-  }
-
   step(input) {
     return Object.fromEntries(
-      [...new Array(this.bits)].map((_, index) => [
-        `out${index}`,
-        this.getBitAt(input.in, index),
-      ]),
+      input.in
+        .asArray(this.bits)
+        .map((bit, index, { length }) => [
+          `out${length - index - 1}`,
+          bit,
+        ]),
     );
   }
 
   stepFloating(input) {
-    return Object.fromEntries(
-      [...new Array(this.bits)].map((_, index) => [
-        `out${this.bits - index - 1}`,
-        [input.in[index]],
-      ]),
-    );
+    return this.step(input);
   }
 
   stepError(input) {
-    return this.stepFloating(input);
+    return this.step(input);
   }
 }

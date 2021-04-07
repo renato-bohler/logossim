@@ -12,21 +12,17 @@ export default class JoinerModel extends BaseModel {
 
   step(input) {
     return {
-      out: [...new Array(this.bits)]
-        .map((_, index) => input[`in${index}`])
-        .reduce((acc, curr, index) => acc + curr * 2 ** index, 0),
+      out: Object.values(input)
+        .map(value => value.asArray(1)[0])
+        .map((_, index, arr) => arr[arr.length - index - 1]),
     };
   }
 
   stepFloating(input) {
-    return {
-      out: [...new Array(this.bits)]
-        .map((_, index) => input[`in${this.bits - index - 1}`])
-        .flat(),
-    };
+    return this.step(input);
   }
 
   stepError(input) {
-    return this.stepFloating(input);
+    return this.step(input);
   }
 }
