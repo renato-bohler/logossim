@@ -178,7 +178,7 @@ export default class App extends Component {
 
   loadExample = async name => {
     this.setState({ isLoadingExample: true });
-    const response = await window.fetch(`/examples/${name}.lgsim`);
+    const response = await window.fetch(`./examples/${name}.lgsim`);
     const circuit = await response.json();
     this.loadFile(circuit);
     this.setState({ isLoadingExample: false });
