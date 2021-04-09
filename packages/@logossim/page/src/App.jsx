@@ -18,6 +18,7 @@ import {
   ComponentEdit,
   ContextMenus,
   HelpKeyboardShortcuts,
+  LoadingExample,
   HelpAbout,
   Snackbar,
   Tour,
@@ -45,6 +46,7 @@ export default class App extends Component {
       circuitName: DEFAULT_CIRCUIT_NAME,
       circuitCreatedAt: null,
       isCircuitNameFocused: false,
+      isLoadingExample: false,
       snackbar: {
         open: false,
         message: '',
@@ -63,8 +65,16 @@ export default class App extends Component {
   }
 
   componentDidMount() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const example = urlParams.get('example');
+
+    if (example === null) {
+      window.addEventListener('load', this.loadHandler);
+    } else {
+      this.loadExample(example);
+    }
+
     window.addEventListener('keydown', this.shortcutHandler);
-    window.addEventListener('load', this.loadHandler);
     window.addEventListener('beforeunload', this.unloadHandler);
 
     this.autoSaveInterval = setInterval(this.autoSave, 15000);
@@ -164,6 +174,14 @@ export default class App extends Component {
       circuitCreatedAt: file.createdAt,
     });
     this.diagram.load(file.circuit);
+  };
+
+  loadExample = async name => {
+    this.setState({ isLoadingExample: true });
+    const response = await window.fetch(`/examples/${name}.lgsim`);
+    const circuit = await response.json();
+    this.loadFile(circuit);
+    this.setState({ isLoadingExample: false });
   };
 
   loadHandler = () => {
@@ -454,6 +472,7 @@ export default class App extends Component {
       isTourRunning,
       circuitName,
       isCircuitNameFocused,
+      isLoadingExample,
       snackbar,
     } = this.state;
 
@@ -515,6 +534,7 @@ export default class App extends Component {
           />
         )}
 
+        {isLoadingExample && <LoadingExample />}
         <Diagram engine={this.diagram} />
 
         <ContextMenus
