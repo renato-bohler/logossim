@@ -3,11 +3,9 @@ import {
   Action,
   InputType,
 } from '@projectstorm/react-canvas-core';
-import {
-  PortModel,
-  LinkModel,
-} from '@projectstorm/react-diagrams-core';
 
+import LinkModel from '../../Link/LinkModel';
+import PortModel from '../../Port/PortModel';
 import BifurcateLinkState from './BifurcateLinkState';
 import DragCanvasState from './DragCanvasState';
 import DragNewLinkState from './DragNewLinkState';
@@ -55,6 +53,16 @@ export default class States extends State {
           else {
             this.transitionWithEvent(this.dragItems, event);
           }
+        },
+      }),
+    );
+
+    // Allows dragging the canvas on touch devices
+    this.registerAction(
+      new Action({
+        type: InputType.TOUCH_START,
+        fire: event => {
+          this.transitionWithEvent(this.dragCanvas, event);
         },
       }),
     );

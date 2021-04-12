@@ -84,7 +84,9 @@ export default class MoveItemsState extends AbstractDisplacementState {
     this.engine
       .getModel()
       .getSelectedEntities()
-      .filter(model => model instanceof BaseModel)
+      .filter(
+        model => Object.getPrototypeOf(model) instanceof BaseModel,
+      )
       .map(node => ({
         id: node.getID(),
         position: node.getPosition(),
@@ -94,7 +96,9 @@ export default class MoveItemsState extends AbstractDisplacementState {
     this.engine
       .getModel()
       .getSelectedEntities()
-      .filter(model => model instanceof BaseModel)
+      .filter(
+        model => Object.getPrototypeOf(model) instanceof BaseModel,
+      )
       .map(node => node.getAllLinks())
       .flat()
       .map(link => ({
@@ -131,7 +135,8 @@ export default class MoveItemsState extends AbstractDisplacementState {
    * Gets all links from a given node, including all its bifurcations.
    */
   getLinksFromNode(node) {
-    if (!(node instanceof NodeModel)) return [];
+    if (!(Object.getPrototypeOf(node) instanceof BaseModel))
+      return [];
 
     return Object.values(node.getPorts())
       .map(p => Object.entries(p.getLinks()))
@@ -196,14 +201,12 @@ export default class MoveItemsState extends AbstractDisplacementState {
     this.engine
       .getModel()
       .getSelectedEntities()
+      .filter(
+        entity => Object.getPrototypeOf(entity) instanceof BaseModel,
+      )
       .forEach(entity => {
-        if (entity instanceof BasePositionModel) {
-          this.moveEntity(entity, event);
-
-          if (entity instanceof NodeModel) {
-            this.adjustNodeLinks(entity);
-          }
-        }
+        this.moveEntity(entity, event);
+        this.adjustNodeLinks(entity);
       });
 
     this.engine.repaintCanvas();

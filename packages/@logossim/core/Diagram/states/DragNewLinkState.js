@@ -3,11 +3,9 @@ import {
   Action,
   InputType,
 } from '@projectstorm/react-canvas-core';
-import {
-  NodeModel,
-  PortModel,
-} from '@projectstorm/react-diagrams-core';
 
+import BaseModel from '../../BaseModel';
+import PortModel from '../../Port/PortModel';
 import {
   nearby,
   getLandingLink,
@@ -63,7 +61,7 @@ export default class DragNewLinkState extends AbstractDisplacementState {
 
           // Disallows creation under nodes
           if (
-            model instanceof NodeModel ||
+            Object.getPrototypeOf(model) instanceof BaseModel ||
             this.isNearbySourcePort(event.event)
           ) {
             this.link.remove();
