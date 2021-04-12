@@ -33,7 +33,11 @@ export default class DragCanvasState extends AbstractDisplacementState {
 
   fireMouseMoved(event) {
     // Allow moving only with left clicks
-    if (event.event.nativeEvent.which !== 1) return;
+    if (
+      event.event.nativeEvent.which !== 1 &&
+      !event.event.nativeEvent.targetTouches
+    )
+      return;
 
     this.engine
       .getModel()
