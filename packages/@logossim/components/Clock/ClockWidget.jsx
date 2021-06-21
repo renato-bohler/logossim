@@ -50,7 +50,7 @@ export const Decoration = ({
       strokeWidth={0.75}
       fill="none"
       style={{
-        transform: isActive ? 'none' : 'rotateX(180deg)',
+        transform: isActive ? 'scaleX(1)' : 'scaleX(-1)',
         transformOrigin: 'center',
         transition: animateTransition
           ? `calc(${periodMs}ms / 2 * 0.4) ease-in-out`
