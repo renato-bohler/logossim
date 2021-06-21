@@ -191,7 +191,12 @@ export const appendComponentDiff = (component, output) => {
   }
   self.diff.components[component.id] = {
     ...self.diff.components[component.id],
-    output: output || self.diff.components[component.id].output,
+    output: self.diff.components[component.id].output
+      ? {
+          ...self.diff.components[component.id].output,
+          ...(output || {}),
+        }
+      : output || {},
     properties: component.getProperties(),
   };
 };
