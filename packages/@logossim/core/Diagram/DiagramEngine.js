@@ -127,8 +127,14 @@ export default class DiagramEngine {
   };
 
   adjustGridOffset = ({ offsetX, offsetY }) => {
-    document.body.style.setProperty('--offset-x', `${offsetX}px`);
-    document.body.style.setProperty('--offset-y', `${offsetY}px`);
+    document.body.style.setProperty(
+      '--offset-x',
+      `${Math.round(offsetX)}px`,
+    );
+    document.body.style.setProperty(
+      '--offset-y',
+      `${Math.round(offsetY)}px`,
+    );
   };
 
   adjustGridZoom = ({ zoom }) => {
