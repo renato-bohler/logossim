@@ -2,10 +2,8 @@ import { Point } from '@projectstorm/geometry';
 import {
   Action,
   InputType,
-  BasePositionModel,
   AbstractDisplacementState,
 } from '@projectstorm/react-canvas-core';
-import { NodeModel } from '@projectstorm/react-diagrams-core';
 
 import BaseModel from '../../BaseModel';
 import {

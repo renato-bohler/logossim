@@ -29,7 +29,7 @@ describe('ClockWidget', () => {
     const { getByTestId } = render(<ClockWidget model={model} />);
     const decoration = getByTestId('decoration');
 
-    expect(decoration).toHaveStyle('transform: rotateX(180deg)');
+    expect(decoration).toHaveStyle('transform: scaleX(-1)');
   });
 
   it('should display on value', () => {
@@ -43,6 +43,6 @@ describe('ClockWidget', () => {
     const { getByTestId } = render(<ClockWidget model={model} />);
     const decoration = getByTestId('decoration');
 
-    expect(decoration).toHaveStyle('transform: none');
+    expect(decoration).toHaveStyle('transform: scaleX(1)');
   });
 });

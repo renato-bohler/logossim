@@ -17,10 +17,10 @@ describe('InputWidget', () => {
   it('should have 1 pin when configured with 1-bit', () => {
     const model = new InputModel({ DATA_BITS: 1 });
 
-    const { getAllByRole } = render(<InputWidget model={model} />);
+    const { getByRole } = render(<InputWidget model={model} />);
 
-    const pins = getAllByRole('button');
-    expect(pins).toHaveLength(1);
+    const pins = getByRole('button');
+    expect(pins).toBeInTheDocument();
   });
 
   it('should have 2 pins when configured with 2-bits', () => {
