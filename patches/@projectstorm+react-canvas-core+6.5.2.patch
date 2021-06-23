@@ -220,7 +220,7 @@ index 7c10eb7..1ee3276 100644
      render() {
          const { rect } = this.props;
 +        if (!rect)
-+            return;
++            return null;
          return (React.createElement(S.Container, { style: {
                  top: rect.top,
                  left: rect.left,
