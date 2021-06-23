@@ -16,8 +16,9 @@ export default class XnorModel extends BaseModel {
   }
 
   executeBit(bits) {
+    if (bits.some(bit => bit === 'x' || bit === 'e')) return 'e';
     if (this.behavior === 'ONE') return this.executeOne(bits);
-    if (this.behavior === 'ODD') return this.executeOdd(bits);
+    if (this.behavior === 'EVEN') return this.executeEven(bits);
     return {};
   }
 
@@ -25,7 +26,7 @@ export default class XnorModel extends BaseModel {
     return bits.filter(bit => bit === 1).length === 1 ? 0 : 1;
   }
 
-  executeOdd(bits) {
+  executeEven(bits) {
     return bits.filter(bit => bit === 1).length % 2 ? 0 : 1;
   }
 

@@ -72,15 +72,6 @@ describe('XnorModel', () => {
           in3: 1,
         }),
       ).toEqual({ out: [0] });
-
-      expect(
-        model.stepFloating({
-          in0: ['x'],
-          in1: [0],
-          in2: [0],
-          in3: [1],
-        }),
-      ).toEqual({ out: [0] });
     });
 
     it("should return 1 when there's more than 1 high input", () => {
@@ -143,15 +134,6 @@ describe('XnorModel', () => {
           in3: 1,
         }),
       ).toEqual({ out: [1] });
-
-      expect(
-        model.stepFloating({
-          in0: [1],
-          in1: [1],
-          in2: [1],
-          in3: ['x'],
-        }),
-      ).toEqual({ out: [1] });
     });
 
     it('should return 1 when all inputs are 0', () => {
@@ -169,6 +151,32 @@ describe('XnorModel', () => {
           in3: 0,
         }),
       ).toEqual({ out: [1] });
+    });
+
+    it('should return error if any of the bits are not numeric', () => {
+      const model = new XnorModel({
+        MULTIPLE_INPUT_BEHAVIOR: 'ONE',
+        INPUT_PORTS_NUMBER: 4,
+        DATA_BITS: 1,
+      });
+
+      expect(
+        model.stepFloating({
+          in0: ['x'],
+          in1: [0],
+          in2: [0],
+          in3: [1],
+        }),
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: [1],
+          in1: [1],
+          in2: [1],
+          in3: ['e'],
+        }),
+      ).toEqual({ out: ['e'] });
     });
 
     it('should return bitwise XNOR for multiple data bits', () => {
@@ -193,10 +201,10 @@ describe('XnorModel', () => {
     });
   });
 
-  describe('Configured with MULTIPLE_INPUT_BEHAVIOR=ODD', () => {
-    it("should return 0 when there's an odd number of high inputs", () => {
+  describe('Configured with MULTIPLE_INPUT_BEHAVIOR=EVEN', () => {
+    it("should return 1 when there's an even number of high inputs", () => {
       const model = new XnorModel({
-        MULTIPLE_INPUT_BEHAVIOR: 'ODD',
+        MULTIPLE_INPUT_BEHAVIOR: 'EVEN',
         INPUT_PORTS_NUMBER: 5,
         DATA_BITS: 1,
       });
@@ -230,29 +238,11 @@ describe('XnorModel', () => {
           in4: 1,
         }),
       ).toEqual({ out: [0] });
-
-      expect(
-        model.stepFloating({
-          in0: [0],
-          in1: [1],
-          in2: ['x'],
-          in3: [0],
-        }),
-      ).toEqual({ out: [0] });
-
-      expect(
-        model.stepFloating({
-          in0: [1],
-          in1: [1],
-          in2: ['x'],
-          in3: [1],
-        }),
-      ).toEqual({ out: [0] });
     });
 
-    it("should return 0 when there's an odd number of high inputs", () => {
+    it("should return 1 when there's an even number of high inputs", () => {
       const model = new XnorModel({
-        MULTIPLE_INPUT_BEHAVIOR: 'ODD',
+        MULTIPLE_INPUT_BEHAVIOR: 'EVEN',
         INPUT_PORTS_NUMBER: 4,
         DATA_BITS: 1,
       });
@@ -310,6 +300,14 @@ describe('XnorModel', () => {
           in3: 1,
         }),
       ).toEqual({ out: [1] });
+    });
+
+    it('should return error if any of the bits are not numeric', () => {
+      const model = new XnorModel({
+        MULTIPLE_INPUT_BEHAVIOR: 'EVEN',
+        INPUT_PORTS_NUMBER: 5,
+        DATA_BITS: 1,
+      });
 
       expect(
         model.stepFloating({
@@ -318,7 +316,7 @@ describe('XnorModel', () => {
           in2: ['x'],
           in3: [0],
         }),
-      ).toEqual({ out: [1] });
+      ).toEqual({ out: ['e'] });
 
       expect(
         model.stepFloating({
@@ -327,14 +325,32 @@ describe('XnorModel', () => {
           in2: ['x'],
           in3: [1],
         }),
-      ).toEqual({ out: [1] });
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: [0],
+          in1: [1],
+          in2: ['e'],
+          in3: [0],
+        }),
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: [1],
+          in1: [1],
+          in2: ['e'],
+          in3: [1],
+        }),
+      ).toEqual({ out: ['e'] });
     });
 
     it('should return bitwise XOR for multiple data bits', () => {
       const DATA_BITS = 8;
 
       const model = new XnorModel({
-        MULTIPLE_INPUT_BEHAVIOR: 'ODD',
+        MULTIPLE_INPUT_BEHAVIOR: 'EVEN',
         INPUT_PORTS_NUMBER: 5,
         DATA_BITS,
       });

@@ -16,6 +16,7 @@ export default class XorModel extends BaseModel {
   }
 
   executeBit(bits) {
+    if (bits.some(bit => bit === 'x' || bit === 'e')) return 'e';
     if (this.behavior === 'ONE') return this.executeOne(bits);
     if (this.behavior === 'ODD') return this.executeOdd(bits);
     return {};
