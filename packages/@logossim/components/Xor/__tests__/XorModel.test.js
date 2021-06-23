@@ -72,15 +72,6 @@ describe('XorModel', () => {
           in3: 1,
         }),
       ).toEqual({ out: [1] });
-
-      expect(
-        model.stepFloating({
-          in0: ['x'],
-          in1: [0],
-          in2: [0],
-          in3: [1],
-        }),
-      ).toEqual({ out: [1] });
     });
 
     it("should return 0 when there's more than 1 high input", () => {
@@ -143,15 +134,6 @@ describe('XorModel', () => {
           in3: 1,
         }),
       ).toEqual({ out: [0] });
-
-      expect(
-        model.stepFloating({
-          in0: [1],
-          in1: [1],
-          in2: [1],
-          in3: ['x'],
-        }),
-      ).toEqual({ out: [0] });
     });
 
     it('should return 0 when all inputs are 0', () => {
@@ -169,6 +151,32 @@ describe('XorModel', () => {
           in3: 0,
         }),
       ).toEqual({ out: [0] });
+    });
+
+    it('should return error if any of the bits are not numeric', () => {
+      const model = new XorModel({
+        MULTIPLE_INPUT_BEHAVIOR: 'ONE',
+        INPUT_PORTS_NUMBER: 4,
+        DATA_BITS: 1,
+      });
+
+      expect(
+        model.stepFloating({
+          in0: [1],
+          in1: [1],
+          in2: [1],
+          in3: ['x'],
+        }),
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: ['x'],
+          in1: [0],
+          in2: [0],
+          in3: [1],
+        }),
+      ).toEqual({ out: ['e'] });
     });
 
     it('should return bitwise XOR for multiple data bits', () => {
@@ -228,24 +236,6 @@ describe('XorModel', () => {
           in2: 1,
           in3: 1,
           in4: 1,
-        }),
-      ).toEqual({ out: [1] });
-
-      expect(
-        model.stepFloating({
-          in0: [0],
-          in1: [1],
-          in2: ['x'],
-          in3: [0],
-        }),
-      ).toEqual({ out: [1] });
-
-      expect(
-        model.stepFloating({
-          in0: [1],
-          in1: [1],
-          in2: ['x'],
-          in3: [1],
         }),
       ).toEqual({ out: [1] });
     });
@@ -310,24 +300,50 @@ describe('XorModel', () => {
           in3: 1,
         }),
       ).toEqual({ out: [0] });
+    });
 
-      expect(
-        model.stepFloating({
-          in0: [0],
-          in1: [0],
-          in2: ['x'],
-          in3: [0],
-        }),
-      ).toEqual({ out: [0] });
+    it('should return error if any of the bits are not numeric', () => {
+      const model = new XorModel({
+        MULTIPLE_INPUT_BEHAVIOR: 'ODD',
+        INPUT_PORTS_NUMBER: 5,
+        DATA_BITS: 1,
+      });
 
       expect(
         model.stepFloating({
           in0: [0],
           in1: [1],
           in2: ['x'],
+          in3: [0],
+        }),
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: [1],
+          in1: [1],
+          in2: ['x'],
           in3: [1],
         }),
-      ).toEqual({ out: [0] });
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: [0],
+          in1: [0],
+          in2: ['e'],
+          in3: [0],
+        }),
+      ).toEqual({ out: ['e'] });
+
+      expect(
+        model.stepFloating({
+          in0: [0],
+          in1: [1],
+          in2: ['e'],
+          in3: [1],
+        }),
+      ).toEqual({ out: ['e'] });
     });
 
     it('should return bitwise XOR for multiple data bits', () => {
