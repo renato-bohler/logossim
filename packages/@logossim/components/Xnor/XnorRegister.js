@@ -64,7 +64,7 @@ export default new Component({
           value: 'ONE',
         },
         {
-          label: 'Detect when an odd number of inputs are on',
+          label: 'Detect when an even number of inputs are on',
           value: 'ODD',
         },
       ],
