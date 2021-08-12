@@ -82,6 +82,29 @@ const Value = styled.span`
   padding: 4px;
 `;
 
+const Chevron = ({ className, selected }) => (
+  <svg
+    className={className}
+    width={20}
+    height={12}
+    viewBox="0 0 20 12"
+    stroke={`var(--border-${selected ? '' : 'un'}selected)`}
+    strokeWidth={2}
+    strokeLinecap="round"
+  >
+    <line x1={0} y1={12} x2={10} y2={0} />
+    <line x1={10} y1={0} x2={20} y2={12} />
+  </svg>
+);
+
+const PositionedChevron = styled(Chevron)`
+  position: absolute;
+  bottom: -1px;
+  left: calc(50% - 10px);
+
+  transition: 100ms linear;
+`;
+
 const PositionedPort = styled(Port)`
   position: absolute;
 
@@ -108,12 +131,16 @@ const getMemoryDisplayRange = (memory, address) => {
 
 const RamWidget = props => {
   const { model } = props;
+  const selected = model.isSelected();
+
   const memory = model.getMemory();
   const selectedAddress = model.getAddress();
   const range = getMemoryDisplayRange(memory, selectedAddress);
 
   return (
-    <Wrapper selected={model.isSelected()}>
+    <Wrapper selected={selected}>
+      <PositionedChevron selected={selected} />
+
       <PositionedPort name="clock" />
       <PositionedPort name="load" />
       <PositionedPort name="address" />
@@ -135,7 +162,7 @@ const RamWidget = props => {
               />
               <AddressValueContainer>
                 <Address>{formattedAddress}</Address>
-                <Value isSelected>{value}</Value>
+                <Value>{value}</Value>
               </AddressValueContainer>
             </Cell>
           );
