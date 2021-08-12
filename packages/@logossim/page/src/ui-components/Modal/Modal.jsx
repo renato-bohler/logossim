@@ -20,6 +20,9 @@ const Overlay = styled.div`
 `;
 
 const Window = styled.div`
+  display: flex;
+  flex-direction: column;
+
   width: 60vw;
   height: 80vh;
 

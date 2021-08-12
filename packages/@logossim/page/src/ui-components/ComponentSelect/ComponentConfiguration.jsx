@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Tooltip from 'react-tooltip';
 
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form as BaseForm, Field } from 'formik';
 import styled from 'styled-components';
 
 import { ArrowLeft, Close } from '../Icons';
@@ -54,12 +54,19 @@ const DragArea = styled.div`
 `;
 
 const FormScroll = styled.div`
-  height: 375px;
+  max-height: calc(min(800px, 80vh) - 400px);
   overflow-y: auto;
+`;
+
+const Form = styled(BaseForm)`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 `;
 
 const Footer = styled.div`
   display: flex;
+  margin-top: auto;
 `;
 
 const Hint = styled.span`

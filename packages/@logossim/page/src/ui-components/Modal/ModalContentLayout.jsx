@@ -33,6 +33,7 @@ export const Subtitle = styled.h2`
 
 export const Content = styled.div`
   margin-top: 32px;
+  flex: 1;
 `;
 
 export const IconButton = styled.button`
