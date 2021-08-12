@@ -127,7 +127,7 @@ const RomWidget = props => {
               />
               <AddressValueContainer>
                 <Address>{formattedAddress}</Address>
-                <Value isSelected>{value}</Value>
+                <Value>{value}</Value>
               </AddressValueContainer>
             </Cell>
           );
