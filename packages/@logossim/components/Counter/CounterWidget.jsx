@@ -29,6 +29,28 @@ export const Wrapper = styled.div`
         : 'var(--border-unselected)'};
 `;
 
+const Chevron = ({ className, selected }) => (
+  <svg
+    className={className}
+    width={12}
+    height={20}
+    viewBox="0 0 12 20"
+    stroke={`var(--border-${selected ? '' : 'un'}selected)`}
+    strokeWidth={2}
+    strokeLinecap="round"
+  >
+    <line x1={0} y1={0} x2={6} y2={10} />
+    <line x1={6} y1={10} x2={0} y2={20} />
+  </svg>
+);
+
+const PositionedChevron = styled(Chevron)`
+  position: absolute;
+  left: -1px;
+
+  transition: 100ms linear;
+`;
+
 const PositionedPort = styled(Port)`
   position: absolute;
   ${props => {
@@ -46,6 +68,7 @@ const CounterWidget = props => {
 
   return (
     <Wrapper selected={selected}>
+      <PositionedChevron selected={selected} />
       <PositionedPort name="in" />
       <PositionedPort name="out" />
       ++
