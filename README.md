@@ -21,7 +21,7 @@ The repository is using a monorepo strategy in order to separate constraints int
 Requirements
 
 - [NodeJS](https://nodejs.org/en/)
-- [Yarn](https://yarnpkg.com/)
+- [Yarn](https://classic.yarnpkg.com/lang/en/)
 
 Clone project and install
 
