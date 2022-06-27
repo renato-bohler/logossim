@@ -24,10 +24,9 @@ const Window = styled.div`
   flex-direction: column;
 
   width: 60vw;
-  height: 80vh;
+  height: ${({ $height }) => $height};
 
-  max-width: 600px;
-  max-height: 800px;
+  max-width: ${({ $maxWidth }) => $maxWidth};
 
   background: white;
 
@@ -39,9 +38,11 @@ const Window = styled.div`
   z-index: 4;
 `;
 
-const Modal = ({ children }) => (
+const Modal = ({ children, maxWidth = '600px', height = '80vh' }) => (
   <Overlay>
-    <Window>{children}</Window>
+    <Window $maxWidth={maxWidth} $height={height}>
+      {children}
+    </Window>
   </Overlay>
 );
 
