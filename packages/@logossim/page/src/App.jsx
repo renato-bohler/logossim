@@ -23,11 +23,13 @@ import {
   Snackbar,
   Tour,
 } from './ui-components';
+import SelectCircuit from './ui-components/SelectCircuit/SelectCircuit';
 import tourCircuit, {
   DIMENSIONS,
 } from './ui-components/Tour/tourCircuit';
 
 import './App.css';
+import newCircuit from './newCircuit';
 
 const DEFAULT_CIRCUIT_NAME = 'Untitled circuit';
 
@@ -36,6 +38,7 @@ export default class App extends Component {
     super(props);
 
     this.state = {
+      isSelectCircuitOpen: false,
       isComponentSelectOpen: false,
       isComponentEditOpen: false,
       isHelpKeyboardOpen: false,
@@ -43,6 +46,7 @@ export default class App extends Component {
       componentEdit: null,
       isTourAvailable: false,
       isTourRunning: !JSON.parse(localStorage.getItem('tour-done')),
+      isTourManualRun: false,
       circuitName: DEFAULT_CIRCUIT_NAME,
       circuitCreatedAt: null,
       isCircuitNameFocused: false,
@@ -68,10 +72,15 @@ export default class App extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const example = urlParams.get('example');
 
-    if (example === null) {
-      window.addEventListener('load', this.loadHandler);
-    } else {
+    if (example !== null) {
       this.loadExample(example);
+    } else {
+      this.setState({ isTourAvailable: true });
+    }
+
+    const { isTourRunning } = this.state;
+    if (!isTourRunning && window.location.hash !== '#app') {
+      this.showSelectCircuit();
     }
 
     window.addEventListener('keydown', this.shortcutHandler);
@@ -90,6 +99,7 @@ export default class App extends Component {
 
   areShortcutsAllowed = () => {
     const {
+      isSelectCircuitOpen,
       isComponentSelectOpen,
       isComponentEditOpen,
       isHelpKeyboardOpen,
@@ -99,6 +109,7 @@ export default class App extends Component {
     } = this.state;
 
     return !(
+      isSelectCircuitOpen ||
       isComponentSelectOpen ||
       isComponentEditOpen ||
       isHelpKeyboardOpen ||
@@ -184,43 +195,25 @@ export default class App extends Component {
     this.setState({ isLoadingExample: false });
   };
 
-  loadHandler = () => {
-    const lastSaved = JSON.parse(
-      localStorage.getItem('circuit-autosave'),
-    );
-
-    if (this.isCircuitEmpty(lastSaved?.circuit)) {
-      this.setState({ isTourAvailable: true });
-      return;
-    }
-
-    // eslint-disable-next-line no-alert
-    const reload = window.confirm('Reload last unsaved circuit?');
-    if (reload) {
-      this.loadFile(lastSaved);
-    } else {
-      this.setState({ isTourAvailable: true });
-      localStorage.removeItem('circuit-autosave');
-    }
-  };
-
-  shouldWarnUnload = (currentCircuit, lastSavedCircuit) => {
-    if (this.isCircuitEmpty(currentCircuit)) return false;
-
-    return (
-      JSON.stringify(lastSavedCircuit.layers) !==
-      JSON.stringify(currentCircuit.layers)
-    );
-  };
-
-  unloadHandler = event => {
+  shouldWarnUnload = () => {
     const lastSaved = JSON.parse(
       localStorage.getItem('last-saved-circuit'),
     );
     const file = this.generateFile();
 
-    if (this.shouldWarnUnload(file.circuit, lastSaved.circuit)) {
+    if (this.isCircuitEmpty(file.circuit)) return false;
+    if (this.isCircuitEmpty(lastSaved?.circuit)) return false;
+
+    return (
+      JSON.stringify(lastSaved.circuit.layers) !==
+      JSON.stringify(file.circuit.layers)
+    );
+  };
+
+  unloadHandler = event => {
+    if (this.shouldWarnUnload()) {
       if (this.simulation.isStopped()) {
+        const file = this.generateFile();
         localStorage.setItem(
           'circuit-autosave',
           JSON.stringify(file),
@@ -228,7 +221,7 @@ export default class App extends Component {
       }
       // eslint-disable-next-line no-param-reassign
       event.returnValue =
-        'You have unsaved changes. Sure you want to leave?';
+        'You have unsaved changes. Are you sure you want to leave?';
     }
   };
 
@@ -254,6 +247,19 @@ export default class App extends Component {
 
     localStorage.setItem('circuit-autosave', JSON.stringify(file));
   };
+
+  getAutoSavedCircuit = () =>
+    JSON.parse(localStorage.getItem('circuit-autosave'));
+
+  hasAutoSavedCircuit = () =>
+    !this.isCircuitEmpty(this.getAutoSavedCircuit()?.circuit);
+
+  loadAutoSavedCircuit = () => {
+    if (!this.hasAutoSavedCircuit()) return;
+    this.loadFile(this.getAutoSavedCircuit());
+  };
+
+  loadNewCircuit = () => this.loadFile(newCircuit());
 
   synchronizeSimulation = () => {
     const diff = this.simulation.getDiff();
@@ -390,9 +396,33 @@ export default class App extends Component {
       componentEdit: null,
     });
 
-  setTourRunning = isTourRunning => this.setState({ isTourRunning });
+  setTourRunning = isTourRunning => {
+    const { isTourManualRun } = this.state;
+    if (
+      !isTourRunning &&
+      !isTourManualRun &&
+      window.location.hash !== '#app'
+    ) {
+      this.showSelectCircuit();
+    }
+    this.setState({ isTourRunning, isTourManualRun: false });
+  };
 
-  showHelpTour = () => this.setTourRunning(true);
+  showHelpTour = () =>
+    this.setState({ isTourRunning: true, isTourManualRun: true });
+
+  showSelectCircuit = () => {
+    window.location.hash = '';
+    this.setState({ isSelectCircuitOpen: true });
+  };
+
+  hideSelectCircuit = () => {
+    this.setState({
+      isSelectCircuitOpen: false,
+      isTourAvailable: true,
+    });
+    window.location.hash = '#app';
+  };
 
   showHelpKeyboard = () =>
     this.setState({ isHelpKeyboardOpen: true });
@@ -463,6 +493,7 @@ export default class App extends Component {
 
   render() {
     const {
+      isSelectCircuitOpen,
       isComponentSelectOpen,
       isComponentEditOpen,
       isHelpKeyboardOpen,
@@ -486,6 +517,7 @@ export default class App extends Component {
           handleBlurCircuitName={this.handleCircuitNameBlur}
           handleClickSave={this.handleClickSave}
           handleFileLoad={this.handleFileLoad}
+          handleClickSelectCircuit={this.showSelectCircuit}
           handleClickKeyboardShortcuts={this.showHelpKeyboard}
           handleClickRedoTour={this.showHelpTour}
           handleClickAbout={this.showHelpAbout}
@@ -516,6 +548,16 @@ export default class App extends Component {
           handleComponentEdit={this.diagram.handleComponentEdit}
         />
 
+        <SelectCircuit
+          isOpen={isSelectCircuitOpen}
+          handleClose={this.hideSelectCircuit}
+          handleNewCircuit={this.loadNewCircuit}
+          handleClickLoad={this.handleClickLoad}
+          handleLoadExample={this.loadExample}
+          hasAutoSavedCircuit={this.hasAutoSavedCircuit()}
+          handleLoadAutoSavedCircuit={this.loadAutoSavedCircuit}
+          shouldWarnUnload={this.shouldWarnUnload}
+        />
         <HelpKeyboardShortcuts
           isOpen={isHelpKeyboardOpen}
           handleClose={this.hideHelpKeyboard}

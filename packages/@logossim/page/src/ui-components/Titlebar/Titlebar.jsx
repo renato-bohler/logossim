@@ -178,6 +178,7 @@ const Titlebar = ({
   handleChangeCircuitName,
   handleFocusCircuitName,
   handleBlurCircuitName,
+  handleClickSelectCircuit,
   handleClickSave,
   handleFileLoad,
   handleClickKeyboardShortcuts,
@@ -261,6 +262,14 @@ const Titlebar = ({
         </HelpButton>
         {isHelpMenuOpen && (
           <HelpButtonMenu ref={helpMenuRef}>
+            <HelpButtonMenuItem
+              onClick={() => {
+                handleClickSelectCircuit();
+                handleToggleHelpMenu();
+              }}
+            >
+              Select circuit
+            </HelpButtonMenuItem>
             <HelpButtonMenuItem
               onClick={() => {
                 handleClickKeyboardShortcuts();
