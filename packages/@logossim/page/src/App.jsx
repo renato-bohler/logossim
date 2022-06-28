@@ -79,7 +79,11 @@ export default class App extends Component {
     }
 
     const { isTourRunning } = this.state;
-    if (!isTourRunning && window.location.hash !== '#app') {
+    if (
+      !isTourRunning &&
+      window.location.hash !== '#app' &&
+      example === null
+    ) {
       this.showSelectCircuit();
     }
 
