@@ -128,7 +128,7 @@ const ComponentContextMenu = ({
     <Separator />
 
     <Item
-      onClick={({ props: component }) =>
+      onClick={({ props: { component } }) =>
         configureComponent(component)
       }
     >
