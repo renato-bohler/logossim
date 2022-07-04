@@ -10,6 +10,7 @@ import {
 
 import FileSaver from 'file-saver';
 
+import newCircuit from './newCircuit';
 import {
   Titlebar,
   SimulationControlButtons,
@@ -29,7 +30,6 @@ import tourCircuit, {
 } from './ui-components/Tour/tourCircuit';
 
 import './App.css';
-import newCircuit from './newCircuit';
 
 const DEFAULT_CIRCUIT_NAME = 'Untitled circuit';
 

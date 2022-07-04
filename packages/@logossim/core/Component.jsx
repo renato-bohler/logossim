@@ -31,7 +31,11 @@ export default class Component extends AbstractReactFactory {
     const { model } = event;
 
     return (
-      <MenuProvider id="component" storeRef={false} data={model}>
+      <MenuProvider
+        id="component"
+        storeRef={false}
+        data={{ component: model }}
+      >
         <ComponentContext.Provider value={model}>
           <Widget model={model} />
         </ComponentContext.Provider>
