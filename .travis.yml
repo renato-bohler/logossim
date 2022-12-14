@@ -2,7 +2,7 @@ os: linux
 dist: xenial
 language: node_js
 node_js:
-  - lts/*
+  - 16
 cache:
   yarn: true
   directories:
