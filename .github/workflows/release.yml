@@ -19,6 +19,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_URL: ${{ env.PUBLIC_URL }}
     steps:
       - name: Setup Node.js
         uses: actions/setup-node@v3
