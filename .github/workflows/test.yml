@@ -14,7 +14,11 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_URL: ${{ vars.PUBLIC_URL }}
     steps:
+      - name: Debug
+        run: echo $PUBLIC_URL
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
