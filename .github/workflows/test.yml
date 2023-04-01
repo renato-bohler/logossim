@@ -11,15 +11,10 @@ on:
 permissions:
   contents: read
 
-env:
-  PUBLIC_URL: 'https://bohler.dev/logossim'
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
-        run: echo $PUBLIC_URL
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
