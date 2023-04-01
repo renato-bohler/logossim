@@ -115,7 +115,7 @@ const HelpAbout = ({ isOpen, handleClose }) => {
           <p style={{ textAlign: 'center' }}>
             This is a project built by{' '}
             <a
-              href="https://renato-bohler.github.io/"
+              href="https://bohler.dev/"
               target="_blank"
               rel="noopener noreferrer"
             >
