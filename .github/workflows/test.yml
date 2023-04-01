@@ -11,6 +11,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PUBLIC_URL: 'https://bohler.dev/logossim'
+
 jobs:
   test:
     runs-on: ubuntu-latest
