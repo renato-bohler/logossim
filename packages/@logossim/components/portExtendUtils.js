@@ -40,7 +40,7 @@ const PortExtensionBar = styled.div`
       ? 'var(--border-selected)'
       : 'var(--border-unselected)'};
 
-  ${props => `${props.place}: 88px;`}
+  ${props => `${props.place}: 58px;`}
 `;
 
 export const PortExtension = ({
@@ -51,7 +51,7 @@ export const PortExtension = ({
   const lastPortPosition = portPositions[portPositions.length - 1];
   if (lastPortPosition <= MAX_PORTS) return null;
 
-  const size = (lastPortPosition - MAX_PORTS) * 15;
+  const size = (lastPortPosition - MAX_PORTS) * 10;
 
   return (
     <>

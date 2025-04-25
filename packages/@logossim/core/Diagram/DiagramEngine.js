@@ -68,7 +68,7 @@ export default class DiagramEngine {
   initializeModel = () => {
     this.model = new DiagramModel();
 
-    this.model.setGridSize(15);
+    this.model.setGridSize(10);
     this.model.setLocked(false);
     this.model.registerListener({
       eventDidFire: event => {

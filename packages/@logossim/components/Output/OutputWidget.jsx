@@ -5,11 +5,11 @@ import { Port } from '@logossim/core';
 import styled from 'styled-components';
 
 const SHAPE_SIZES = {
-  1: { width: 30, height: 30 },
-  2: { width: 60, height: 30 },
-  4: { width: 120, height: 30 },
-  8: { width: 120, height: 60 },
-  16: { width: 240, height: 60 },
+  1: { width: 20, height: 20 },
+  2: { width: 40, height: 20 },
+  4: { width: 80, height: 20 },
+  8: { width: 80, height: 40 },
+  16: { width: 160, height: 40 },
 };
 
 const PIN_BACKGROUND = {

@@ -12,8 +12,8 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
 
   transition: 100ms linear;
   svg {
@@ -33,7 +33,7 @@ const PositionedPort = styled(Port)`
 
   ${props => {
     if (props.name === 'out') return '';
-    return `top: ${props.position * 15 - 5}px;`;
+    return `top: ${props.position * 10 - 5}px;`;
   }}
 
   ${props => {
