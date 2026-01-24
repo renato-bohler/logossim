@@ -31,7 +31,7 @@
     "dagre": "^0.8.5",
     "file-saver": "^2.0.2",
     "formik": "^2.0.8",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.23",
     "ml-matrix": "^6.5.0",
     "pathfinding": "^0.4.18",
     "paths-js": "^0.4.10",
